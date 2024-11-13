@@ -109,7 +109,7 @@ export default {
   }
 }
 .logo {
-  @include btn-img(220px, 56px, "logo.png");
+  @include btn-img(199px, 56px, "logo.png");
 }
 .pc-menu {
   width: 338px;
@@ -174,7 +174,7 @@ export default {
     display: none;
   }
   .logo {
-    @include btn-img(vw(312), vw(80), "logo-text.png");
+    @include btn-img(vw(284), vw(80), "logo-text.png");
     background-size: 100% 100%;
   }
   .icon-logo {
