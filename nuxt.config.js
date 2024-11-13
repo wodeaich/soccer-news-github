@@ -44,7 +44,7 @@ export default {
   },
   head: {
     title:
-      "SoccerGameSelect－dedicated to the dreams and wonders of the young crowd, play with your own colors in the game!",
+      "CompSoccer－dedicated to the dreams and wonders of the young crowd, play with your own colors in the game!",
     meta: [
       {
         name: "version",
@@ -58,7 +58,7 @@ export default {
         hid: "description",
         name: "description",
         content:
-          "SoccerGameSelect is a platform that gathers countless young gamers with the best free online games. All of our games are designed to provide young people with a better way to relax and have fun, ≈ and a wide range of styles waiting for your selection. When you are looking for fun through games, SoccerGameSelect will be your faithful choice, offering you a more comprehensive range of games, the most diverse selection and as many new surprises as possible!"
+          "CompSoccer is a platform that gathers countless young gamers with the best free online games. All of our games are designed to provide young people with a better way to relax and have fun, ≈ and a wide range of styles waiting for your selection. When you are looking for fun through games, CompSoccer will be your faithful choice, offering you a more comprehensive range of games, the most diverse selection and as many new surprises as possible!"
       },
       {
         hid: "keywords",
@@ -107,14 +107,14 @@ export default {
   },
   modules: ["@nuxtjs/axios"],
   sitemap: {
-    hostname: "https://SoccerGameSelect.com/"
+    hostname: "https://compsoccer.com/"
   },
   pwa: {
     manifest: {
-      name: "SoccerGameSelect",
-      short_name: "SoccerGameSelect",
+      name: "CompSoccer",
+      short_name: "CompSoccer",
       description:
-        "SoccerGameSelect is a platform that gathers countless young gamers with the best free online games. All of our games are designed to provide young people with a better way to relax and have fun, with healthy gameplay and a wide range of styles waiting for your selection. When you are looking for fun through games, SoccerGameSelect will be your faithful choice, offering you a more comprehensive range of games, the most diverse selection and as many new surprises as possible!",
+        "CompSoccer is a platform that gathers countless young gamers with the best free online games. All of our games are designed to provide young people with a better way to relax and have fun, with healthy gameplay and a wide range of styles waiting for your selection. When you are looking for fun through games, CompSoccer will be your faithful choice, offering you a more comprehensive range of games, the most diverse selection and as many new surprises as possible!",
       icons: [
         {
           src: "/icons/32.png",

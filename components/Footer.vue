@@ -15,19 +15,19 @@
         </div>
       </div>
       <div class="introduction">
-        SoccerGameSelect.com is a game aggregation platform. Through this platform, you can play
-        games on different devices that support Android and iOS. Our team goal is to enable all
-        players to find a game they love.We offer many types of games. Including but not limited to
-        puzzle games, action games, sports games, racing games, shooting games, arcade games, makeup
-        games, matching games, cooking games, etc.<br />
-        SoccerGameSelect.com has collected the hottest, most classic and most fun mobile games, each
-        of which is handpicked by us. SoccerGameSelect.com is a website that supports genuine games.
-        The website does not provide game downloads, and our game download links will jump to formal
+        CompSoccer.com is a game aggregation platform. Through this platform, you can play games on
+        different devices that support Android and iOS. Our team goal is to enable all players to
+        find a game they love.We offer many types of games. Including but not limited to puzzle
+        games, action games, sports games, racing games, shooting games, arcade games, makeup games,
+        matching games, cooking games, etc.<br />
+        CompSoccer.com has collected the hottest, most classic and most fun mobile games, each of
+        which is handpicked by us. CompSoccer.com is a website that supports genuine games. The
+        website does not provide game downloads, and our game download links will jump to formal
         platforms such as Google Play and Apple Store. Players can find the most suitable games in
-        SoccerGameSelect.com for the first time.<br />
-        Hope you can find the best game for you on SoccerGameSelect.com platform. If you have any
-        feedback on us, please feel free to contact us by email:
-        <a href="mailto:Service@soccergameselect.com">Service@soccergameselect.com</a>
+        CompSoccer.com for the first time.<br />
+        Hope you can find the best game for you on CompSoccer.com platform. If you have any feedback
+        on us, please feel free to contact us by email:
+        <a href="mailto:Service@compsoccer.com">Service@compsoccer.com</a>
       </div>
     </div>
 
@@ -37,9 +37,9 @@
           <CustomLink to="/eula.html" target="_blank">Terms of Service</CustomLink>
           <CustomLink to="/privacy.html" target="_blank">Privacy Policy</CustomLink
           ><CustomLink to="/cookies.html" target="_blank">Cookies Policy</CustomLink>
-          <a href="mailto:Service@SoccerGameSelect.com">Contact</a>
+          <a href="mailto:Service@CompSoccer.com">Contact</a>
         </div>
-        <span>Copyright ©&nbsp; 2024 SoccerGameSelect &nbsp;All rights reserved.</span>
+        <span>Copyright ©&nbsp; 2024 CompSoccer &nbsp;All rights reserved.</span>
       </div>
     </div>
     <Notification v-if="showNotification" :message="notificationMessage" />

@@ -229,7 +229,7 @@ export default {
   },
   head() {
     return {
-      title: `SoccerGameSelect － dedicated to the dreams and wonders of the young crowd, play with your own colors in the ${
+      title: `CompSoccer － dedicated to the dreams and wonders of the young crowd, play with your own colors in the ${
         this.currentGame.name || "game"
       }!`
     };
