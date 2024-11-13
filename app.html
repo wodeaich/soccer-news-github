@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head {{ HEAD_ATTRS }}>
+    {{ HEAD }}
+    <meta charset="UTF-8" />
+    <script>
+      (function () {
+        if ("PerformanceObserver" in window) {
+          const observer = new PerformanceObserver((list) => {
+            list.getEntries().forEach((entry) => {
+              if (entry.entryType === "resource" && entry.name.includes("adsbygoogle.js")) {
+                if (entry.responseStatus === 200) {
+                  console.log(
+                    `Resource loaded: ${entry.name} with initiatorType: ${entry.initiatorType}`
+                  );
+                  dataLayer.push({ event: "AL_0" });
+                }
+              }
+              if (
+                entry.entryType === "resource" &&
+                entry.initiatorType === "iframe" &&
+                entry.name.indexOf("adf=3025194257") !== -1
+              ) {
+                dataLayer.push({ event: "AL_1" });
+                console.log(
+                  `Resource loaded: ${entry.name} with initiatorType: ${entry.initiatorType}`
+                );
+                observer.disconnect();
+              }
+            });
+          });
+
+          observer.observe({ entryTypes: ["resource"] });
+        }
+
+        const mutationObserver = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.type === "attributes") {
+              if (
+                mutation.target.matches("ins.adsbygoogle") &&
+                mutation.attributeName === "data-vignette-loaded"
+              ) {
+                dataLayer.push({ event: "AL_2" });
+                const value = mutation.target.getAttribute("data-vignette-loaded");
+                if (value === "true") {
+                  dataLayer.push({ event: "AL_3" });
+                  mutationObserver.disconnect();
+                }
+              }
+            }
+          });
+        });
+
+        mutationObserver.observe(document.documentElement, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+          attributeFilter: ["data-vignette-loaded"]
+        });
+      })();
+    </script>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1853000876464912"
+      crossorigin="anonymous"
+    ></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YMXQ4DT7QS"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-YMXQ4DT7QS");
+    </script>
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-TVJFJMC3");
+    </script>
+    <!-- End Google Tag Manager -->
+
+    <script
+      async
+      src="https://fundingchoicesmessages.google.com/i/pub-1853000876464912?ers=1"
+      nonce="M51p12pef07AV09oBT6P0Q"
+    ></script
+    ><script nonce="M51p12pef07AV09oBT6P0Q">
+      (function () {
+        function signalGooglefcPresent() {
+          if (!window.frames["googlefcPresent"]) {
+            if (document.body) {
+              const iframe = document.createElement("iframe");
+              iframe.style =
+                "width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px;";
+              iframe.style.display = "none";
+              iframe.name = "googlefcPresent";
+              document.body.appendChild(iframe);
+            } else {
+              setTimeout(signalGooglefcPresent, 0);
+            }
+          }
+        }
+        signalGooglefcPresent();
+      })();
+    </script>
+
+    <script>
+      window.addEventListener("load", function () {
+        if ("serviceWorker" in window.navigator) {
+          window.navigator.serviceWorker
+            .register("/sw.js")
+            .then(() => {})
+            .catch(() => {});
+        }
+        window.addEventListener("beforeinstallprompt", (e) => {
+          e.preventDefault();
+          window.deferredPrompt = e;
+        });
+      });
+    </script>
+  </head>
+  <body {{ BODY_ATTRS }}>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-TVJFJMC3"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    {{ APP }}
+    <script>
+      // 初始化标志变量
+      window.isUnloaded = false;
+      // 监听页面即将卸载事件
+      window.addEventListener("beforeunload", () => {
+        var elementUrlIndex = window.dataLayer.findIndex(
+          ({ event: eventType }) => "gtm.linkClick" === eventType
+        );
+        // 如果找到了对应事件，且标志变量为 false，则执行逻辑
+        if (-1 === elementUrlIndex || window.isUnloaded) {
+          return;
+        }
+        // 根据条件执行不同逻辑
+        if (1 === window.clickOpen) {
+          // 点击穿插广告
+          dataLayer.push({ event: "D_AL" });
+        } else {
+          // 用户点击跳转
+          dataLayer.push({ event: "D_RE" });
+        }
+        window.isUnloaded = true;
+      });
+      // 监听 hash 变化事件 --- 判断穿插全屏广告出现
+      window.addEventListener("hashchange", () => {
+        if ("#google_vignette" == window.location.hash) {
+          window.clickOpen = 1;
+          // 触发穿插
+          dataLayer.push({ event: "C_AL" });
+        }
+      });
+      // 监听消息事件
+      window.addEventListener("message", (event) => {
+        if (
+          '{"eventType":"adClosed","result":{"status":1},"googMsgType":"fullscreen"}' ===
+            event.data &&
+          "https://googleads.g.doubleclick.net" === event.origin
+        ) {
+          window.clickOpen = 0;
+          // 关闭穿插广告
+          dataLayer.push({ event: "G_AL" });
+        }
+      });
+      // 监听失去焦点事件
+      window.addEventListener("blur", () => {
+        const activeElement = document.activeElement,
+          sourceAttribute = activeElement.getAttribute("src");
+        if (
+          sourceAttribute &&
+          -1 !== sourceAttribute.indexOf("googleads.g.doubleclick.net/pagead/ads?")
+        ) {
+          const closestIns = activeElement.closest("ins");
+          let adStatus = "unfilled";
+          if (closestIns) {
+            adStatus = closestIns.getAttribute("data-ad-status") || adStatus;
+          }
+          if ("filled" == adStatus) {
+            // 点击页内广告
+            dataLayer.push({ event: "D_IP" });
+          }
+        } else if (
+          sourceAttribute &&
+          -1 !== sourceAttribute.indexOf("googleads.g.doubleclick.net/pagead/html/")
+        ) {
+          if (-1 !== sourceAttribute.indexOf("btvi=")) {
+            // 点击锚定广告
+            dataLayer.push({ event: "D_FI" });
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

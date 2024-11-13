@@ -1,0 +1,15 @@
+@font-face {
+  font-family: "se";
+  src: url("~assets/fonts/se.woff2") format("woff2");
+  font-display: swap;
+}
+@font-face {
+  font-family: "seb";
+  src: url("~assets/fonts/seb.woff2") format("woff2");
+  font-display: swap;
+}
+@font-face {
+  font-family: "sesb";
+  src: url("~assets/fonts/sesb.woff2") format("woff2");
+  font-display: swap;
+}
