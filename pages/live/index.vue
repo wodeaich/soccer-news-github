@@ -26,10 +26,20 @@
             >
             </ContentItemRow2>
             <!-- new-1: Google Ad 占位 1 -->
-            <GoogleAd ad-slot="4363167594" class="ad1" />
+            <!-- <GoogleAd ad-slot="4363167594" class="ad1" /> -->
+            <adm-slot
+              class="ad1"
+              adm-id="live-1"
+              adm-unit="/23197833490/compsoccer/compsoccer_module_1"
+            />
 
             <!-- new-2: Google Ad 占位 2 -->
-            <GoogleAd ad-slot="5676249263" class="ad2" />
+            <!-- <GoogleAd ad-slot="5676249263" class="ad2" /> -->
+            <adm-slot
+              class="ad2"
+              adm-id="live-2"
+              adm-unit="/23197833490/compsoccer/compsoccer_module_2"
+            />
           </template>
         </InfiniteScrollList>
       </section>

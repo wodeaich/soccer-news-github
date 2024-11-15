@@ -5,7 +5,12 @@
       <Breadcrumb :name="currentGame.name" />
 
       <!-- download-1: Google Ad 占位 1 -->
-      <GoogleAd ad-slot="3297497936" class="ad-1" />
+      <!-- <GoogleAd ad-slot="3297497936" class="ad-1" /> -->
+      <adm-slot
+        class="ad-1"
+        adm-id="download-1"
+        adm-unit="/23197833490/compsoccer/compsoccer_detail_1"
+      />
 
       <section class="download-info">
         <div class="base-info">
@@ -64,7 +69,12 @@
       </section> -->
 
       <!-- download-2: Google Ad 占位 2 -->
-      <GoogleAd ad-slot="2955836717" class="ad-2" />
+      <!-- <GoogleAd ad-slot="2955836717" class="ad-2" /> -->
+      <adm-slot
+        class="ad-2"
+        adm-id="download-2"
+        adm-unit="/23197833490/compsoccer/compsoccer_detail_2"
+      />
 
       <div class="title-h2">
         <div class="title-button"> <i class="icon-rec" /> Recommend Games</div></div
@@ -91,7 +101,8 @@
 
       <aside class="box-aside">
         <!-- download-r1: Google Ad 占位 r1 -->
-        <GoogleAd ad-slot="3489069628" />
+        <!-- <GoogleAd ad-slot="3489069628" /> -->
+        <adm-slot adm-id="download-3" adm-unit="/23197833490/compsoccer/compsoccer_detail_3" />
         <div class="title-h2">
           <div class="title-button"> <i class="icon-hot" /> Hot Games</div></div
         >
@@ -106,7 +117,7 @@
     </main>
     <Footer />
     <BackTop />
-    <AdLoading />
+    <!-- <AdLoading /> -->
   </div>
 </template>
 
