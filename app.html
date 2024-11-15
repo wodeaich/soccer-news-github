@@ -175,9 +175,7 @@
       // 监听消息事件
       window.addEventListener("message", (event) => {
         if (
-          '{"eventType":"adClosed","result":{"status":1},"googMsgType":"fullscreen"}' ===
-            event.data &&
-          "https://googleads.g.doubleclick.net" === event.origin
+          '{"eventType":"adClosed","result":{"status":1},"googMsgType":"fullscreen"}' === event.data
         ) {
           window.clickOpen = 0;
           // 关闭穿插广告
@@ -187,28 +185,23 @@
       // 监听失去焦点事件
       window.addEventListener("blur", () => {
         const activeElement = document.activeElement,
-          sourceAttribute = activeElement.getAttribute("src");
+          sourceAttribute = activeElement.getAttribute("name");
         if (
           sourceAttribute &&
-          -1 !== sourceAttribute.indexOf("googleads.g.doubleclick.net/pagead/ads?")
+          -1 !== sourceAttribute.indexOf("google_ads_iframe_/23197833490") &&
+          -1 === sourceAttribute.indexOf("anchor_0")
         ) {
-          const closestIns = activeElement.closest("ins");
-          let adStatus = "unfilled";
-          if (closestIns) {
-            adStatus = closestIns.getAttribute("data-ad-status") || adStatus;
+          let adStatus = "false";
+          if (activeElement) {
+            adStatus = closestIns.getAttribute("data-load-complete") || adStatus;
           }
-          if ("filled" == adStatus) {
+          if ("true" == adStatus) {
             // 点击页内广告
             dataLayer.push({ event: "D_IP" });
           }
-        } else if (
-          sourceAttribute &&
-          -1 !== sourceAttribute.indexOf("googleads.g.doubleclick.net/pagead/html/")
-        ) {
-          if (-1 !== sourceAttribute.indexOf("btvi=")) {
-            // 点击锚定广告
-            dataLayer.push({ event: "D_FI" });
-          }
+        } else if (sourceAttribute && -1 !== sourceAttribute.indexOf("anchor_0")) {
+          // 点击锚定广告
+          dataLayer.push({ event: "D_FI" });
         }
       });
     </script>
