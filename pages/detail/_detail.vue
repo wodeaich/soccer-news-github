@@ -71,7 +71,7 @@ export default {
       htmlAttrs: {
         lang: this.newInfo.language
       },
-      title: this.newInfo.name + " - SoccerGameSelect",
+      title: this.newInfo.name + " - SoccerIns",
       meta: [
         {
           hid: "description",
@@ -96,7 +96,7 @@ export default {
         {
           hid: "og:url",
           property: "og:url",
-          content: `https://soccergameselect.com/detail/${this.newInfo.path}/`
+          content: `https://soccerins.com/detail/${this.newInfo.path}/`
         },
         {
           hid: "og:locale",

@@ -20,13 +20,13 @@
           >
             {{ cookiesText[lang] || cookiesText["en"] }}
           </Afs-CustomLink>
-          <a href="mailto:service@soccergameselect.com">
+          <a href="mailto:service@soccerins.com">
             {{ contactText[lang] || contactText["en"] }}
           </a>
         </div>
         <span style="text-align: center">
           {{ copyRightText1[lang] || copyRightText1["en"] }}
-          ©&nbsp; 2024 SoccerGameSelect &nbsp;
+          ©&nbsp; 2024 SoccerIns &nbsp;
           {{ copyRightText2[lang] || copyRightText2["en"] }}
         </span>
       </div>

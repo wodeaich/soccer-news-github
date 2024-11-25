@@ -54,7 +54,7 @@ export default {
     trailingSlash: true
   },
   head: {
-    title: "SoccerGameSelect - Global News at Your Fingertips!",
+    title: "SoccerIns - Global News at Your Fingertips!",
     meta: [
       // {
       //   name: "version",
@@ -68,7 +68,7 @@ export default {
       //   hid: "description",
       //   name: "description",
       //   content:
-      //     "SoccerGameSelect is a platform that gathers countless young gamers with the best free online games. All of our games are designed to provide young people with a better way to relax and have fun, ≈ and a wide range of styles waiting for your selection. When you are looking for fun through games, SoccerGameSelect will be your faithful choice, offering you a more comprehensive range of games, the most diverse selection and as many new surprises as possible!"
+      //     "SoccerIns is a platform that gathers countless young gamers with the best free online games. All of our games are designed to provide young people with a better way to relax and have fun, ≈ and a wide range of styles waiting for your selection. When you are looking for fun through games, SoccerIns will be your faithful choice, offering you a more comprehensive range of games, the most diverse selection and as many new surprises as possible!"
       // },
       // {
       //   hid: "keywords",
@@ -108,7 +108,7 @@ export default {
       {
         hid: "og:site_name",
         property: "og:site_name",
-        content: "SoccerGameSelect"
+        content: "SoccerIns"
       }
     ],
     link: [
@@ -152,14 +152,14 @@ export default {
   },
   modules: ["@nuxtjs/axios"],
   sitemap: {
-    hostname: "https://soccerGameSelect.com/"
+    hostname: "https://soccerins.com/"
   },
   pwa: {
     manifest: {
-      name: "SoccerGameSelect",
-      short_name: "SoccerGameSelect",
+      name: "SoccerIns",
+      short_name: "SoccerIns",
       description:
-        "SoccerGameSelect is a platform that gathers countless young gamers with the best free online games. All of our games are designed to provide young people with a better way to relax and have fun, with healthy gameplay and a wide range of styles waiting for your selection. When you are looking for fun through games, SoccerGameSelect will be your faithful choice, offering you a more comprehensive range of games, the most diverse selection and as many new surprises as possible!",
+        "SoccerIns is a platform that gathers countless young gamers with the best free online games. All of our games are designed to provide young people with a better way to relax and have fun, with healthy gameplay and a wide range of styles waiting for your selection. When you are looking for fun through games, SoccerIns will be your faithful choice, offering you a more comprehensive range of games, the most diverse selection and as many new surprises as possible!",
       icons: [
         {
           src: "/icons/32.png",
