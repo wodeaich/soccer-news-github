@@ -1,8 +1,10 @@
 <template>
   <header class="header">
     <!-- logo -->
-    <CustomLink to="/games/" class="logo"></CustomLink>
-
+    <CustomLink to="/games/" class="logo-container">
+      <div class="logo"></div>
+      <div class="logo-text"></div>
+    </CustomLink>
     <div class="pc-menu">
       <!-- 下载到桌面 -->
       <div class="pc-pwa" v-if="showInstallButton" @click="installPWA">
@@ -108,9 +110,23 @@ export default {
     z-index: -1;
   }
 }
-.logo {
-  @include btn-img(220px, 56px, "logo.png");
+
+.logo-container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
+
+.logo {
+  @include btn-img(56px, 56px, "logo.png");
+  box-shadow: 5px 5px 4px 0px rgba(131, 169, 196, 0.3), -5px -5px 4px 0px #f8fdfd;
+  border-radius: 16px;
+}
+
+.logo-text {
+  @include btn-img(194px, 34px, "logo-text.png");
+}
+
 .pc-menu {
   width: 338px;
   display: flex;
@@ -170,13 +186,27 @@ export default {
       display: none;
     }
   }
+
   .pc-menu {
     display: none;
   }
-  .logo {
-    @include btn-img(vw(312), vw(80), "logo-text.png");
-    background-size: 100% 100%;
+
+  .logo-container {
+    gap: vw(16);
   }
+
+  .logo {
+    width: vw(64);
+    height: vw(64);
+    background-size: 100% 100%;
+    border-radius: vw(16);
+  }
+
+  .logo-text {
+    width: vw(194);
+    height: vw(34);
+  }
+
   .icon-logo {
     width: vw(55);
     height: vw(55);

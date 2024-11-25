@@ -182,7 +182,7 @@ export default {
   }
 }
 .logo {
-  width: 210px;
+  width: 198px;
   height: 56px;
   @include bg("Afs/logo.png");
 }
