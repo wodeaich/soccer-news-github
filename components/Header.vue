@@ -93,7 +93,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 64px;
+  height: 72px;
   position: relative;
   z-index: 1;
   background: $bg;
@@ -118,13 +118,13 @@ export default {
 }
 
 .logo {
-  @include btn-img(56px, 56px, "logo.png");
+  @include btn-img(50px, 50px, "logo.png");
   box-shadow: 5px 5px 4px 0px rgba(131, 169, 196, 0.3), -5px -5px 4px 0px #f8fdfd;
-  border-radius: 16px;
+  border-radius: 8px;
 }
 
 .logo-text {
-  @include btn-img(194px, 34px, "logo-text.png");
+  @include btn-img(97px, 17px, "logo-text.png");
 }
 
 .pc-menu {
@@ -203,8 +203,8 @@ export default {
   }
 
   .logo-text {
-    width: vw(194);
-    height: vw(34);
+    width: vw(135);
+    height: vw(25);
   }
 
   .icon-logo {
