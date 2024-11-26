@@ -25,7 +25,7 @@
         <!--eslint-enable-->
       </article>
       <Afs-Footer :lang="newInfo.language" />
-      <AdLoading />
+      <!-- <AdLoading /> -->
     </div>
   </div>
 </template>

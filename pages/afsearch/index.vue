@@ -11,7 +11,7 @@
         </section>
       </main>
       <Afs-Footer />
-      <AdLoading />
+      <!-- <AdLoading /> -->
     </div>
   </div>
 </template>

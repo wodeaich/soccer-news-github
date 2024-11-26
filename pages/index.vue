@@ -33,7 +33,7 @@
         </InfiniteScrollList1>
       </main>
       <Afs-Footer />
-      <AdLoading />
+      <!-- <AdLoading /> -->
     </div>
   </div>
 </template>

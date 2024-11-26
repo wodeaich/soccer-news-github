@@ -106,7 +106,7 @@
     </main>
     <Footer />
     <BackTop />
-    <AdLoading />
+    <!-- <AdLoading /> -->
   </div>
 </template>
 
