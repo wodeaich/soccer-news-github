@@ -3,67 +3,52 @@
   <head {{ HEAD_ATTRS }}>
     {{ HEAD }}
     <meta charset="UTF-8" />
+
+    <link rel="preload" href="https://securepubads.g.doubleclick.net/tag/js/gpt.js" as="script" />
+    <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
+
     <script>
-      (function () {
-        if ("PerformanceObserver" in window) {
-          const observer = new PerformanceObserver((list) => {
-            list.getEntries().forEach((entry) => {
-              if (entry.entryType === "resource" && entry.name.includes("adsbygoogle.js")) {
-                if (entry.responseStatus === 200) {
-                  console.log(
-                    `Resource loaded: ${entry.name} with initiatorType: ${entry.initiatorType}`
-                  );
-                  dataLayer.push({ event: "AL_0" });
-                }
-              }
-              if (
-                entry.entryType === "resource" &&
-                entry.initiatorType === "iframe" &&
-                entry.name.indexOf("adf=3025194257") !== -1
-              ) {
-                dataLayer.push({ event: "AL_1" });
-                console.log(
-                  `Resource loaded: ${entry.name} with initiatorType: ${entry.initiatorType}`
-                );
-                observer.disconnect();
-              }
-            });
-          });
+      window.googletag = window.googletag || { cmd: [] };
+      let interstitialSlot, anchorSlot;
 
-          observer.observe({ entryTypes: ["resource"] });
-        }
+      googletag.cmd.push(function () {
+        interstitialSlot = googletag.defineOutOfPageSlot(
+          "/23197833490/soccerins/soccerins_interstitial",
+          googletag.enums.OutOfPageFormat.INTERSTITIAL
+        );
 
-        const mutationObserver = new MutationObserver((mutations) => {
-          mutations.forEach((mutation) => {
-            if (mutation.type === "attributes") {
-              if (
-                mutation.target.matches("ins.adsbygoogle") &&
-                mutation.attributeName === "data-vignette-loaded"
-              ) {
-                dataLayer.push({ event: "AL_2" });
-                const value = mutation.target.getAttribute("data-vignette-loaded");
-                if (value === "true") {
-                  dataLayer.push({ event: "AL_3" });
-                  mutationObserver.disconnect();
-                }
+        if (interstitialSlot) {
+          interstitialSlot.addService(googletag.pubads()).setConfig({
+            interstitial: {
+              triggers: {
+                navBar: true,
+                unhideWindow: true
               }
             }
           });
-        });
+          googletag.pubads().addEventListener("slotOnload", (event) => {
+            if (interstitialSlot === event.slot) {
+              console.log("Interstitial is loaded.");
+            }
+          });
+        }
+        anchorSlot = googletag.defineOutOfPageSlot(
+          "/23197833490/soccerins/soccerins_anchor",
+          googletag.enums.OutOfPageFormat.BOTTOM_ANCHOR
+        );
 
-        mutationObserver.observe(document.documentElement, {
-          childList: true,
-          subtree: true,
-          attributes: true,
-          attributeFilter: ["data-vignette-loaded"]
-        });
-      })();
+        if (anchorSlot) {
+          anchorSlot.addService(googletag.pubads());
+        }
+        googletag.enableServices();
+      });
     </script>
-    <script
+
+    <!-- <script
       async
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1853000876464912"
       crossorigin="anonymous"
-    ></script>
+    ></script> -->
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4ZQQBJW72Y"></script>
     <script>
@@ -142,6 +127,11 @@
     <!-- End Google Tag Manager (noscript) -->
     {{ APP }}
     <script>
+      googletag.cmd.push(() => {
+        googletag.display(interstitialSlot);
+        googletag.display(anchorSlot);
+      });
+
       // 初始化标志变量
       window.isUnloaded = false;
       // 监听页面即将卸载事件
