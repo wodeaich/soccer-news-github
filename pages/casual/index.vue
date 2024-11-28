@@ -26,10 +26,20 @@
             >
             </ContentItemRow2>
             <!-- best-1: Google Ad 占位 1 -->
-            <GoogleAd ad-slot="2858514230" class="ad1" />
+            <!-- <GoogleAd ad-slot="2858514230" class="ad1" /> -->
+            <adm-slot
+              class="ad1"
+              adm-id="best-1"
+              adm-unit="/23197833490/soccerins/soccerins_module_1"
+            />
 
             <!-- best-2: Google Ad 占位 2 -->
-            <GoogleAd ad-slot="8110840910" class="ad2" />
+            <!-- <GoogleAd ad-slot="8110840910" class="ad2" /> -->
+            <adm-slot
+              class="ad2"
+              adm-id="best-2"
+              adm-unit="/23197833490/soccerins/soccerins_module_2"
+            />
           </template>
         </InfiniteScrollList>
       </section>

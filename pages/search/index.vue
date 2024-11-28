@@ -40,7 +40,8 @@
       </section>
 
       <!-- search-1: Google Ad 占位 1 -->
-      <GoogleAd ad-slot="1454551777" class="ad" />
+      <!-- <GoogleAd ad-slot="1454551777" class="ad" /> -->
+      <adm-slot class="ad" adm-id="search-1" adm-unit="/23197833490/soccerins/soccerins_search_1" />
 
       <div class="title-h2">
         <div class="title-button"> <i class="icon-rec" /> Recommend Games</div></div

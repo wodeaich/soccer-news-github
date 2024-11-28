@@ -6,7 +6,12 @@
         <h1 class="article-title">{{ newInfo.name }}</h1>
         <div class="news-detail">{{ newInfo.first_paragraph }}</div>
         <!-- <div id="relatedsearchesDivfeed1"> </div> -->
-        <GoogleAd ad-slot="1437640172" class="ad-1" />
+        <!-- <GoogleAd ad-slot="1437640172" class="ad-1" /> -->
+        <adm-slot
+          class="ad-1"
+          adm-id="detail-afs-1"
+          adm-unit="/23197833490/soccerins/soccerins_detail_afs1"
+        />
         <!-- <div class="read-more" :class="{ hide: readMore }" @click="readMore = true">
         {{ readMoreText[newInfo.language] }}
       </div> -->

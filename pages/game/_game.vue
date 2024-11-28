@@ -38,7 +38,8 @@
         </div>
       </section>
       <!-- detail-1: Google Ad 占位 1 -->
-      <GoogleAd ad-slot="7045171250" />
+      <!-- <GoogleAd ad-slot="7045171250" /> -->
+      <adm-slot adm-id="detail-1" adm-unit="/23197833490/soccerins/soccerins_detail_1" />
 
       <section class="table-content">
         <div class="table-info">
@@ -92,7 +93,8 @@
 
       <!-- detail-2: Google Ad 占位 2 -->
       <div ref="targetElement">
-        <GoogleAd ad-slot="8358252927" />
+        <!-- <GoogleAd ad-slot="8358252927" /> -->
+        <adm-slot adm-id="detail-2" adm-unit="/23197833490/soccerins/soccerins_detail_2" />
       </div>
 
       <section class="get-the-game">
@@ -143,7 +145,8 @@
 
       <aside class="box-aside">
         <!-- detail-r1: Google Ad 占位 2 -->
-        <GoogleAd ad-slot="7793230426" />
+        <!-- <GoogleAd ad-slot="7793230426" /> -->
+        <adm-slot adm-id="detail-3" adm-unit="/23197833490/soccerins/soccerins_detail_3" />
         <div class="title-h2">
           <div class="title-button"> <i class="icon-hot" /> Hot Games</div></div
         >
