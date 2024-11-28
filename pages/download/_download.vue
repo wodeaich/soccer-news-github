@@ -6,7 +6,7 @@
 
       <!-- download-1: Google Ad 占位 1 -->
       <!-- <GoogleAd ad-slot="3297497936" class="ad-1" /> -->
-      <adm-slot
+      <adm-slot-preload
         class="ad-1"
         adm-id="download-1"
         adm-unit="/23197833490/soccerins/soccerins_detail_1"

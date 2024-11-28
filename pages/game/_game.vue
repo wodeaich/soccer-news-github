@@ -39,7 +39,7 @@
       </section>
       <!-- detail-1: Google Ad 占位 1 -->
       <!-- <GoogleAd ad-slot="7045171250" /> -->
-      <adm-slot adm-id="detail-1" adm-unit="/23197833490/soccerins/soccerins_detail_1" />
+      <adm-slot-preload adm-id="detail-1" adm-unit="/23197833490/soccerins/soccerins_detail_1" />
 
       <section class="table-content">
         <div class="table-info">

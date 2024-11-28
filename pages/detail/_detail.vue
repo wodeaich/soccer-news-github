@@ -7,7 +7,7 @@
         <div class="news-detail">{{ newInfo.first_paragraph }}</div>
         <!-- <div id="relatedsearchesDivfeed1"> </div> -->
         <!-- <GoogleAd ad-slot="1437640172" class="ad-1" /> -->
-        <adm-slot
+        <adm-slot-preload
           class="ad-1"
           adm-id="detail-afs-1"
           adm-unit="/23197833490/soccerins/soccerins_detail_afs1"
