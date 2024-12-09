@@ -10,7 +10,7 @@
         <adm-slot-preload
           class="ad-1"
           adm-id="detail-afs-1"
-          adm-unit="/23197833490/soccerins/soccerins_detail_afs1"
+          adm-unit="/23197833490/soccerins/soccerins_detail_afs0"
         />
         <!-- <div class="read-more" :class="{ hide: readMore }" @click="readMore = true">
         {{ readMoreText[newInfo.language] }}
@@ -26,7 +26,8 @@
           preload
         />
         <!-- eslint-disable vue/no-v-html -->
-        <div class="news-detail" :class="{ show: readMore }" v-html="newInfo.content"></div>
+        <!-- <div class="news-detail" :class="{ show: readMore }" v-html="newInfo.content"></div> -->
+        <Afs-ArticleWithAdm :class="{ show: readMore }" :content="newInfo.content" />
         <!--eslint-enable-->
       </article>
       <Afs-Footer :lang="newInfo.language" />
