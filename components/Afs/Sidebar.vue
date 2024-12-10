@@ -7,7 +7,7 @@
       <div class="search-box">
         <input
           v-model="input"
-          :placeholder="searchText[lang] || searchText[en]"
+          :placeholder="searchText[lang] || searchText['en']"
           class="search"
           name="search"
           @keyup.enter="search"
@@ -16,7 +16,7 @@
         <i class="icon-search" @click="search"></i>
       </div>
 
-      <h2 class="title-h2">{{ categoryText[lang] || categoryText[en] }}</h2>
+      <h2 class="title-h2">{{ categoryText[lang] || categoryText["en"] }}</h2>
       <ul class="categories">
         <li v-for="(item, i) in navData.list" :key="i">
           <Afs-CustomLink :to="`/category/${item.path}/`">{{
@@ -30,7 +30,7 @@
 
       <div v-if="showInstallButton" class="btn-download" @click="installPWA">
         <i class="icon-pwa"></i>
-        <span>{{ downloadText[lang] || downloadText[en] }}</span>
+        <span>{{ downloadText[lang] || downloadText["en"] }}</span>
       </div>
     </div>
   </div>

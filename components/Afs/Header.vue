@@ -19,7 +19,7 @@
     <div class="search-box">
       <input
         v-model="input"
-        :placeholder="searchText[lang] || searchText[en]"
+        :placeholder="searchText[lang] || searchText['en']"
         class="search"
         name="search"
         ref="searchInput"
@@ -31,7 +31,7 @@
     </div>
 
     <div class="category"
-      >{{ categoryText[lang] || categoryText[en] }}
+      >{{ categoryText[lang] || categoryText["en"] }}
       <ul class="dropdown">
         <li v-for="(item, i) in navData.list" :key="i">
           <Afs-CustomLink :to="`/category/${item.path}/`"
