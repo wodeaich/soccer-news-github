@@ -25,23 +25,23 @@ export default {
         {
           id: "detail-1",
           slot: "/23197833490/soccerins/soccerins_detail_afs1"
-        },
-        {
-          id: "detail-2",
-          slot: "/23197833490/soccerins/soccerins_detail_afs2"
-        },
-        {
-          id: "detail-3",
-          slot: "/23197833490/soccerins/soccerins_detail_afs3"
-        },
-        {
-          id: "detail-4",
-          slot: "/23197833490/soccerins/soccerins_detail_afs4"
-        },
-        {
-          id: "detail-5",
-          slot: "/23197833490/soccerins/soccerins_detail_afs5"
         }
+        // {
+        //   id: "detail-2",
+        //   slot: "/23197833490/soccerins/soccerins_detail_afs2"
+        // },
+        // {
+        //   id: "detail-3",
+        //   slot: "/23197833490/soccerins/soccerins_detail_afs3"
+        // },
+        // {
+        //   id: "detail-4",
+        //   slot: "/23197833490/soccerins/soccerins_detail_afs4"
+        // },
+        // {
+        //   id: "detail-5",
+        //   slot: "/23197833490/soccerins/soccerins_detail_afs5"
+        // }
       ]
     }
   },
