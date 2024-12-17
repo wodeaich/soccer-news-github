@@ -56,7 +56,7 @@ export default {};
   height: vw(64);
 
   position: relative;
-  margin-left: vw(6);
+  margin-left: vw(12);
 }
 .football-shadow {
   position: absolute;
@@ -68,19 +68,20 @@ export default {};
   bottom: vw(6);
   left: 50%;
   transform: translateX(-50%);
-  animation: shadow 0.8s infinite ease-in-out;
+  animation: shadow 1.2s infinite ease-in-out;
 }
 .football-icon {
   @include icon(vw(66), vw(66), "icon-football.png");
   position: relative;
   bottom: vw(12);
-  animation: bounce 0.8s infinite ease-in-out;
+  animation: bounce 1.2s infinite ease-in-out;
 }
 .football-text {
   font-family: seb;
-  font-size: vw(28);
+  font-size: vw(34);
   color: #fff;
-  margin-left: vw(16);
+  margin-left: vw(6);
+  margin-bottom: vw(8);
 }
 .football-arrow {
   @include icon(vw(48), vw(48), "icon-football-arrow.png");
