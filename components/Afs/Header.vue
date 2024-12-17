@@ -18,17 +18,20 @@
 
     <div class="search-box">
       <input
+        ref="searchInput"
         v-model="input"
         :placeholder="searchText[lang] || searchText['en']"
         class="search"
         name="search"
-        ref="searchInput"
         @keyup.enter="search"
       />
 
       <i v-show="input != ''" class="icon-clear" @click="clear"></i>
       <i class="icon-search" @click="search"></i>
     </div>
+
+    <!-- 足球入口 -->
+    <Afs-Football />
 
     <div class="category"
       >{{ categoryText[lang] || categoryText["en"] }}
@@ -372,6 +375,7 @@ export default {
     margin-right: vw(48);
   }
   .search-box {
+    display: none;
     max-width: vw(450);
     height: vw(64);
     // box-shadow: inset 5px 5px 4px 0px rgba(131, 169, 196, 0.3), inset -5px -5px 4px 0px #f8fdfd;
