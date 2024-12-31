@@ -3,8 +3,8 @@
     <NuxtImg
       format="auto"
       fit="cover"
-      :width="index === 0 ? '720' : '480'"
-      :height="index === 0 ? '456' : '304'"
+      :width="index === 0 ? '658' : '480'"
+      :height="index === 0 ? '400' : '304'"
       :src="item.cover"
       :alt="item.name"
       loading="lazy"
@@ -44,7 +44,7 @@ export default {
   bottom: 0;
   width: 100%;
   padding: 16px;
-  background: rgba(0, 0, 0, 0.2);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.4) 100%);
   border-radius: 0 0 8px 8px;
 
   font-size: 26px;
@@ -56,7 +56,7 @@ export default {
 }
 @media screen and (max-width: 750px) {
   .item {
-    height: vw(440);
+    height: vw(400);
   }
   .img {
     width: 100%;

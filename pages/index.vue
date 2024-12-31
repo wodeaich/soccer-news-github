@@ -3,13 +3,46 @@
     <div class="page-afs home-page">
       <Afs-Header />
       <main class="main">
-        <section class="news-style-1">
+        <section v-swiper:mySwiper="swiperOption" class="swiper-box pc-hidden">
+          <div class="swiper-wrapper">
+            <afs-news-item-1
+              v-for="(item, i) in recNews.list"
+              :key="i"
+              :item="item"
+              :index="i"
+              class="swiper-slide"
+            >
+            </afs-news-item-1>
+          </div>
+        </section>
+
+        <section class="news-style-1 m-hidden">
           <afs-news-item-1 v-for="(item, i) in recNews.list" :key="i" :item="item" :index="i">
           </afs-news-item-1
         ></section>
+
         <h2 class="title-h2-afs">Trending</h2>
         <section class="news-box-1">
-          <afs-news-item-5 v-for="(item, i) in trendingNews.list" :key="i" :item="item">
+          <afs-news-item-5 :item="trendingNews.list[0]"> </afs-news-item-5>
+          <div class="afs-games">
+            <CustomLink
+              v-for="(item, i) in afsGames"
+              :key="i"
+              class="afs-game"
+              :to="`/game/${item.path}/`"
+            >
+              <NuxtImg
+                format="auto"
+                fit="cover"
+                width="280"
+                height="280"
+                :src="item.icon"
+                :alt="item.name"
+                style="width: 100%; height: 100%"
+              />
+            </CustomLink>
+          </div>
+          <afs-news-item-5 v-for="(item, i) in trendingNews.list.slice(1)" :key="i" :item="item">
           </afs-news-item-5>
         </section>
 
@@ -39,41 +72,55 @@
 </template>
 
 <script>
+import { directive } from "vue-awesome-swiper";
+import "swiper/css/swiper.min.css";
 import { simulateAFSSearch } from "~/utils/utils";
 
 export default {
+  directives: {
+    swiper: directive
+  },
   async asyncData({ $axios, env }) {
     try {
       // 并行处理多个异步请求
-      const [recNewsResponse, trendingNewsResponse, allNewsResponse] = await Promise.all([
-        $axios.$get("/api/article/menu", {
-          params: {
-            site_id: env.SITE_AFS,
-            mod_id: "rec",
-            size: 3
-          }
-        }),
-        $axios.$get("/api/article/menu", {
-          params: {
-            site_id: env.SITE_AFS,
-            mod_id: "trending",
-            size: 6
-          }
-        }),
-        $axios.$get("/api/article/menu", {
-          params: {
-            site_id: env.SITE_AFS,
-            mod_id: "all",
-            size: 10
-          }
-        })
-      ]);
+      const [recNewsResponse, trendingNewsResponse, allNewsResponse, afsGameResponse] =
+        await Promise.all([
+          $axios.$get("/api/article/menu", {
+            params: {
+              site_id: env.SITE_AFS,
+              mod_id: "rec",
+              size: 3
+            }
+          }),
+          $axios.$get("/api/article/menu", {
+            params: {
+              site_id: env.SITE_AFS,
+              mod_id: "trending",
+              size: 6
+            }
+          }),
+          $axios.$get("/api/article/menu", {
+            params: {
+              site_id: env.SITE_AFS,
+              mod_id: "all",
+              size: 10
+            }
+          }),
+          $axios.$get("/api/game/menu", {
+            params: {
+              site_id: env.SITE_ID,
+              mod_id: "doings",
+              size: 4
+            }
+          })
+        ]);
 
       // 返回多个接口的数据
       return {
         recNews: recNewsResponse,
         trendingNews: trendingNewsResponse,
-        allNews: allNewsResponse
+        allNews: allNewsResponse,
+        afsGames: afsGameResponse.list
       };
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -82,7 +129,6 @@ export default {
   data() {
     return {
       swiperOption: {
-        slidesPerView: "auto",
         autoplay: {
           delay: 3000
         }
@@ -114,7 +160,25 @@ export default {
   padding-bottom: 32px;
   border-bottom: 1px solid #ececee;
 }
+.pc-hidden {
+  display: none !important;
+}
+.m-hidden {
+  display: grid !important;
+}
+.swiper-box {
+  position: relative;
+  overflow: hidden;
+  border-radius: vw(16);
 
+  .swiper-slide {
+    width: 100%;
+    overflow: hidden;
+  }
+}
+.afs-games {
+  display: none;
+}
 .news-style-1 {
   display: grid;
   gap: 24px;
@@ -142,9 +206,26 @@ export default {
   }
 }
 @media screen and (max-width: 750px) {
+  .pc-hidden {
+    display: block !important;
+  }
+
+  .m-hidden {
+    display: none !important;
+  }
   .main {
     padding-bottom: vw(32);
     border-bottom: none;
+  }
+  .afs-games {
+    display: flex;
+    gap: vw(32);
+    .afs-game {
+      width: vw(140);
+      height: vw(140);
+      border-radius: vw(8);
+      overflow: hidden;
+    }
   }
 
   .news-style-1 {

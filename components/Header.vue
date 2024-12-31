@@ -7,7 +7,7 @@
     </CustomLink>
     <div class="pc-menu">
       <!-- 下载到桌面 -->
-      <div class="pc-pwa" v-if="showInstallButton" @click="installPWA">
+      <div v-if="showInstallButton" class="pc-pwa" @click="installPWA">
         <i class="icon-pc-pwa"></i>TO DESKTOP
       </div>
 
@@ -18,12 +18,16 @@
     </div>
 
     <!-- 下载到桌面 -->
-    <div class="pwa-download" v-if="showInstallButton" @click="installPWA">
+    <div v-if="showInstallButton" class="pwa-download" @click="installPWA">
       <i class="icon-pwa"></i>
     </div>
 
     <!-- 移动 搜索 -->
-    <CustomLink class="m-search" to="/search/"></CustomLink>
+    <!-- <CustomLink class="m-search" to="/search/"></CustomLink> -->
+    <CustomLink class="afs" to="/">
+      <img src="~/assets/images/afs.gif" alt="search" />
+      <i class="icon-afs-right"></i>
+    </CustomLink>
   </header>
 </template>
 
@@ -31,18 +35,18 @@
 import { simulateSearch } from "~/utils/utils";
 
 export default {
+  props: {
+    currentPath: {
+      type: String,
+      required: true
+    }
+  },
   data() {
     return {
       input: "",
       deferredPrompt: null,
       showInstallButton: false
     };
-  },
-  props: {
-    currentPath: {
-      type: String,
-      required: true
-    }
   },
   mounted() {
     // 判断是否支持 PWA
@@ -119,7 +123,9 @@ export default {
 
 .logo {
   @include btn-img(50px, 50px, "logo.png");
-  box-shadow: 5px 5px 4px 0px rgba(131, 169, 196, 0.3), -5px -5px 4px 0px #f8fdfd;
+  box-shadow:
+    5px 5px 4px 0px rgba(131, 169, 196, 0.3),
+    -5px -5px 4px 0px #f8fdfd;
   border-radius: 8px;
 }
 
@@ -140,7 +146,9 @@ export default {
   border-radius: 50px;
   align-items: center;
   justify-content: center;
-  box-shadow: 3px 3px 3px 0px rgba(131, 169, 196, 0.3), -3px -3px 3px 0px #f8fdfd;
+  box-shadow:
+    3px 3px 3px 0px rgba(131, 169, 196, 0.3),
+    -3px -3px 3px 0px #f8fdfd;
   border: 1px solid #68dfc3;
   font-family: seb;
   font-size: 14px;
@@ -164,12 +172,17 @@ export default {
   border-radius: 50px;
   font-family: seb;
   color: #ffffff;
-  box-shadow: 3px 3px 3px 0px rgba(131, 169, 196, 0.3), -3px -3px 3px 0px #f8fdfd;
+  box-shadow:
+    3px 3px 3px 0px rgba(131, 169, 196, 0.3),
+    -3px -3px 3px 0px #f8fdfd;
   margin-left: 32px;
   cursor: pointer;
 }
 
 .m-search {
+  display: none;
+}
+.afs {
   display: none;
 }
 @media screen and (max-width: 879px) {
@@ -181,7 +194,9 @@ export default {
     height: vw(96);
     padding: 0 vw(46);
     z-index: 10;
-    box-shadow: 5px 5px 4px 0px rgba(131, 169, 196, 0.3), -5px -5px 4px 0px #f8fdfd;
+    box-shadow:
+      5px 5px 4px 0px rgba(131, 169, 196, 0.3),
+      -5px -5px 4px 0px #f8fdfd;
     &:before {
       display: none;
     }
@@ -241,6 +256,18 @@ export default {
     display: block;
     @include icon(vw(48), vw(48), "icon-search2.png");
     margin-left: vw(52);
+  }
+  .afs {
+    display: flex;
+    align-items: center;
+    img {
+      width: vw(144);
+      height: vw(144);
+    }
+    i {
+      @include icon(vw(48), vw(48), "icon-afs-right.png");
+      margin-left: vw(-42);
+    }
   }
 }
 </style>

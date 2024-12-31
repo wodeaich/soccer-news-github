@@ -3,8 +3,8 @@
     <NuxtImg
       format="auto"
       fit="cover"
-      width="480"
-      height="304"
+      width="658"
+      height="400"
       :src="item.cover"
       :alt="item.name"
       loading="lazy"
@@ -56,14 +56,14 @@ export default {
   }
   .img {
     width: 100%;
-    height: vw(440);
+    height: vw(400);
     border-radius: vw(16);
   }
   .title {
     position: absolute;
     bottom: 0;
     @include center;
-    background: rgba(0, 0, 0, 0.2);
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.4) 100%);
     font-size: vw(36);
     line-height: vw(52);
     width: 100%;
