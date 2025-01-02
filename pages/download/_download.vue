@@ -119,6 +119,7 @@
     <Footer />
     <BackTop />
     <!-- <AdLoading /> -->
+    <Dotlottie />
   </div>
 </template>
 

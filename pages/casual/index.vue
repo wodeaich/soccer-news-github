@@ -69,6 +69,7 @@
     </main>
     <Footer />
     <BackTop />
+    <Dotlottie />
   </div>
 </template>
 

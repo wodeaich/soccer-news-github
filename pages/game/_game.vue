@@ -161,6 +161,7 @@
     </main>
     <Footer />
     <BackTop />
+    <Dotlottie />
     <!-- <AdLoading /> -->
   </div>
 </template>

@@ -68,6 +68,7 @@
       <Afs-Footer />
       <!-- <AdLoading /> -->
     </div>
+    <Dotlottie />
   </div>
 </template>
 

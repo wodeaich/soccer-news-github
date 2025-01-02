@@ -33,6 +33,7 @@
       <Afs-Footer :lang="newInfo.language" />
       <!-- <AdLoading /> -->
     </div>
+    <Dotlottie />
   </div>
 </template>
 
