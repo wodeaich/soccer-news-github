@@ -17,20 +17,12 @@
     </div>
     <div class="game-list">
       <CustomLink
-        v-for="afsGame in afsGames.slice(1)"
+        v-for="(afsGame, i) in afsGames.slice(1)"
         :key="afsGame.id"
         :to="`/game/${afsGame.path}/`"
         class="game-item"
       >
-        <NuxtImg
-          format="auto"
-          fit="cover"
-          width="148"
-          height="148"
-          :src="afsGame.icon"
-          :alt="afsGame.name"
-          class="icon"
-        />
+        <img :src="`/images/star-${i + 1}.png`" :alt="afsGame.name" class="icon" />
       </CustomLink>
     </div>
   </div>
@@ -78,7 +70,7 @@ export default {
   background-size: vw(750) vw(1488);
   background-color: #083508;
   background-repeat: no-repeat;
-  padding-top: vw(318);
+  padding-top: vw(172);
   .back {
     position: absolute;
     top: vw(20);
@@ -92,15 +84,19 @@ export default {
   }
   .play-now {
     display: flex;
-    width: vw(480);
-    height: vw(100);
+    justify-content: center;
+    align-items: end;
+    width: vw(680);
+    height: vw(392);
     @include bg("/landing/play.png");
+    background-size: vw(480) vw(100);
+    background-position: center;
+    background-repeat: no-repeat;
     align-items: center;
     margin: 0 auto;
     font-size: vw(42);
     font-family: "seb";
     color: #fff;
-    padding-left: vw(106);
   }
   .button {
     padding-bottom: vw(6);
@@ -126,7 +122,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: vw(156) vw(46) 0;
+    margin: vw(10) vw(46) 0;
     .type-item {
       display: flex;
       align-items: center;
@@ -229,7 +225,7 @@ export default {
   }
 
   .game-item {
-    animation: breathe 1.5s ease-in-out infinite;
+    animation: breathe 3s ease-in-out infinite;
 
     &:nth-child(1) {
       animation-delay: 0s;
