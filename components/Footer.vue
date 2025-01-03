@@ -39,7 +39,7 @@
           ><CustomLink to="/cookies.html" target="_blank">Cookies Policy</CustomLink>
           <a href="mailto:Service@SoccerIns.com">Contact</a>
         </div>
-        <span>Copyright ©&nbsp; 2024 SoccerIns &nbsp;All rights reserved.</span>
+        <span>Copyright ©&nbsp; 2025 SoccerIns &nbsp;All rights reserved.</span>
       </div>
     </div>
     <Notification v-if="showNotification" :message="notificationMessage" />
@@ -131,7 +131,8 @@ export default {
     color: $item-name;
     height: 48px;
     border-radius: 38px;
-    box-shadow: inset 3px 3px 4px 0px rgba(196, 212, 223, 0.8),
+    box-shadow:
+      inset 3px 3px 4px 0px rgba(196, 212, 223, 0.8),
       inset -3px -3px 4px 0px rgba(248, 253, 253, 0.6);
     background: #f0f2f5;
     &::placeholder {
