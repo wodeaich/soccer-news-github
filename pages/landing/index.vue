@@ -52,7 +52,9 @@ export default {
   },
   methods: {
     handleBack() {
-      if (window.history.length > 1) {
+      if (!window.location.href.includes("from=")) {
+        this.$router.push("/");
+      } else if (window.history.length > 1) {
         window.history.back();
       } else {
         this.$router.push("/");
