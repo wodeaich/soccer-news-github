@@ -26,9 +26,6 @@ export default function ({ $axios, redirect }) {
       const res = response.data;
       if (res.success === true) {
         return res;
-      } else {
-        redirect("/404");
-        // if the custom code is not 200, it is judged as an error.
       }
       return Promise.reject(new Error(res.msg || "Error"));
     },
@@ -37,13 +34,4 @@ export default function ({ $axios, redirect }) {
       return Promise.reject(error);
     }
   );
-
-  $axios.onError((error) => {
-    const code = parseInt(error.response && error.response.status);
-    if (code === 400) {
-      redirect("/404");
-    } else if (code === 500) {
-      redirect("/500");
-    }
-  });
 }
