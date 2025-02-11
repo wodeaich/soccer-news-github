@@ -7,11 +7,11 @@
     </CustomLink>
     <div class="type">
       <CustomLink to="/" class="type-item type-news">
-        <span> Soccer News </span>
+        <span> Soccer<br />News ></span>
         <img src="~/assets/images/landing/btn-1.png" alt="news" />
       </CustomLink>
       <CustomLink to="/games/" class="type-item type-games">
-        <span> Soccer Games </span>
+        <span> Soccer<br />Games ></span>
         <img src="~/assets/images/landing/btn-2.png" alt="games" />
       </CustomLink>
     </div>
@@ -24,6 +24,14 @@
       >
         <img :src="`/images/star-${i + 1}.png`" :alt="afsGame.name" class="icon" />
       </CustomLink>
+      <dotlottie-player
+        autoplay
+        loop
+        mode="normal"
+        src="/hand.lottie"
+        class="lottie-hand"
+        data-bm-renderer="svg"
+      ></dotlottie-player>
     </div>
   </div>
 </template>
@@ -130,13 +138,11 @@ export default {
       align-items: center;
       width: vw(312);
       height: vw(126);
-      background: rgba(255, 255, 255, 0.3);
-      backdrop-filter: blur(vw(4));
-      -webkit-backdrop-filter: blur(vw(10));
-      box-shadow: 0px vw(8) vw(18) 0px rgba(0, 0, 0, 0.45);
+      background: linear-gradient(136deg, #599800 0%, #99d001 100%);
+      border: vw(2) solid #fff;
       border-radius: vw(20);
-      border: vw(2) solid rgba(255, 255, 255, 0.2);
       padding-left: vw(22);
+      position: relative;
       span {
         font-size: vw(32);
         color: #fff;
@@ -147,6 +153,9 @@ export default {
         width: vw(188);
         height: vw(160);
         align-self: end;
+        position: absolute;
+        right: 0;
+        bottom: 0;
       }
     }
   }
@@ -155,8 +164,39 @@ export default {
     width: vw(690);
     height: vw(664);
     margin: vw(44) auto 0;
+    .lottie-hand {
+      position: absolute;
+      top: vw(120);
+      left: vw(520);
+      width: vw(70);
+      height: vw(70);
+      z-index: 2;
+      &::before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 50%;
+        animation: ripple 2s infinite;
+        left: vw(-8);
+        top: vw(-24);
+      }
+
+      @keyframes ripple {
+        0% {
+          transform: scale(0.8);
+          opacity: 0.7;
+        }
+        100% {
+          transform: scale(1.5);
+          opacity: 0;
+        }
+      }
+    }
     .game-item {
       position: absolute;
+      z-index: 2;
       img {
         border: vw(6) solid #ffffff;
         border-radius: 50%;
@@ -213,7 +253,7 @@ export default {
   }
   @keyframes breathe {
     0% {
-      transform: scale(1);
+      transform: scale(0.8);
       opacity: 1;
     }
     50% {
@@ -221,7 +261,7 @@ export default {
       opacity: 1;
     }
     100% {
-      transform: scale(1);
+      transform: scale(0.8);
       opacity: 1;
     }
   }
