@@ -1,37 +1,41 @@
 <template>
   <div class="landing-page">
-    <div class="back" @click="handleBack"></div>
-    <CustomLink class="play-now" :to="`/game/${afsGames[0].path}/`">
-      <div class="button">Play Now</div>
-      <i class="right"></i>
-    </CustomLink>
-    <div class="type">
-      <CustomLink to="/" class="type-item type-news">
-        <span> Soccer<br />News ></span>
-        <img src="~/assets/images/landing/btn-1.png" alt="news" />
+    <div class="bg-top">
+      <div class="back" @click="handleBack"></div>
+      <CustomLink class="play-now" :to="`/game/${afsGames[0].path}/`">
+        <div class="button">Play Now</div>
+        <i class="right"></i>
       </CustomLink>
-      <CustomLink to="/games/" class="type-item type-games">
-        <span> Soccer<br />Games ></span>
-        <img src="~/assets/images/landing/btn-2.png" alt="games" />
-      </CustomLink>
+      <div class="type">
+        <CustomLink to="/" class="type-item type-news">
+          <span> Soccer<br />News ></span>
+          <img src="~/assets/images/landing/btn-1.png" alt="news" />
+        </CustomLink>
+        <CustomLink to="/games/" class="type-item type-games">
+          <span> Soccer<br />Games ></span>
+          <img src="~/assets/images/landing/btn-2.png" alt="games" />
+        </CustomLink>
+      </div>
     </div>
-    <div class="game-list">
-      <CustomLink
-        v-for="(afsGame, i) in afsGames.slice(1)"
-        :key="afsGame.id"
-        :to="`/game/${afsGame.path}/`"
-        class="game-item"
-      >
-        <img :src="`/images/star-${i + 1}.png`" :alt="afsGame.name" class="icon" />
-      </CustomLink>
-      <dotlottie-player
-        autoplay
-        loop
-        mode="normal"
-        src="/hand.lottie"
-        class="lottie-hand"
-        data-bm-renderer="svg"
-      ></dotlottie-player>
+    <div class="bg-bottom">
+      <div class="game-list">
+        <CustomLink
+          v-for="(afsGame, i) in afsGames.slice(1)"
+          :key="afsGame.id"
+          :to="`/game/${afsGame.path}/`"
+          class="game-item"
+        >
+          <img :src="`/images/star-${i + 1}.png`" :alt="afsGame.name" class="icon" />
+        </CustomLink>
+        <dotlottie-player
+          autoplay
+          loop
+          mode="normal"
+          src="/hand.lottie"
+          class="lottie-hand"
+          data-bm-renderer="svg"
+        ></dotlottie-player>
+      </div>
     </div>
   </div>
 </template>
@@ -76,11 +80,19 @@ export default {
 .landing-page {
   min-height: 100vh;
   height: vw(1488);
-  @include bg("/landing/bg.jpeg");
-  background-size: vw(750) vw(1488);
   background-color: #083508;
   background-repeat: no-repeat;
-  padding-top: vw(172);
+  .bg-top {
+    width: vw(750);
+    height: vw(744);
+    @include bg("/landing/bg-top.jpg");
+    padding-top: vw(172);
+  }
+  .bg-bottom {
+    width: vw(750);
+    height: vw(744);
+    @include bg("/landing/bg-bottom.jpg");
+  }
   .back {
     position: absolute;
     top: vw(20);
