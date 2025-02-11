@@ -2,7 +2,7 @@
   <div class="landing-page">
     <div class="bg-top">
       <div class="back" @click="handleBack"></div>
-      <CustomLink class="play-now" :to="`/game/${afsGames[0].path}/`">
+      <CustomLink class="play-now" to="/games/">
         <div class="button">Play Now</div>
         <i class="right"></i>
       </CustomLink>
@@ -22,19 +22,21 @@
         <CustomLink
           v-for="(afsGame, i) in afsGames.slice(1)"
           :key="afsGame.id"
-          :to="`/game/${afsGame.path}/`"
+          to="/games/"
           class="game-item"
         >
           <img :src="`/images/star-${i + 1}.png`" :alt="afsGame.name" class="icon" />
         </CustomLink>
-        <dotlottie-player
-          autoplay
-          loop
-          mode="normal"
-          src="/hand.lottie"
-          class="lottie-hand"
-          data-bm-renderer="svg"
-        ></dotlottie-player>
+        <CustomLink class="game-item-hand game-item" to="/games/">
+          <dotlottie-player
+            autoplay
+            loop
+            mode="normal"
+            src="/hand.lottie"
+            class="lottie-hand"
+            data-bm-renderer="svg"
+          ></dotlottie-player>
+        </CustomLink>
       </div>
     </div>
   </div>
@@ -209,6 +211,9 @@ export default {
     .game-item {
       position: absolute;
       z-index: 2;
+      &.game-item-hand {
+        animation: none !important;
+      }
       img {
         border: vw(6) solid #ffffff;
         border-radius: 50%;
