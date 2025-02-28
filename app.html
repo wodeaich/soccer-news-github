@@ -1,8 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
   <head {{ HEAD_ATTRS }}>
-    {{ HEAD }}
     <meta charset="UTF-8" />
+    {{ HEAD }}
+    <script>
+      let hasObserver = 0;
+      (function () {
+        const mutationObserver = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.type === "attributes") {
+              if (
+                mutation.attributeName === "data-anchor-status" &&
+                mutation.target.id.includes("_anchor_0")
+              ) {
+                hasObserver += 1;
+
+                let targetElements = document.querySelectorAll(
+                  '[data-anchor-status="displayed"], [data-anchor-shown="true"]'
+                );
+
+                // 创建一个 IntersectionObserver 实例
+                let observer = new IntersectionObserver(
+                  (entries, observer) => {
+                    entries.forEach((entry) => {
+                      if (entry.isIntersecting) {
+                        if (
+                          entry.boundingClientRect.top == 0 &&
+                          entry.boundingClientRect.bottom > 0
+                        ) {
+                          /* 获取body的padding高度 */
+                          const body = document.body;
+                          if (body) {
+                            const bodyPaddingTop = parseInt(
+                              window.getComputedStyle(body).paddingTop
+                            );
+                            if (bodyPaddingTop) {
+                              window.scrollBy(0, -bodyPaddingTop);
+                            }
+                          }
+                        }
+                        observer.disconnect();
+                      }
+                    });
+                  },
+                  {
+                    root: null, // 使用默认的视口（即浏览器窗口）
+                    rootMargin: "0px", // 可选的视口边距
+                    threshold: 0.1 // 触发回调的阈值，表示元素与视口交集的比例
+                  }
+                );
+
+                // 启动观察
+                targetElements?.forEach((element) => {
+                  observer.observe(element); // 观察每个符合条件的元素
+                });
+
+                if (hasObserver === 2) {
+                  mutationObserver.disconnect();
+                }
+              }
+            }
+          });
+        });
+
+        mutationObserver.observe(document.documentElement, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+          attributeFilter: ["data-anchor-status"]
+        });
+      })();
+    </script>
 
     <link rel="preload" href="https://securepubads.g.doubleclick.net/tag/js/gpt.js" as="script" />
     <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
@@ -34,7 +102,7 @@
         }
         anchorSlot = googletag.defineOutOfPageSlot(
           "/23197833490/compsoccer/compsoccer_anchor",
-          googletag.enums.OutOfPageFormat.BOTTOM_ANCHOR
+          googletag.enums.OutOfPageFormat.TOP_ANCHOR
         );
 
         if (anchorSlot) {
@@ -160,6 +228,13 @@
           window.clickOpen = 1;
           // 触发穿插
           dataLayer.push({ event: "C_AL" });
+          if (
+            window.location.hostname !== "www.compsoccer.com" &&
+            window.location.hostname !== "compsoccer.com"
+          ) {
+            // 清除穿插缓存
+            localStorage.removeItem("__lsv__");
+          }
         }
       });
       // 监听消息事件
