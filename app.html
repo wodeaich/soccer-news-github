@@ -44,11 +44,11 @@
       });
     </script>
 
-    <!-- <script
+    <script
       async
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1853000876464912"
       crossorigin="anonymous"
-    ></script> -->
+    ></script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4ZQQBJW72Y"></script>
     <script>
@@ -128,10 +128,10 @@
     <!-- End Google Tag Manager (noscript) -->
     {{ APP }}
     <script>
-      googletag.cmd.push(() => {
-        googletag.display(interstitialSlot);
-        googletag.display(anchorSlot);
-      });
+      // googletag.cmd.push(() => {
+      //   googletag.display(interstitialSlot);
+      //   googletag.display(anchorSlot);
+      // });
 
       // 初始化标志变量
       window.isUnloaded = false;
@@ -155,12 +155,36 @@
         window.isUnloaded = true;
       });
       // 监听 hash 变化事件 --- 判断穿插全屏广告出现
-      window.addEventListener("hashchange", () => {
-        if ("#google_vignette" == window.location.hash) {
-          window.clickOpen = 1;
-          // 触发穿插
-          dataLayer.push({ event: "C_AL" });
+      // window.addEventListener("hashchange", () => {
+      //   if ("#google_vignette" == window.location.hash) {
+      //     window.clickOpen = 1;
+      //     // 触发穿插
+      //     dataLayer.push({ event: "C_AL" });
+      //   }
+      // });
+      new MutationObserver((mutations, observer) => {
+        const interstitialAdElement = document.querySelector('ins[data-vignette-loaded="true"]');
+        if (interstitialAdElement) {
+          const mutationObserver = new MutationObserver(() => {
+            var adDisplay = window.getComputedStyle(interstitialAdElement).display;
+            if (!("block" !== adDisplay && "flex" !== adDisplay)) {
+              window.clickOpen = 1;
+              dataLayer.push({
+                event: "C_AL",
+              });
+
+              mutationObserver.disconnect();
+            }
+          });
+          mutationObserver.observe(interstitialAdElement, {
+            attributes: true,
+            attributeFilter: ["style"]
+          });
+          observer.disconnect();
         }
+      }).observe(document.body, {
+        childList: true,
+        subtree: true
       });
       // 监听消息事件
       window.addEventListener("message", (event) => {
@@ -178,8 +202,7 @@
           sourceAttribute = activeElement.getAttribute("name");
         if (
           sourceAttribute &&
-          -1 !== sourceAttribute.indexOf("google_ads_iframe_/23197833490") &&
-          -1 === sourceAttribute.indexOf("anchor_0")
+          -1 !== sourceAttribute.indexOf("google_ads_iframe_/23197833490")
         ) {
           let adStatus = "false";
           if (activeElement) {
