@@ -1,54 +1,8 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head {{ HEAD_ATTRS }}>
     {{ HEAD }}
     <meta charset="UTF-8" />
-
-    <link rel="preload" href="https://securepubads.g.doubleclick.net/tag/js/gpt.js" as="script" />
-    <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
-
-    <script>
-      window.googletag = window.googletag || { cmd: [] };
-      let interstitialSlot, anchorSlot;
-
-      googletag.cmd.push(function () {
-        interstitialSlot = googletag.defineOutOfPageSlot(
-          "/23197833490/soccerins/soccerins_interstitial",
-          googletag.enums.OutOfPageFormat.INTERSTITIAL
-        );
-
-        if (interstitialSlot) {
-          interstitialSlot.addService(googletag.pubads()).setConfig({
-            interstitial: {
-              triggers: {
-                navBar: true,
-                unhideWindow: true
-              }
-            }
-          });
-          googletag.pubads().addEventListener("slotOnload", (event) => {
-            if (interstitialSlot === event.slot) {
-              console.log("Interstitial is loaded.");
-            }
-          });
-        }
-        anchorSlot = googletag.defineOutOfPageSlot(
-          "/23197833490/soccerins/soccerins_anchor",
-          googletag.enums.OutOfPageFormat.BOTTOM_ANCHOR
-        );
-
-        if (anchorSlot) {
-          anchorSlot.addService(googletag.pubads());
-        }
-        googletag.enableServices();
-      });
-    </script>
-
-    <script
-      async
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1853000876464912"
-      crossorigin="anonymous"
-    ></script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4ZQQBJW72Y"></script>
     <script>
@@ -75,29 +29,46 @@
     </script>
     <!-- End Google Tag Manager -->
 
+    <link rel="preload" href="https://securepubads.g.doubleclick.net/tag/js/gpt.js" as="script" />
+    <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
+
+    <script>
+      window.googletag = window.googletag || { cmd: [] };
+      let interstitialSlot, anchorSlot;
+
+      googletag.cmd.push(function () {
+        interstitialSlot = googletag.defineOutOfPageSlot(
+          "/23197833490/soccerins/soccerins_interstitial",
+          googletag.enums.OutOfPageFormat.INTERSTITIAL
+        );
+
+        if (interstitialSlot) {
+          interstitialSlot.addService(googletag.pubads()).setConfig({
+            interstitial: {
+              triggers: {
+                navBar: true,
+                unhideWindow: true
+              }
+            }
+          });
+        }
+        anchorSlot = googletag.defineOutOfPageSlot(
+          "/23197833490/soccerins/soccerins_anchor",
+          googletag.enums.OutOfPageFormat.BOTTOM_ANCHOR
+        );
+
+        if (anchorSlot) {
+          anchorSlot.addService(googletag.pubads());
+        }
+        googletag.enableServices();
+      });
+    </script>
+
     <script
       async
-      src="https://fundingchoicesmessages.google.com/i/pub-1853000876464912?ers=1"
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1853000876464912"
+      crossorigin="anonymous"
     ></script>
-    <script>
-      (function () {
-        function signalGooglefcPresent() {
-          if (!window.frames["googlefcPresent"]) {
-            if (document.body) {
-              const iframe = document.createElement("iframe");
-              iframe.style =
-                "width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px;";
-              iframe.style.display = "none";
-              iframe.name = "googlefcPresent";
-              document.body.appendChild(iframe);
-            } else {
-              setTimeout(signalGooglefcPresent, 0);
-            }
-          }
-        }
-        signalGooglefcPresent();
-      })();
-    </script>
 
     <script>
       window.addEventListener("load", function () {
@@ -128,49 +99,63 @@
     <!-- End Google Tag Manager (noscript) -->
     {{ APP }}
     <script>
-      // googletag.cmd.push(() => {
-      //   googletag.display(interstitialSlot);
-      //   googletag.display(anchorSlot);
-      // });
+      googletag.cmd.push(() => {
+        googletag.display(interstitialSlot);
+        googletag.display(anchorSlot);
+      });
 
       // 初始化标志变量
-      window.isUnloaded = false;
+      window.isPageUnloaded = false;
+      window.clickOpenAL = 0;
+
+      var isLinkClick = false;
+      document.addEventListener(
+        "click",
+        (event) => {
+          if (window.clickOpenAL === 0) {
+            if ((event = event.target.closest("a")) && event.href) {
+              isLinkClick = true;
+            }
+          } else {
+            window.clickOpenAL = 0;
+          }
+        },
+        true
+      );
+
       // 监听页面即将卸载事件
       window.addEventListener("beforeunload", () => {
-        var elementUrlIndex = window.dataLayer.findIndex(
-          ({ event: eventType }) => "gtm.linkClick" === eventType
-        );
-        // 如果找到了对应事件，且标志变量为 false，则执行逻辑
-        if (-1 === elementUrlIndex || window.isUnloaded) {
+        const activeElement = document.activeElement;
+        const elementSrc = activeElement.getAttribute("src");
+        const elementId = activeElement.getAttribute("id");
+
+        if (window.isPageUnloaded) {
           return;
         }
-        // 根据条件执行不同逻辑
-        if (1 === window.clickOpen) {
+
+        if (1 === window.clickOpenAL) {
           // 点击穿插广告
           dataLayer.push({ event: "D_AL" });
+          if (isLinkClick) {
+            dataLayer.push({ event: "D_AL_LINK" });
+          }
         } else {
           // 用户点击跳转
           dataLayer.push({ event: "D_RE" });
         }
-        window.isUnloaded = true;
+        window.isPageUnloaded = true;
+        isLinkClick = false;
       });
-      // 监听 hash 变化事件 --- 判断穿插全屏广告出现
-      // window.addEventListener("hashchange", () => {
-      //   if ("#google_vignette" == window.location.hash) {
-      //     window.clickOpen = 1;
-      //     // 触发穿插
-      //     dataLayer.push({ event: "C_AL" });
-      //   }
-      // });
+
       new MutationObserver((mutations, observer) => {
         const interstitialAdElement = document.querySelector('ins[data-vignette-loaded="true"]');
         if (interstitialAdElement) {
           const mutationObserver = new MutationObserver(() => {
             var adDisplay = window.getComputedStyle(interstitialAdElement).display;
             if (!("block" !== adDisplay && "flex" !== adDisplay)) {
-              window.clickOpen = 1;
+              window.clickOpenAL = 1;
               dataLayer.push({
-                event: "C_AL",
+                event: "C_AL"
               });
 
               mutationObserver.disconnect();
@@ -186,35 +171,36 @@
         childList: true,
         subtree: true
       });
+
       // 监听消息事件
       window.addEventListener("message", (event) => {
-        if (
-          '{"eventType":"adClosed","result":{"status":1},"googMsgType":"fullscreen"}' === event.data
-        ) {
-          window.clickOpen = 0;
-          // 关闭穿插广告
-          dataLayer.push({ event: "G_AL" });
-        }
+        try {
+          let data = JSON.parse(event.data);
+          if (
+            data?.eventType === "adClosed" &&
+            data?.result?.status == "1" &&
+            data?.googMsgType === "fullscreen"
+          ) {
+            window.clickOpenAL = 0;
+            // 关闭穿插广告
+            dataLayer.push({ event: "G_AL" });
+          }
+        } catch (e) {}
       });
+
       // 监听失去焦点事件
       window.addEventListener("blur", () => {
         const activeElement = document.activeElement,
-          sourceAttribute = activeElement.getAttribute("name");
-        if (
-          sourceAttribute &&
-          -1 !== sourceAttribute.indexOf("google_ads_iframe_/23197833490")
-        ) {
-          let adStatus = "false";
-          if (activeElement) {
-            adStatus = activeElement.getAttribute("data-load-complete") || adStatus;
-          }
-          if ("true" == adStatus) {
-            // 点击页内广告
+          activeElementId = activeElement.getAttribute("id");
+        if (activeElementId && activeElementId.includes("google_ads_iframe_/23197833490")) {
+          if (activeElementId.includes("anchor_0")) {
+            dataLayer.push({ event: "D_FI" });
+          } else if (
+            !activeElementId.includes("interstitial") &&
+            activeElement.getAttribute("data-load-complete")
+          ) {
             dataLayer.push({ event: "D_IP" });
           }
-        } else if (sourceAttribute && -1 !== sourceAttribute.indexOf("anchor_0")) {
-          // 点击锚定广告
-          dataLayer.push({ event: "D_FI" });
         }
       });
     </script>
