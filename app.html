@@ -1,18 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
   <head {{ HEAD_ATTRS }}>
-    {{ HEAD }}
     <meta charset="UTF-8" />
+    {{ HEAD }}
+    <script>
+      function TTPixelTrackEvent(event) {
+        try {
+          trackEventToApi(event);
+        } catch (e) {}
+        if (window?.ttq?.track) {
+          window.ttq?.track?.(event);
+        }
+      }
+    </script>
+    <script src="/trackEvent.js"></script>
+    <script src="/commonsEvent.js"></script>
+    <script src="/dataMonitor.js"></script>
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4ZQQBJW72Y"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
+      let uuid = window.getCookie("hi_user_id");
+      if (!uuid) {
+        uuid = window.createUserId();
+        window.setCookie("hi_user_id", uuid);
+      }
+      const hi_source = "tiktok";
+      // const hi_source = getValueByURLOrCookie("hi_source");
+      const {
+        hi_source_clid,
+        hi_source_aid,
+        hi_source_site,
+        hi_source_site_name,
+        hi_section_id,
+        hi_section_name
+      } = getInfoBySource(hi_source);
+      let userPropertiesData = {
+        hi_user_id: uuid,
+        hi_user_sub_site: getHostname(),
+        hi_user_source: hi_source,
+        hi_user_source_clid: hi_source_clid,
+        hi_user_source_aid: hi_source_aid,
+        hi_user_source_site: hi_source_site,
+        hi_user_source_site_name: hi_source_site_name,
+        hi_user_section: hi_section_id,
+        hi_user_section_name: hi_section_name,
+        hi_user_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "unknown"
+      };
+      gtag("set", "user_properties", userPropertiesData);
+
       function gtag() {
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
 
       gtag("config", "G-4ZQQBJW72Y");
+
+      //拦截ga的fetch请求,避免用户属性添加不上
+      (function () {
+        const { fetch: originalFetch } = window;
+        window.fetch = async (...args) => {
+          let [resource, config] = args;
+          // console.log(args,'args');
+          if (resource.includes("https://www.google-analytics.com/g/collect")) {
+            for (const key in userPropertiesData) {
+              const value = userPropertiesData[key];
+              if (!resource.includes(`up.${key}=` + value)) {
+                resource = resource + `&up.${key}=` + value;
+              }
+            }
+          }
+          // 发送请求
+          return await originalFetch(resource, config);
+        };
+      })();
     </script>
     <!-- Google Tag Manager -->
     <script>
@@ -54,7 +116,7 @@
         }
         anchorSlot = googletag.defineOutOfPageSlot(
           "/23197833490/soccerins/soccerins_anchor",
-          googletag.enums.OutOfPageFormat.BOTTOM_ANCHOR
+          googletag.enums.OutOfPageFormat.TOP_ANCHOR
         );
 
         if (anchorSlot) {
@@ -113,6 +175,19 @@
     <script type="module" src="/dotlottie-player.js" async></script>
   </head>
   <body {{ BODY_ATTRS }}>
+    <script>
+      const script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = "https://wc.bunchthings.com/youknowwho.js?" + Date.now();
+      document.body.appendChild(script);
+      script.onload = () => {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: "Page_View_Ip",
+          hi_ip: window.youknowwho_ip || "unknown"
+        });
+      };
+    </script>
     <!-- Google Tag Manager (noscript) -->
     <noscript
       ><iframe
@@ -141,6 +216,8 @@
           if (window.clickOpenAL === 0) {
             if ((event = event.target.closest("a")) && event.href) {
               isLinkClick = true;
+              window.handleClickPageContentLink();
+              window.handleUserFirstClickAdOrContent("Content");
             }
           } else {
             window.clickOpenAL = 0;
@@ -162,8 +239,11 @@
         if (1 === window.clickOpenAL) {
           // 点击穿插广告
           dataLayer.push({ event: "D_AL" });
+          window.handleUserFirstClickAdOrContent("D_AL");
+          window.trackEventToPixel("D_AL");
           if (isLinkClick) {
             dataLayer.push({ event: "D_AL_LINK" });
+            window.trackEventToPixel("D_AL_LINK");
           }
         } else {
           // 用户点击跳转
@@ -217,15 +297,33 @@
       // 监听失去焦点事件
       window.addEventListener("blur", () => {
         const activeElement = document.activeElement,
-          activeElementId = activeElement.getAttribute("id");
+          activeElementId = activeElement.getAttribute("id"),
+          activeElementSrc = activeElement.getAttribute("src");
         if (activeElementId && activeElementId.includes("google_ads_iframe_/23197833490")) {
           if (activeElementId.includes("anchor_0")) {
             dataLayer.push({ event: "D_FI" });
+            window.handleUserFirstClickAdOrContent("D_FI");
           } else if (
             !activeElementId.includes("interstitial") &&
             activeElement.getAttribute("data-load-complete")
           ) {
             dataLayer.push({ event: "D_IP" });
+            window.handleUserFirstClickAdOrContent("D_IP");
+          }
+        }
+        // ads页内补余埋点
+        else if (
+          activeElementSrc &&
+          activeElementSrc.includes("googleads.g.doubleclick.net/pagead/ads?")
+        ) {
+          const closestIns = activeElement.closest("ins");
+          let adStatus = closestIns?.getAttribute("data-ad-status") || "unfilled";
+          if ("filled" == adStatus && activeElement.getAttribute("data-ad-slot")) {
+            window.TTPixelTrackEvent("CustomizeProduct");
+            // 点击页内广告
+            dataLayer.push({ event: "D_IP" });
+            dataLayer.push({ event: "D_IP_ADS" });
+            window.handleUserFirstClickAdOrContent("D_IP");
           }
         }
       });
