@@ -3,7 +3,14 @@
     <template v-for="(item, index) in contentItems">
       <!-- eslint-disable-next-line vue/no-v-html -->
       <div v-if="item.type === 'content'" :key="`content-${index}`" v-html="item.content" />
-      <AdmSlot v-else :key="`ad-${index}`" :adm-id="item.id" :adm-unit="item.slot" />
+      <adm-slot
+        v-else
+        :key="`ad-${index}`"
+        :adm-id="item.id"
+        :adm-unit="item.slot"
+        :ads-slot="item.adsSlot"
+        class="ad-box"
+      />
     </template>
   </div>
 </template>
@@ -24,24 +31,9 @@ export default {
       default: () => [
         {
           id: "detail-1",
-          slot: "/23197833490/soccerins/soccerins_detail_afs1"
+          slot: "/23197833490/soccerins/soccerins_detail_afs1",
+          adsSlot: "3911913203"
         }
-        // {
-        //   id: "detail-2",
-        //   slot: "/23197833490/soccerins/soccerins_detail_afs2"
-        // },
-        // {
-        //   id: "detail-3",
-        //   slot: "/23197833490/soccerins/soccerins_detail_afs3"
-        // },
-        // {
-        //   id: "detail-4",
-        //   slot: "/23197833490/soccerins/soccerins_detail_afs4"
-        // },
-        // {
-        //   id: "detail-5",
-        //   slot: "/23197833490/soccerins/soccerins_detail_afs5"
-        // }
       ]
     }
   },
@@ -79,7 +71,8 @@ export default {
           items.push({
             type: "ad",
             id: this.adConfigs[adIndex].id,
-            slot: this.adConfigs[adIndex].slot
+            slot: this.adConfigs[adIndex].slot,
+            adsSlot: this.adConfigs[adIndex].adsSlot
           });
           lastAdCharCount = charCount;
           adIndex++;

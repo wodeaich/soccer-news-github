@@ -14,7 +14,6 @@
         </section>
       </main>
       <Afs-Footer />
-      <!-- <AdLoading /> -->
     </div>
     <Dotlottie />
   </div>

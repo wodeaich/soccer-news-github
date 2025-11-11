@@ -25,7 +25,10 @@ export default {
     }
   },
   mounted() {
-    this.observer = new IntersectionObserver(this.handleIntersection);
+    const innerHeight = window.innerHeight;
+    this.observer = new IntersectionObserver(this.handleIntersection, {
+      rootMargin: `${innerHeight / 2}px`
+    });
     this.observer.observe(this.$refs.googleAdmSlot);
   },
   methods: {
@@ -66,12 +69,11 @@ export default {
   line-height: 24px;
   color: $font2;
   text-align: center;
-  margin: 0 !important;
 }
 
 @media screen and (max-width: 879px) {
   .adm-slot {
-    height: vw(673);
+    height: 100dvh;
   }
   .title {
     font-size: vw(24);

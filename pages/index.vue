@@ -21,9 +21,15 @@
           </afs-news-item-1
         ></section>
 
+        <adm-slot-preload
+          class="ad-1"
+          adm-id="home-1"
+          adm-unit="/23197833490/soccerins/soccerins_home_1"
+          ads-slot="6667048681"
+        />
+
         <h2 class="title-h2-afs">Trending</h2>
         <section class="news-box-1">
-          <afs-news-item-5 :item="trendingNews.list[0]"> </afs-news-item-5>
           <div class="afs-games">
             <CustomLink
               v-for="(item, i) in afsGames"
@@ -42,15 +48,24 @@
               />
             </CustomLink>
           </div>
-          <afs-news-item-5 v-for="(item, i) in trendingNews.list.slice(1)" :key="i" :item="item">
+          <adm-slot-full
+            class="ad-2"
+            adm-id="home-2"
+            adm-unit="/23197833490/soccerins/soccerins_home_full"
+            ads-slot="4080715115"
+          />
+          <afs-news-item-5 v-for="(item, i) in trendingNews.list" :key="i" :item="item">
           </afs-news-item-5>
         </section>
 
-        <h2 class="title-h2-afs">All Articles</h2>
-        <!-- <section class="news-box-2">
-        <afs-news-item-2 v-for="(item, i) in allNews.list" :key="i" :item="item"> </afs-news-item-2>
-      </section> -->
+        <adm-slot
+          class="ad-3"
+          adm-id="home-3"
+          adm-unit="/23197833490/soccerins/soccerins_home_3"
+          ads-slot="6028318341"
+        />
 
+        <h2 class="title-h2-afs">All Articles</h2>
         <InfiniteScrollList1
           api-endpoint="/api/article/menu"
           :initial-page="3"
@@ -66,7 +81,6 @@
         </InfiniteScrollList1>
       </main>
       <Afs-Footer />
-      <!-- <AdLoading /> -->
     </div>
     <Dotlottie />
   </div>
@@ -156,7 +170,7 @@ export default {
   }
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .main {
   padding-bottom: 32px;
   border-bottom: 1px solid #ececee;
@@ -200,6 +214,15 @@ export default {
   grid-template-columns: repeat(2, 1fr);
   gap: 24px;
 }
+
+.ad-1,
+.ad-3 {
+  margin-top: 24px;
+}
+.ad-2 {
+  grid-row: 2 / 3;
+  grid-column: 1 / -1;
+}
 @media screen and (max-width: 1100px) {
   .news-box-2 {
     display: flex;
@@ -219,8 +242,10 @@ export default {
     border-bottom: none;
   }
   .afs-games {
+    grid-row: 2 / 3;
+    grid-column: 1 / -1;
     display: flex;
-    gap: vw(32);
+    justify-content: space-between;
     .afs-game {
       width: vw(140);
       height: vw(140);
@@ -236,10 +261,8 @@ export default {
     justify-content: center;
   }
   .news-box-1 {
-    display: flex;
+    grid-template-columns: vw(658);
     gap: vw(32);
-    flex-wrap: wrap;
-    justify-content: center;
   }
   .news-box-2 {
     gap: vw(32);
@@ -261,6 +284,16 @@ export default {
         line-height: vw(52);
       }
     }
+  }
+  .ad-2 {
+    grid-row: 4 / 5;
+    grid-column: 1 / -1;
+  }
+  .ad-1,
+  .ad-2,
+  .ad-3 {
+    width: 100vw;
+    margin-left: vw(-46);
   }
 }
 </style>

@@ -60,6 +60,32 @@
         if (anchorSlot) {
           anchorSlot.addService(googletag.pubads());
         }
+        googletag.cmd.push(function () {
+          googletag.pubads().addEventListener("slotRenderEnded", (event) => {
+            if (event.isEmpty) {
+              const elementId = event.slot.getSlotId().getDomId();
+              const element = document.getElementById(elementId);
+              const dataSlotValue = element ? element.dataset.slot : "";
+              console.log("dataSlotValue", dataSlotValue);
+              if (dataSlotValue) {
+                element.style.display = "none";
+                const adsElement = document.getElementById(`${elementId}-ads`);
+                const adScript = document.createElement("script");
+                adScript.innerHTML = `(adsbygoogle = window.adsbygoogle || []).push({});`;
+                const ins = document.createElement("ins");
+                ins.className = "adsbygoogle";
+                ins.style.display = "block";
+                ins.style.width = "100%";
+                ins.setAttribute("data-ad-client", "ca-pub-1853000876464912");
+                ins.setAttribute("data-ad-slot", dataSlotValue);
+                // ins.setAttribute("data-ad-format", "rectangle");
+                // ins.setAttribute("data-full-width-responsive", "true");
+                adsElement.appendChild(ins);
+                adsElement.appendChild(adScript);
+              }
+            }
+          });
+        });
         googletag.enableServices();
       });
     </script>

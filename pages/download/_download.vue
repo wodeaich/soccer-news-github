@@ -4,12 +4,11 @@
     <main class="main">
       <Breadcrumb :name="currentGame.name" />
 
-      <!-- download-1: Google Ad 占位 1 -->
-      <!-- <GoogleAd ad-slot="3297497936" class="ad-1" /> -->
       <adm-slot-preload
         class="ad-1"
         adm-id="download-1"
         adm-unit="/23197833490/soccerins/soccerins_detail_1"
+        ads-slot="3297497936"
       />
 
       <section class="download-info">
@@ -57,23 +56,11 @@
         <ExpandableText2 :text="currentGame.desc" />
       </section>
 
-      <!-- <h2 class="title-h2"><i class="icon-related"></i>RelatedApps</h2>
-      <section class="box-small-bg">
-        <ContentItemRow1
-          v-for="(item, index) in relatedApps"
-          :key="index"
-          :index="index"
-          :item="item"
-          :to="`/app/${item.path}/`"
-        />
-      </section> -->
-
-      <!-- download-2: Google Ad 占位 2 -->
-      <!-- <GoogleAd ad-slot="2955836717" class="ad-2" /> -->
       <adm-slot
         class="ad-2"
         adm-id="download-2"
         adm-unit="/23197833490/soccerins/soccerins_detail_2"
+        ads-slot="2955836717"
       />
 
       <div class="title-h2">
@@ -100,9 +87,11 @@
       </section>
 
       <aside class="box-aside">
-        <!-- download-r1: Google Ad 占位 r1 -->
-        <!-- <GoogleAd ad-slot="3489069628" /> -->
-        <adm-slot adm-id="download-3" adm-unit="/23197833490/soccerins/soccerins_detail_3" />
+        <adm-slot
+          adm-id="download-3"
+          adm-unit="/23197833490/soccerins/soccerins_detail_3"
+          ads-slot="3489069628"
+        />
 
         <div class="title-h2">
           <div class="title-button"> <i class="icon-hot" /> Hot Games</div></div
@@ -118,7 +107,6 @@
     </main>
     <Footer />
     <BackTop />
-    <!-- <AdLoading /> -->
     <Dotlottie />
   </div>
 </template>

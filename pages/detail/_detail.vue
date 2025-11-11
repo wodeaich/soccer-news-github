@@ -4,17 +4,12 @@
       <Afs-Header :lang="newInfo.language" />
       <article class="article">
         <h1 class="article-title">{{ newInfo.name }}</h1>
-        <div class="news-detail">{{ newInfo.first_paragraph }}</div>
-        <!-- <div id="relatedsearchesDivfeed1"> </div> -->
-        <!-- <GoogleAd ad-slot="1437640172" class="ad-1" /> -->
         <adm-slot-preload
-          class="ad-1"
+          class="ad-box"
           adm-id="detail-afs-1"
           adm-unit="/23197833490/soccerins/soccerins_detail_afs0"
+          ads-slot="5287911342"
         />
-        <!-- <div class="read-more" :class="{ hide: readMore }" @click="readMore = true">
-        {{ readMoreText[newInfo.language] }}
-      </div> -->
         <NuxtImg
           format="auto"
           fit="cover"
@@ -22,16 +17,21 @@
           :src="newInfo.cover"
           :alt="newInfo.name"
           class="article-img"
-          :class="{ show: readMore }"
           preload
         />
-        <!-- eslint-disable vue/no-v-html -->
-        <!-- <div class="news-detail" :class="{ show: readMore }" v-html="newInfo.content"></div> -->
+        <div class="news-detail">{{ newInfo.first_paragraph }}</div>
+
+        <adm-slot-full
+          class="ad-box"
+          adm-id="detail-full"
+          adm-unit="/23197833490/soccerins/soccerins_detail_full"
+          ads-slot="2677786806"
+        />
+
         <Afs-ArticleWithAdm :class="{ show: readMore }" :content="newInfo.content" />
         <!--eslint-enable-->
       </article>
       <Afs-Footer :lang="newInfo.language" />
-      <!-- <AdLoading /> -->
     </div>
     <Dotlottie />
   </div>
@@ -58,19 +58,7 @@ export default {
   data() {
     return {
       channelId: "",
-      readMore: true,
-      readMoreText: {
-        en: "Read More>>",
-        ja: "続きを読む>>",
-        ko: "더 읽기>>",
-        zh_TW: "閱讀更多>>",
-        de: "Weiterlesen>>",
-        pt: "Leia Mais>>", // 葡萄牙语
-        es: "Leer Más>>", // 西班牙语
-        fr: "Lire la suite>>", // 法语
-        th: "อ่านเพิ่มเติม>>", // 泰语
-        id: "Baca Selengkapnya>>" // 印度尼西亚语
-      }
+      readMore: true
     };
   },
   head() {
@@ -122,67 +110,6 @@ export default {
         }
       ]
     };
-  },
-
-  mounted: function () {
-    // 获取 URL 查询参数
-    const searchParams = new URLSearchParams(window.location.search);
-    // AdSense 配置参数
-    if (searchParams.has("channel")) {
-      this.channelId = searchParams.get("channel");
-    } else {
-      this.channelId = this.newInfo.channel || "";
-      console.log("channelId", this.channelId, this.newInfo);
-      if (this.channelId !== "") {
-        searchParams.set("channel", this.channelId);
-        const newUrl = `${window.location.origin}${
-          window.location.pathname
-        }?${searchParams.toString()}`;
-        window.history.replaceState({}, "", newUrl);
-      }
-    }
-    let lastScrollTop = 0;
-    let scrolledUpFromBottom = false;
-    let flag1 = false;
-    let flag2 = false;
-    let flag3 = false;
-
-    window.addEventListener("scroll", () => {
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
-      const docHeight = document.documentElement.scrollHeight;
-      const windowHeight = window.innerHeight;
-
-      // 判断用户是否向下滚动
-      if (scrollTop > lastScrollTop) {
-        scrolledUpFromBottom = false; // 如果用户向下滚动，重置标志
-        if (flag1 === false) {
-          // eslint-disable-next-line no-undef
-          dataLayer.push({ event: "SCROLL_D" });
-          flag1 = true;
-        }
-      }
-      // 判断用户是否向上滚动
-      else {
-        if (scrollTop + windowHeight >= docHeight - 5) {
-          // 加入小缓冲区以检测页面底部
-          scrolledUpFromBottom = true;
-        }
-
-        if (scrolledUpFromBottom) {
-          if (flag2 === false) {
-            // eslint-disable-next-line no-undef
-            dataLayer.push({ event: "SCROLL_BU" });
-            flag2 = true;
-          }
-        } else if (flag3 === false) {
-          // eslint-disable-next-line no-undef
-          dataLayer.push({ event: "SCROLL_U" });
-          flag3 = true;
-        }
-      }
-
-      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // 处理移动设备或负滚动
-    });
   }
 };
 </script>
@@ -204,17 +131,8 @@ export default {
   line-height: 30px;
   margin-bottom: 24px;
 }
-.read-more {
-  line-height: 4;
-}
-.hide {
-  display: none;
-  &.show {
-    display: block;
-  }
-}
-.ad-1 {
-  margin: 32px 0 32px 0;
+::v-deep .ad-box {
+  margin-bottom: 32px;
 }
 @media screen and (max-width: 750px) {
   .article {
@@ -231,8 +149,10 @@ export default {
   .article-desc {
     margin-bottom: vw(48);
   }
-  .ad-1 {
-    margin: vw(48) 0 vw(48) 0;
+  ::v-deep .ad-box {
+    width: 100vw;
+    margin-bottom: vw(48);
+    margin-left: vw(-46);
   }
 }
 </style>

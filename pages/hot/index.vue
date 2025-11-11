@@ -17,17 +17,19 @@
         >
         </ContentItemRow2>
 
-        <!-- hot-1: Google Ad 占位 1 -->
-        <!-- <GoogleAd ad-slot="4419007919" class="ad1" /> -->
         <adm-slot-preload
           class="ad1"
           adm-id="hot-1"
           adm-unit="/23197833490/soccerins/soccerins_module_1"
+          ads-slot="2858514230"
         />
 
-        <!-- hot-2: Google Ad 占位 2 -->
-        <!-- <GoogleAd ad-slot="9615494277" class="ad2" /> -->
-        <adm-slot class="ad2" adm-id="hot-2" adm-unit="/23197833490/soccerins/soccerins_module_2" />
+        <adm-slot
+          class="ad2"
+          adm-id="hot-2"
+          adm-unit="/23197833490/soccerins/soccerins_module_2"
+          ads-slot="8110840910"
+        />
       </section>
 
       <!-- 推荐游戏列表 -->

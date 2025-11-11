@@ -39,12 +39,11 @@
         />
       </section>
 
-      <!-- search-1: Google Ad 占位 1 -->
-      <!-- <GoogleAd ad-slot="1454551777" class="ad" /> -->
       <adm-slot-preload
         class="ad"
         adm-id="search-1"
         adm-unit="/23197833490/soccerins/soccerins_search_1"
+        ads-slot="1454551777"
       />
 
       <div class="title-h2">
@@ -148,9 +147,7 @@ export default {
     color: $item-name;
     padding-left: 16px;
     border-radius: 30px;
-    box-shadow:
-      inset 5px 5px 4px 0px rgba(131, 169, 196, 0.3),
-      inset -5px -5px 4px 0px #f8fdfd;
+    box-shadow: inset 5px 5px 4px 0px rgba(131, 169, 196, 0.3), inset -5px -5px 4px 0px #f8fdfd;
     &::placeholder {
       color: rgba($item-name, 0.4);
     }
@@ -174,9 +171,7 @@ export default {
 .search-null {
   width: 100%;
   height: 120px;
-  box-shadow:
-    inset 5px 5px 4px 0px rgba(131, 169, 196, 0.3),
-    inset -5px -5px 4px 0px #f8fdfd;
+  box-shadow: inset 5px 5px 4px 0px rgba(131, 169, 196, 0.3), inset -5px -5px 4px 0px #f8fdfd;
   border-radius: 24px;
   @include center;
 }
@@ -198,9 +193,7 @@ export default {
   margin: 0 auto;
   border-radius: 24px;
   padding: 20px 20px 32px;
-  box-shadow:
-    inset 5px 5px 4px 0px rgba(131, 169, 196, 0.3),
-    inset -5px -5px 4px 0px #f8fdfd;
+  box-shadow: inset 5px 5px 4px 0px rgba(131, 169, 196, 0.3), inset -5px -5px 4px 0px #f8fdfd;
   .number {
     grid-column: 1 / -1;
     text-align: center;
@@ -271,9 +264,7 @@ export default {
     grid-template-columns: repeat(3, vw(198));
     gap: vw(32);
     padding: vw(32) 0 vw(32);
-    box-shadow:
-      inset 5px 5px 4px 0px rgba(131, 169, 196, 0.3),
-      inset -5px -5px 4px 0px #f8fdfd;
+    box-shadow: inset 5px 5px 4px 0px rgba(131, 169, 196, 0.3), inset -5px -5px 4px 0px #f8fdfd;
     border-radius: vw(32);
     margin: 0 vw(46);
     h3 {

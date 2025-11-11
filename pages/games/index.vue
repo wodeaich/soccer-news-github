@@ -1,10 +1,7 @@
 <template>
   <div class="page">
-    <!-- <Header current-path="home" /> -->
     <main class="main">
       <section>
-        <!-- <link-outside :item="linkOutside" /> -->
-        <!-- if取消导流代码使用部分 -->
         <CustomLink
           v-for="(item, index) in recGames"
           :key="index"
@@ -87,8 +84,6 @@
           </div>
         </div>
       </section>
-      <!-- page-1: Google Ad 占位 1 -->
-      <!-- <GoogleAd ad-slot="6667048681" class="ad" /> -->
 
       <div class="title-h2">
         <CustomLink to="/hot/" class="title-button button-hot">
@@ -97,7 +92,6 @@
         <CustomLink to="/hot/"> <i class="icon-arrow" /></CustomLink>
       </div>
       <section class="box-row-scroll">
-        <!-- <link-outside :item="hotGames[0]" /> -->
         <ContentItemRow
           v-for="(item, index) in hotGames.slice(1)"
           :key="index"
@@ -106,6 +100,14 @@
           :to="`/game/${item.path}/`"
         />
       </section>
+
+      <adm-slot-full
+        class="ad-box"
+        adm-id="game-full"
+        adm-unit="/23197833490/soccerins/soccerins_game_full"
+        ads-slot="6667048681"
+      />
+
       <div class="title-h2 rec-title">
         <div class="title-button"> <i class="icon-rec" /> Recommend Games</div>
       </div>
@@ -133,7 +135,6 @@
     <Footer />
     <BackTop />
     <Dotlottie />
-    <!-- <AdLoading /> -->
   </div>
 </template>
 <script>
@@ -326,16 +327,12 @@ export default {
   padding: 24px;
   width: 100%;
   // height: 432px;
-  box-shadow:
-    inset 5px 5px 4px 0px rgba(131, 169, 196, 0.3),
-    inset -5px -5px 4px 0px #f8fdfd;
+  box-shadow: inset 5px 5px 4px 0px rgba(131, 169, 196, 0.3), inset -5px -5px 4px 0px #f8fdfd;
   border-radius: 40px 40px 40px 40px;
   position: relative;
   .content {
     border-radius: 24px;
-    box-shadow:
-      5px 5px 4px 0px rgba(#83a9c4, 0.3),
-      -5px -5px 4px 0px #f8fdfd;
+    box-shadow: 5px 5px 4px 0px rgba(#83a9c4, 0.3), -5px -5px 4px 0px #f8fdfd;
   }
   .category {
     display: flex;
@@ -368,8 +365,7 @@ export default {
     color: #ffffff;
     background: $btn-bg;
     border: 4px solid #f0f2f5;
-    box-shadow:
-      inset 3px 3px 3px 0px rgba(131, 169, 196, 0.3),
+    box-shadow: inset 3px 3px 3px 0px rgba(131, 169, 196, 0.3),
       inset -3px -3px 3px 0px rgba(248, 253, 253, 0.5);
     .icon-cate-live {
       @include icon(40px, 40px, "icon-cate-live2.png");
@@ -398,8 +394,7 @@ export default {
   .module2active {
     color: #ffffff;
     background: $btn-bg;
-    box-shadow:
-      inset 3px 3px 3px 0px rgba(131, 169, 196, 0.3),
+    box-shadow: inset 3px 3px 3px 0px rgba(131, 169, 196, 0.3),
       inset -3px -3px 3px 0px rgba(248, 253, 253, 0.5);
     border: 4px solid #f0f2f5;
     .icon-cate-casual {
@@ -418,9 +413,7 @@ export default {
   .download {
     width: 152px;
     height: 40px;
-    box-shadow:
-      3px 3px 3px 0px rgba(131, 169, 196, 0.3),
-      -3px -3px 3px 0px #f8fdfd;
+    box-shadow: 3px 3px 3px 0px rgba(131, 169, 196, 0.3), -3px -3px 3px 0px #f8fdfd;
     border-radius: 50px 50px 50px 50px;
     border: 1px solid #68dfc3;
     display: flex;
@@ -434,9 +427,7 @@ export default {
   .search {
     width: 152px;
     height: 40px;
-    box-shadow:
-      3px 3px 3px 0px rgba(131, 169, 196, 0.3),
-      -3px -3px 3px 0px #f8fdfd;
+    box-shadow: 3px 3px 3px 0px rgba(131, 169, 196, 0.3), -3px -3px 3px 0px #f8fdfd;
     border-radius: 50px 50px 50px 50px;
     display: flex;
     align-items: center;
@@ -482,24 +473,17 @@ export default {
   margin-top: 40px;
 }
 .button-hot {
-  box-shadow:
-    5px 5px 4px 0px rgba(131, 169, 196, 0.3),
-    -5px -5px 4px 0px #f8fdfd,
-    inset 0 0 0 rgba(131, 169, 196, 0.3),
-    inset 0 0 0 #f8fdfd;
+  box-shadow: 5px 5px 4px 0px rgba(131, 169, 196, 0.3), -5px -5px 4px 0px #f8fdfd,
+    inset 0 0 0 rgba(131, 169, 196, 0.3), inset 0 0 0 #f8fdfd;
   transition: 0.1s;
   &:hover {
-    box-shadow:
-      0 0 0 rgba(131, 169, 196, 0.3),
-      0 0 0 #f8fdfd,
-      inset -5px -5px 4px #f8fdfd,
+    box-shadow: 0 0 0 rgba(131, 169, 196, 0.3), 0 0 0 #f8fdfd, inset -5px -5px 4px #f8fdfd,
       inset 5px 5px 4px rgba(131, 169, 196, 0.3);
   }
 }
 .box-row-scroll {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(384px, 1fr));
-  margin-bottom: -16px;
   gap: 16px;
   .item {
     &:nth-child(n + 7) {
@@ -507,8 +491,8 @@ export default {
     }
   }
 }
-.rec-title {
-  margin-top: 48px;
+.ad-box {
+  margin-top: 32px;
 }
 @media screen and (min-width: 879px) and (max-width: 1445px) {
   .head-bg {
@@ -636,9 +620,7 @@ export default {
     height: vw(448);
     box-shadow: none;
     .content {
-      box-shadow:
-        0px 5px 4px 0px rgba(131, 169, 196, 0.3),
-        0 -5px 4px 0px #f8fdfd;
+      box-shadow: 0px 5px 4px 0px rgba(131, 169, 196, 0.3), 0 -5px 4px 0px #f8fdfd;
       border-radius: 0;
     }
     .category {
@@ -661,17 +643,14 @@ export default {
       width: vw(198);
       height: vw(64);
       border-radius: vw(76);
-      box-shadow:
-        3px 3px 3px 0px rgba(131, 169, 196, 0.3),
-        -3px -3px 3px 0px #f8fdfd;
+      box-shadow: 3px 3px 3px 0px rgba(131, 169, 196, 0.3), -3px -3px 3px 0px #f8fdfd;
       font-size: vw(28);
       line-height: vw(36);
     }
     .module1active {
       background: $btn-bg2;
       border: none;
-      box-shadow:
-        inset 2px 2px 3px 0px rgba(131, 169, 196, 0.3),
+      box-shadow: inset 2px 2px 3px 0px rgba(131, 169, 196, 0.3),
         inset -2px -2px 3px 0px rgba(#f8fdfd, 0.4);
       .icon-cate-live {
         display: none;
@@ -681,9 +660,7 @@ export default {
       width: vw(232);
       height: vw(64);
       border-radius: vw(76);
-      box-shadow:
-        3px 3px 3px 0px rgba(131, 169, 196, 0.3),
-        -3px -3px 3px 0px #f8fdfd;
+      box-shadow: 3px 3px 3px 0px rgba(131, 169, 196, 0.3), -3px -3px 3px 0px #f8fdfd;
       margin-left: vw(32);
       font-size: vw(28);
       line-height: vw(36);
@@ -691,8 +668,7 @@ export default {
     .module2active {
       background: $btn-bg2;
       border: none;
-      box-shadow:
-        inset 2px 2px 3px 0px rgba(131, 169, 196, 0.3),
+      box-shadow: inset 2px 2px 3px 0px rgba(131, 169, 196, 0.3),
         inset -2px -2px 3px 0px rgba(#f8fdfd, 0.4);
       .icon-cate-casual {
         display: none;
@@ -747,6 +723,9 @@ export default {
       }
     }
     @include scroll;
+  }
+  .ad-box {
+    margin-top: vw(32);
   }
 }
 </style>

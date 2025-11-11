@@ -2,7 +2,8 @@
   <div>
     <div ref="admSlot" class="adm-slot">
       <p ref="title" class="title">Advertisement</p>
-      <div :id="admId" ref="googleAdmSlot" class="ad-slot"></div>
+      <div :id="admId" ref="googleAdmSlot" class="ad-slot" :data-slot="adsSlot"></div>
+      <div :id="`${admId}-ads`"></div>
     </div>
   </div>
 </template>
@@ -17,6 +18,10 @@ export default {
     admUnit: {
       type: String,
       required: true
+    },
+    adsSlot: {
+      type: String,
+      required: true
     }
   },
   mounted() {
@@ -26,7 +31,6 @@ export default {
     handleIntersection() {
       const width = this.$refs.admSlot.clientWidth;
       const height = this.$refs.admSlot.clientHeight - this.$refs.title.clientHeight;
-      console.log(width, height);
       const adScript = document.createElement("script");
       adScript.innerHTML = `googletag.cmd.push(function () {
               googletag.defineSlot('${this.admUnit}', ['fluid', [${width},${height}]], '${this.admId}').addService(googletag.pubads());
@@ -41,11 +45,18 @@ export default {
 
 <style lang="scss" scoped>
 .adm-slot {
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   height: 240px;
+  div {
+    width: 100%;
+    flex: 1;
+  }
 }
 .title {
+  width: 100%;
   background: $color1;
   color: rgba($item-name, 0.6);
   line-height: 24px;
@@ -59,7 +70,7 @@ export default {
   }
   .title {
     font-size: vw(24);
-    line-height: vw(35);
+    line-height: vw(32);
   }
 }
 </style>

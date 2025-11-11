@@ -3,9 +3,8 @@
     <Header current-path="best" />
     <main>
       <div class="title-h2">
-        <div class="title-button"> <i class="icon-casual" /> Casual Football Games</div></div
-      >
-
+        <div class="title-button"> <i class="icon-casual" /> Casual Football Games</div>
+      </div>
       <!-- Best游戏列表 -->
       <section>
         <InfiniteScrollList
@@ -25,47 +24,22 @@
               :to="`/game/${item.path}/`"
             >
             </ContentItemRow2>
-            <!-- best-1: Google Ad 占位 1 -->
-            <!-- <GoogleAd ad-slot="2858514230" class="ad1" /> -->
             <adm-slot
               class="ad1"
               adm-id="best-1"
               adm-unit="/23197833490/soccerins/soccerins_module_1"
+              ads-slot="2858514230"
             />
 
-            <!-- best-2: Google Ad 占位 2 -->
-            <!-- <GoogleAd ad-slot="8110840910" class="ad2" /> -->
             <adm-slot
               class="ad2"
               adm-id="best-2"
               adm-unit="/23197833490/soccerins/soccerins_module_2"
+              ads-slot="8110840910"
             />
           </template>
         </InfiniteScrollList>
       </section>
-
-      <!-- 推荐游戏列表 -->
-      <!-- <div class="title-h2">
-        <div class="title-button"> <i class="icon-rec" /> Recommend Games</div></div
-      >
-
-      <InfiniteScrollList
-        api-endpoint="/api/game/all_game"
-        :initial-page="2"
-        :page-size="24"
-        :initial-items="allGames"
-        class="box-common"
-      >
-        <template #default="{ items }">
-          <ContentItemCommon1
-            v-for="(item, index) in items"
-            :key="index"
-            :index="index"
-            :item="item"
-            :to="`/game/${item.path}/`"
-          />
-        </template>
-      </InfiniteScrollList> -->
     </main>
     <Footer />
     <BackTop />
