@@ -139,6 +139,9 @@ function handleClickPageContentLink() {
 
 // 处理用户首次点击行为（三广告以及内容点击）
 function handleUserFirstClickAdOrContent(eventName) {
+  if (eventName === "D_FI" || eventName === "Content") {
+    handleUserFirstActionInClickId(eventName);
+  }
   const userFirstClickEvent = getCookie("User_First_Click_Event");
   if (!userFirstClickEvent) {
     setCookieToDay("User_First_Click_Event", eventName);
@@ -148,6 +151,35 @@ function handleUserFirstClickAdOrContent(eventName) {
   } else if (userFirstClickEvent === "D_FI" && eventName !== "D_FI") {
     setCookieToDay("User_First_Click_Event", "Cancel_D_FI");
     pushEventParamsToGtm("Only_FI_Click_Cancel");
+  }
+}
+
+// 处理用户首次站内行为（ClickId维度）
+function handleUserFirstActionInClickId(eventName) {
+  const userFirstActionInClickId = getCookie("User_First_Action_In_ClickId");
+  const { hi_source_clid } = getSourceClid("tiktok");
+  const eventMap = {
+    D_FI: "click_anchor",
+    Content: "click_content",
+    Scroll: "scroll"
+  };
+  if (!userFirstActionInClickId) {
+    const data = {
+      sourceClid: hi_source_clid,
+      firstType: eventName
+    };
+    setCookieToDay("User_First_Action_In_ClickId", JSON.stringify(data));
+    pushEventParamsToGtm("User_First_Action", { first_type: eventMap[eventName] });
+    console.log("handleUserFirstActionInClickId", eventName);
+  } else {
+    const userFirstActionInClickIdObj = JSON.parse(userFirstActionInClickId);
+    if (userFirstActionInClickIdObj.sourceClid !== hi_source_clid) {
+      userFirstActionInClickIdObj.sourceClid = hi_source_clid;
+      userFirstActionInClickIdObj.firstType = eventName;
+      setCookieToDay("User_First_Action_In_ClickId", JSON.stringify(userFirstActionInClickIdObj));
+      pushEventParamsToGtm("User_First_Action", { first_type: eventMap[eventName] });
+      console.log("handleUserFirstActionInClickId", eventName);
+    }
   }
 }
 

@@ -32,7 +32,9 @@
           />
           <div class="play-now">PLAY NOW<i /></div>
         </CustomLink>
-        <CustomLink to="/" class="back-afs"><i class="back-afs-icon" /></CustomLink>
+        <CustomLink to="/" class="back-afs" @click.native="handleClickButton('home_icon')"
+          ><i class="back-afs-icon"
+        /></CustomLink>
         <div class="recommend-content">
           <div class="content">
             <div class="menu">
@@ -40,13 +42,26 @@
                 ><i class="icon-pc-pwa" />TO DESKTOP</div
               >
               <CustomLink to="/search/" class="search"><i class="icon-search" />SEARCH </CustomLink>
-              <CustomLink to="/search/" class="m-search"><i class="icon-search" /></CustomLink>
+              <CustomLink
+                to="/search/"
+                class="m-search"
+                @click.native="handleClickButton('search_button')"
+                ><i class="icon-search"
+              /></CustomLink>
             </div>
             <div class="category">
-              <CustomLink to="/live/" class="module1" :class="{ module1active: imageIndex === 0 }"
+              <CustomLink
+                to="/live/"
+                class="module1"
+                :class="{ module1active: imageIndex === 0 }"
+                @click.native="handleClickButton('live_game_button')"
                 ><i class="icon-cate-live" />Live Games</CustomLink
               >
-              <CustomLink to="/casual/" class="module2" :class="{ module2active: imageIndex === 1 }"
+              <CustomLink
+                to="/casual/"
+                class="module2"
+                :class="{ module2active: imageIndex === 1 }"
+                @click.native="handleClickButton('casual_game_button')"
                 ><i class="icon-cate-casual" />Casual Games</CustomLink
               >
             </div>
@@ -134,7 +149,7 @@
     </main>
     <Footer />
     <BackTop />
-    <Dotlottie />
+    <Dotlottie @click.native="handleClickButton('gif_bottom')" />
   </div>
 </template>
 <script>
@@ -256,6 +271,10 @@ export default {
     },
     onSlideChange() {
       this.imageIndex = (this.mySwiper && this.mySwiper.realIndex) || 0;
+    },
+    handleClickButton(event) {
+      console.log("event", event);
+      window.pushEventParamsToGtm("Game_Other_Click", { game_other_click: event });
     }
   }
 };

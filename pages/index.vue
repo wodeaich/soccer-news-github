@@ -268,7 +268,7 @@ export default {
     gap: vw(32);
     color: #333;
 
-    :nth-child(5n + 1) {
+    ::v-deep :nth-child(5n + 1) {
       flex-direction: column;
       .img {
         width: vw(658);

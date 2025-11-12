@@ -2,16 +2,28 @@
   <div class="landing-page">
     <div class="bg-top">
       <div class="back" @click="handleBack"></div>
-      <CustomLink class="play-now" to="/games/">
+      <CustomLink
+        class="play-now"
+        to="/games/"
+        @click.native="handleClickContent('play_now_button')"
+      >
         <div class="button">Play Now</div>
         <i class="right"></i>
       </CustomLink>
       <div class="type">
-        <CustomLink to="/" class="type-item type-news">
+        <CustomLink
+          to="/"
+          class="type-item type-news"
+          @click.native="handleClickContent('soccer_news_button')"
+        >
           <span> Soccer<br />News ></span>
           <img src="~/assets/images/landing/btn-1.png" alt="news" />
         </CustomLink>
-        <CustomLink to="/games/" class="type-item type-games">
+        <CustomLink
+          to="/games/"
+          class="type-item type-games"
+          @click.native="handleClickContent('soccer_games_button')"
+        >
           <span> Soccer<br />Games ></span>
           <img src="~/assets/images/landing/btn-2.png" alt="games" />
         </CustomLink>
@@ -24,18 +36,9 @@
           :key="afsGame.id"
           to="/games/"
           class="game-item"
+          @click.native="handleClickContent('soccer_star_button')"
         >
           <img :src="`/images/star-${i + 1}.png`" :alt="afsGame.name" class="icon" />
-        </CustomLink>
-        <CustomLink class="game-item-hand game-item" to="/games/">
-          <dotlottie-player
-            autoplay
-            loop
-            mode="normal"
-            src="/hand.lottie"
-            class="lottie-hand"
-            data-bm-renderer="svg"
-          ></dotlottie-player>
         </CustomLink>
       </div>
     </div>
@@ -73,6 +76,10 @@ export default {
       } else {
         this.$router.push("/");
       }
+      this.handleClickContent("left_back_button");
+    },
+    handleClickContent(event) {
+      window.pushEventParamsToGtm("Landing_Click_All", { landing_click: event });
     }
   }
 };
@@ -211,9 +218,6 @@ export default {
     .game-item {
       position: absolute;
       z-index: 2;
-      &.game-item-hand {
-        animation: none !important;
-      }
       img {
         border: vw(6) solid #ffffff;
         border-radius: 50%;

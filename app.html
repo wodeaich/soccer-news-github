@@ -128,7 +128,6 @@
               const elementId = event.slot.getSlotId().getDomId();
               const element = document.getElementById(elementId);
               const dataSlotValue = element ? element.dataset.slot : "";
-              console.log("dataSlotValue", dataSlotValue);
               if (dataSlotValue) {
                 element.style.display = "none";
                 const adsElement = document.getElementById(`${elementId}-ads`);
@@ -182,10 +181,7 @@
       document.body.appendChild(script);
       script.onload = () => {
         window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({
-          event: "Page_View_Ip",
-          hi_ip: window.youknowwho_ip || "unknown"
-        });
+        window.pushEventParamsToGtm("Page_View_Ip", { hi_ip: window.youknowwho_ip || "unknown" });
       };
     </script>
     <!-- Google Tag Manager (noscript) -->
@@ -208,6 +204,7 @@
       // 初始化标志变量
       window.isPageUnloaded = false;
       window.clickOpenAL = 0;
+      window.isHomePath = window.location.pathname === "/" ? true : false;
 
       var isLinkClick = false;
       document.addEventListener(
@@ -226,6 +223,14 @@
         true
       );
 
+      document.addEventListener(
+        "touchmove",
+        (event) => {
+          window.handleUserFirstActionInClickId("Scroll");
+        },
+        { once: true }
+      );
+
       // 监听页面即将卸载事件
       window.addEventListener("beforeunload", () => {
         const activeElement = document.activeElement;
@@ -237,17 +242,20 @@
         }
 
         if (1 === window.clickOpenAL) {
-          // 点击穿插广告
-          dataLayer.push({ event: "D_AL" });
+          window.pushEventParamsToGtm("D_AL", {
+            ad_path_type: window.isHomePath ? "home" : "not_home"
+          });
           window.handleUserFirstClickAdOrContent("D_AL");
           window.trackEventToPixel("D_AL");
           if (isLinkClick) {
-            dataLayer.push({ event: "D_AL_LINK" });
+            window.pushEventParamsToGtm("D_AL_LINK", {
+              ad_path_type: window.isHomePath ? "home" : "not_home"
+            });
             window.trackEventToPixel("D_AL_LINK");
           }
         } else {
           // 用户点击跳转
-          dataLayer.push({ event: "D_RE" });
+          window.pushEventParamsToGtm("D_RE");
         }
         window.isPageUnloaded = true;
         isLinkClick = false;
@@ -260,10 +268,9 @@
             var adDisplay = window.getComputedStyle(interstitialAdElement).display;
             if (!("block" !== adDisplay && "flex" !== adDisplay)) {
               window.clickOpenAL = 1;
-              dataLayer.push({
-                event: "C_AL"
+              window.pushEventParamsToGtm("C_AL", {
+                ad_path_type: window.isHomePath ? "home" : "not_home"
               });
-
               mutationObserver.disconnect();
             }
           });
@@ -288,8 +295,7 @@
             data?.googMsgType === "fullscreen"
           ) {
             window.clickOpenAL = 0;
-            // 关闭穿插广告
-            dataLayer.push({ event: "G_AL" });
+            window.pushEventParamsToGtm("G_AL");
           }
         } catch (e) {}
       });
@@ -301,13 +307,17 @@
           activeElementSrc = activeElement.getAttribute("src");
         if (activeElementId && activeElementId.includes("google_ads_iframe_/23197833490")) {
           if (activeElementId.includes("anchor_0")) {
-            dataLayer.push({ event: "D_FI" });
+            window.pushEventParamsToGtm("D_FI", {
+              ad_path_type: window.isHomePath ? "home" : "not_home"
+            });
             window.handleUserFirstClickAdOrContent("D_FI");
           } else if (
             !activeElementId.includes("interstitial") &&
             activeElement.getAttribute("data-load-complete")
           ) {
-            dataLayer.push({ event: "D_IP" });
+            window.pushEventParamsToGtm("D_IP", {
+              ad_path_type: window.isHomePath ? "home" : "not_home"
+            });
             window.handleUserFirstClickAdOrContent("D_IP");
           }
         }
@@ -321,8 +331,10 @@
           if ("filled" == adStatus && activeElement.getAttribute("data-ad-slot")) {
             window.TTPixelTrackEvent("CustomizeProduct");
             // 点击页内广告
-            dataLayer.push({ event: "D_IP" });
-            dataLayer.push({ event: "D_IP_ADS" });
+            window.pushEventParamsToGtm("D_IP", {
+              ad_path_type: window.isHomePath ? "home" : "not_home"
+            });
+            window.pushEventParamsToGtm("D_IP_ADS");
             window.handleUserFirstClickAdOrContent("D_IP");
           }
         }
