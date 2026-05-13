@@ -133,6 +133,7 @@ export default {
   },
   plugins: [
     { src: "~/plugins/vue-infinite-scroll", ssr: false },
+    { src: "~/plugins/lang-redirect", ssr: false },
     "~/plugins/axios",
     "~/plugins/global-data",
     "~/plugins/report",
@@ -146,11 +147,29 @@ export default {
     "@nuxtjs/sitemap",
     "nuxt-purgecss"
   ],
+  i18n: {
+    strategy: "prefix",
+    defaultLocale: "en",
+    locales: [
+      { code: "en", iso: "en-US", file: "en.js", name: "English" },
+      { code: "es", iso: "es-ES", file: "es.js", name: "Español" },
+      { code: "pt", iso: "pt-BR", file: "pt.js", name: "Português" },
+      { code: "ar", iso: "ar-SA", file: "ar.js", name: "العربية", dir: "rtl" },
+      { code: "ja", iso: "ja-JP", file: "ja.js", name: "日本語" },
+      { code: "ko", iso: "ko-KR", file: "ko.js", name: "한국어" }
+    ],
+    langDir: "locales/",
+    seo: true,
+    lazy: true,
+    vueI18n: {
+      fallbackLocale: "en"
+    }
+  },
   css: ["@/assets/css/fonts.css", "@/assets/css/reset.css", "@/assets/css/common.scss"],
   styleResources: {
     scss: ["~/assets/css/_mixins.scss"]
   },
-  modules: ["@nuxtjs/axios"],
+  modules: ["@nuxtjs/axios", "@nuxtjs/i18n"],
   sitemap: {
     hostname: "https://soccerins.com/"
   },

@@ -30,19 +30,21 @@
       <i class="icon-search" @click="search"></i>
     </div>
 
-    <!-- 足球入口 -->
-    <Afs-Football />
+    <!-- 导航菜单 -->
+    <nav class="nav-menu">
+      <nuxt-link :to="localePath('/news/')" class="nav-item">{{ $t('nav.news') }}</nuxt-link>
+      <nuxt-link :to="localePath('/schedule/')" class="nav-item">{{ $t('nav.schedule') }}</nuxt-link>
+      <nuxt-link :to="localePath('/results/')" class="nav-item">{{ $t('nav.results') }}</nuxt-link>
+      <nuxt-link :to="localePath('/standings/')" class="nav-item">{{ $t('nav.standings') }}</nuxt-link>
+      <nuxt-link :to="localePath('/live-tv/')" class="nav-item">{{ $t('nav.liveTV') }}</nuxt-link>
+    </nav>
 
-    <div class="category"
-      >{{ categoryText[lang] || categoryText["en"] }}
-      <ul class="dropdown">
-        <li v-for="(item, i) in navData.list" :key="i">
-          <Afs-CustomLink :to="`/category/${item.path}/`"
-            >{{ i === 0 ? "Soccer Game Tips" : "Soccer Updates" }}
-          </Afs-CustomLink>
-        </li>
-        <li>
-          <Afs-CustomLink to="/games/" class="entrance"> Soccer Games </Afs-CustomLink>
+    <!-- 语言切换器 -->
+    <div class="lang-switcher">
+      <span class="lang-current">{{ currentLocaleName }}</span>
+      <ul class="lang-dropdown">
+        <li v-for="locale in availableLocales" :key="locale.code">
+          <span @click="switchLang(locale.code)">{{ locale.name }}</span>
         </li>
       </ul>
     </div>
@@ -64,6 +66,15 @@ export default {
       default: "en"
     }
   },
+  computed: {
+    availableLocales() {
+      return this.$i18n.locales
+    },
+    currentLocaleName() {
+      const current = this.$i18n.locales.find(l => l.code === this.$i18n.locale)
+      return current ? current.name : 'EN'
+    }
+  },
   data() {
     return {
       input: "",
@@ -71,16 +82,6 @@ export default {
       showInstallButton: false,
       isSidebarOpen: false,
       navData: this.$root.$options.navData || this.$navData,
-      searchText: {
-        en: "Search...",
-        ja: "検索けんさく..."
-      },
-      swiperData: [],
-      isShowSwiper: false,
-      categoryText: {
-        en: "Category",
-        ja: "カテゴリ"
-      }
     };
   },
 
@@ -138,6 +139,10 @@ export default {
     },
     clear() {
       this.input = "";
+    },
+    switchLang(code) {
+      document.cookie = `preferred_lang=${code}; path=/; max-age=${60 * 60 * 24 * 365}`
+      this.$router.push(this.switchLocalePath(code))
     }
   }
 };
@@ -280,56 +285,62 @@ export default {
   // }
 }
 
-.category {
-  height: 72px;
-  line-height: 72px;
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex: 1;
+  margin: 0 32px;
+}
+.nav-item {
   font-family: "rssb";
-  cursor: pointer;
-  position: relative;
-  z-index: 2;
+  font-size: 14px;
   color: $font1;
-}
-
-.category:hover .dropdown,
-.dropdown:hover {
-  display: block;
-}
-
-.dropdown {
-  display: none;
-  position: absolute;
-  top: 54px;
-  right: 34px;
-  transform: translateX(50%);
-  box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
-  border-radius: 8px 8px 8px 8px;
-  background: #fff;
-  overflow: hidden;
-  color: $font1;
-}
-
-.dropdown li {
-  font-size: 16px;
-  font-family: "rssb";
-  line-height: 40px;
-  text-align: left;
-  cursor: pointer;
   white-space: nowrap;
-  a {
-    display: block;
-    width: 100%;
-    height: 100%;
-    padding: 0 16px;
+  &:hover, &.nuxt-link-active {
+    color: $color1;
   }
 }
-
-.dropdown li:hover {
-  background: rgba($color1, 0.2);
-  color: $color1;
+.lang-switcher {
+  position: relative;
+  cursor: pointer;
+  z-index: 10;
 }
-
-.entrance {
-  margin: 0;
+.lang-current {
+  font-family: "rssb";
+  font-size: 14px;
+  color: $font1;
+  padding: 6px 12px;
+  border: 1px solid $color1;
+  border-radius: 20px;
+  &:hover { color: $color1; }
+}
+.lang-switcher:hover .lang-dropdown,
+.lang-dropdown:hover {
+  display: block;
+}
+.lang-dropdown {
+  display: none;
+  position: absolute;
+  top: 36px;
+  right: 0;
+  background: #fff;
+  box-shadow: 0px 4px 12px 0px rgba(0,0,0,0.12);
+  border-radius: 8px;
+  overflow: hidden;
+  min-width: 120px;
+  li {
+    span {
+      display: block;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-family: "rssb";
+      color: $font1;
+      white-space: nowrap;
+      cursor: pointer;
+      &:hover { background: rgba($color1, 0.1); color: $color1; }
+    }
+  }
 }
 
 @media screen and (max-width: 1100px) {

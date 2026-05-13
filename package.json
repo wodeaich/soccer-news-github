@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.13.6",
+    "@nuxtjs/i18n": "7",
     "consola": "^3.2.3",
     "core-js": "^3.25.3",
     "nuxt": "^2.15.8",
