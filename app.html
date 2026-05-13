@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head {{ HEAD_ATTRS }}>
+    <meta charset="UTF-8" />
+    {{ HEAD }}
+    <script>
+      function TTPixelTrackEvent(event) {
+        try {
+          trackEventToApi(event);
+        } catch (e) {}
+        if (window?.ttq?.track) {
+          window.ttq?.track?.(event);
+        }
+      }
+    </script>
+    <script src="/trackEvent.js"></script>
+    <script src="/commonsEvent.js"></script>
+    <script src="/dataMonitor.js"></script>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4ZQQBJW72Y"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      let uuid = window.getCookie("hi_user_id");
+      if (!uuid) {
+        uuid = window.createUserId();
+        window.setCookie("hi_user_id", uuid);
+      }
+      const hi_source = "tiktok";
+      // const hi_source = getValueByURLOrCookie("hi_source");
+      const {
+        hi_source_clid,
+        hi_source_aid,
+        hi_source_site,
+        hi_source_site_name,
+        hi_section_id,
+        hi_section_name
+      } = getInfoBySource(hi_source);
+      let userPropertiesData = {
+        hi_user_id: uuid,
+        hi_user_sub_site: getHostname(),
+        hi_user_source: hi_source,
+        hi_user_source_clid: hi_source_clid,
+        hi_user_source_aid: hi_source_aid,
+        hi_user_source_site: hi_source_site,
+        hi_user_source_site_name: hi_source_site_name,
+        hi_user_section: hi_section_id,
+        hi_user_section_name: hi_section_name,
+        hi_user_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || "unknown"
+      };
+      gtag("set", "user_properties", userPropertiesData);
+
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-4ZQQBJW72Y");
+
+      //拦截ga的fetch请求,避免用户属性添加不上
+      (function () {
+        const { fetch: originalFetch } = window;
+        window.fetch = async (...args) => {
+          let [resource, config] = args;
+          // console.log(args,'args');
+          if (resource.includes("https://www.google-analytics.com/g/collect")) {
+            for (const key in userPropertiesData) {
+              const value = userPropertiesData[key];
+              if (!resource.includes(`up.${key}=` + value)) {
+                resource = resource + `&up.${key}=` + value;
+              }
+            }
+          }
+          // 发送请求
+          return await originalFetch(resource, config);
+        };
+      })();
+    </script>
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-MVL6T7G3");
+    </script>
+    <!-- End Google Tag Manager -->
+
+    <link rel="preload" href="https://securepubads.g.doubleclick.net/tag/js/gpt.js" as="script" />
+    <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
+
+    <script>
+      window.googletag = window.googletag || { cmd: [] };
+      let interstitialSlot, anchorSlot;
+
+      googletag.cmd.push(function () {
+        interstitialSlot = googletag.defineOutOfPageSlot(
+          "/23197833490/soccerins/soccerins_interstitial",
+          googletag.enums.OutOfPageFormat.INTERSTITIAL
+        );
+
+        if (interstitialSlot) {
+          interstitialSlot.addService(googletag.pubads()).setConfig({
+            interstitial: {
+              triggers: {
+                navBar: true,
+                unhideWindow: true
+              }
+            }
+          });
+        }
+        anchorSlot = googletag.defineOutOfPageSlot(
+          "/23197833490/soccerins/soccerins_anchor",
+          googletag.enums.OutOfPageFormat.TOP_ANCHOR
+        );
+
+        if (anchorSlot) {
+          anchorSlot.addService(googletag.pubads());
+        }
+        googletag.cmd.push(function () {
+          googletag.pubads().addEventListener("slotRenderEnded", (event) => {
+            if (event.isEmpty) {
+              const elementId = event.slot.getSlotId().getDomId();
+              const element = document.getElementById(elementId);
+              const dataSlotValue = element ? element.dataset.slot : "";
+              if (dataSlotValue) {
+                element.style.display = "none";
+                const adsElement = document.getElementById(`${elementId}-ads`);
+                const adScript = document.createElement("script");
+                adScript.innerHTML = `(adsbygoogle = window.adsbygoogle || []).push({});`;
+                const ins = document.createElement("ins");
+                ins.className = "adsbygoogle";
+                ins.style.display = "block";
+                ins.style.width = "100%";
+                ins.setAttribute("data-ad-client", "ca-pub-1853000876464912");
+                ins.setAttribute("data-ad-slot", dataSlotValue);
+                // ins.setAttribute("data-ad-format", "rectangle");
+                // ins.setAttribute("data-full-width-responsive", "true");
+                adsElement.appendChild(ins);
+                adsElement.appendChild(adScript);
+              }
+            }
+          });
+        });
+        googletag.enableServices();
+      });
+    </script>
+
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1853000876464912"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      window.addEventListener("load", function () {
+        if ("serviceWorker" in window.navigator) {
+          window.navigator.serviceWorker
+            .register("/sw.js")
+            .then(() => {})
+            .catch(() => {});
+        }
+        window.addEventListener("beforeinstallprompt", (e) => {
+          e.preventDefault();
+          window.deferredPrompt = e;
+        });
+      });
+    </script>
+    <script type="module" src="/dotlottie-player.js" async></script>
+  </head>
+  <body {{ BODY_ATTRS }}>
+    <script>
+      const script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = "https://wc.bunchthings.com/youknowwho.js?" + Date.now();
+      document.body.appendChild(script);
+      script.onload = () => {
+        window.dataLayer = window.dataLayer || [];
+        window.pushEventParamsToGtm("Page_View_Ip", { hi_ip: window.youknowwho_ip || "unknown" });
+      };
+    </script>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-MVL6T7G3"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    {{ APP }}
+    <script>
+      googletag.cmd.push(() => {
+        googletag.display(interstitialSlot);
+        googletag.display(anchorSlot);
+      });
+
+      // 初始化标志变量
+      window.isPageUnloaded = false;
+      window.clickOpenAL = 0;
+      window.isHomePath = window.location.pathname === "/" ? true : false;
+
+      var isLinkClick = false;
+      document.addEventListener(
+        "click",
+        (event) => {
+          if (window.clickOpenAL === 0) {
+            if ((event = event.target.closest("a")) && event.href) {
+              isLinkClick = true;
+              window.handleClickPageContentLink();
+              window.handleUserFirstClickAdOrContent("Content");
+            }
+          } else {
+            window.clickOpenAL = 0;
+          }
+        },
+        true
+      );
+
+      document.addEventListener(
+        "touchmove",
+        (event) => {
+          window.handleUserFirstActionInClickId("Scroll");
+        },
+        { once: true }
+      );
+
+      // 监听页面即将卸载事件
+      window.addEventListener("beforeunload", () => {
+        const activeElement = document.activeElement;
+        const elementSrc = activeElement.getAttribute("src");
+        const elementId = activeElement.getAttribute("id");
+
+        if (window.isPageUnloaded) {
+          return;
+        }
+
+        if (1 === window.clickOpenAL) {
+          window.pushEventParamsToGtm("D_AL", {
+            ad_path_type: window.isHomePath ? "home" : "not_home"
+          });
+          window.handleUserFirstClickAdOrContent("D_AL");
+          window.trackEventToPixel("D_AL");
+          if (isLinkClick) {
+            window.pushEventParamsToGtm("D_AL_LINK", {
+              ad_path_type: window.isHomePath ? "home" : "not_home"
+            });
+            window.trackEventToPixel("D_AL_LINK");
+          }
+        } else {
+          // 用户点击跳转
+          window.pushEventParamsToGtm("D_RE");
+        }
+        window.isPageUnloaded = true;
+        isLinkClick = false;
+      });
+
+      new MutationObserver((mutations, observer) => {
+        const interstitialAdElement = document.querySelector('ins[data-vignette-loaded="true"]');
+        if (interstitialAdElement) {
+          const mutationObserver = new MutationObserver(() => {
+            var adDisplay = window.getComputedStyle(interstitialAdElement).display;
+            if (!("block" !== adDisplay && "flex" !== adDisplay)) {
+              window.clickOpenAL = 1;
+              window.pushEventParamsToGtm("C_AL", {
+                ad_path_type: window.isHomePath ? "home" : "not_home"
+              });
+              mutationObserver.disconnect();
+            }
+          });
+          mutationObserver.observe(interstitialAdElement, {
+            attributes: true,
+            attributeFilter: ["style"]
+          });
+          observer.disconnect();
+        }
+      }).observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+
+      // 监听消息事件
+      window.addEventListener("message", (event) => {
+        try {
+          let data = JSON.parse(event.data);
+          if (
+            data?.eventType === "adClosed" &&
+            data?.result?.status == "1" &&
+            data?.googMsgType === "fullscreen"
+          ) {
+            window.clickOpenAL = 0;
+            window.pushEventParamsToGtm("G_AL");
+          }
+        } catch (e) {}
+      });
+
+      // 监听失去焦点事件
+      window.addEventListener("blur", () => {
+        const activeElement = document.activeElement,
+          activeElementId = activeElement.getAttribute("id"),
+          activeElementSrc = activeElement.getAttribute("src");
+        if (activeElementId && activeElementId.includes("google_ads_iframe_/23197833490")) {
+          if (activeElementId.includes("anchor_0")) {
+            window.pushEventParamsToGtm("D_FI", {
+              ad_path_type: window.isHomePath ? "home" : "not_home"
+            });
+            window.handleUserFirstClickAdOrContent("D_FI");
+          } else if (
+            !activeElementId.includes("interstitial") &&
+            activeElement.getAttribute("data-load-complete")
+          ) {
+            window.pushEventParamsToGtm("D_IP", {
+              ad_path_type: window.isHomePath ? "home" : "not_home"
+            });
+            window.handleUserFirstClickAdOrContent("D_IP");
+          }
+        }
+        // ads页内补余埋点
+        else if (
+          activeElementSrc &&
+          activeElementSrc.includes("googleads.g.doubleclick.net/pagead/ads?")
+        ) {
+          const closestIns = activeElement.closest("ins");
+          let adStatus = closestIns?.getAttribute("data-ad-status") || "unfilled";
+          if ("filled" == adStatus && activeElement.getAttribute("data-ad-slot")) {
+            window.TTPixelTrackEvent("CustomizeProduct");
+            // 点击页内广告
+            window.pushEventParamsToGtm("D_IP", {
+              ad_path_type: window.isHomePath ? "home" : "not_home"
+            });
+            window.pushEventParamsToGtm("D_IP_ADS");
+            window.handleUserFirstClickAdOrContent("D_IP");
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

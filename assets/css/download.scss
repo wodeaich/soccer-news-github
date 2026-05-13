@@ -1,0 +1,196 @@
+.main {
+  width: 770px;
+}
+.download-info {
+  padding: 24px;
+  border-radius: 24px;
+  margin-bottom: 32px;
+  box-shadow: 5px 5px 4px 0px rgba(131, 169, 196, 0.3), -5px -5px 4px 0px #f8fdfd;
+  .base-info {
+    margin-bottom: 24px;
+  }
+  .icon {
+    width: 186px;
+    height: 186px;
+    border-radius: 24px 24px 24px 24px;
+    float: left;
+    margin-right: 24px;
+  }
+  .name {
+    font-size: 24px;
+    font-family: "sesb";
+    margin-bottom: 28px;
+    line-height: 32px;
+  }
+  .version {
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 16px;
+    p {
+      display: flex;
+      align-items: center;
+      margin-right: 32px;
+      margin-bottom: 16px;
+      white-space: nowrap;
+      color: $item-name;
+      font-family: "sesb";
+      b {
+        margin-right: 8px;
+        color: rgba($item-name, 0.6);
+      }
+    }
+  }
+  .update {
+    font-size: 16px;
+    margin-right: 32px;
+    margin-bottom: 16px;
+    white-space: nowrap;
+    color: $item-name;
+    font-family: "sesb";
+    b {
+      margin-right: 8px;
+      color: rgba($item-name, 0.6);
+    }
+  }
+}
+.icon-android {
+  @include icon(24px, 24px, "icon-android2.png");
+  margin-right: 8px;
+}
+.icon-ios {
+  @include icon(24px, 24px, "icon-ios2.png");
+  margin-right: 8px;
+}
+.platform {
+  margin-top: 38px;
+  display: flex;
+  .android,
+  .ios {
+    position: relative;
+    z-index: 2;
+    width: 244px;
+    height: 40px;
+    border-radius: 48px;
+    @include center;
+    cursor: pointer;
+    transition: 0.2s;
+    font-family: "seb";
+    box-shadow: 5px 5px 4px 0px rgba(131, 169, 196, 0.3), -5px -5px 4px 0px #f8fdfd;
+    &:hover {
+      .qrcode {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+  }
+  .android {
+    background: $btn-bg;
+    margin-right: 24px;
+    color: #ffffff;
+  }
+  .ios {
+    background: #f0f2f5;
+    border: 2px solid #68dfc3;
+    color: $btn-bg;
+  }
+  .qrcode {
+    position: absolute;
+    width: 124px;
+    height: 138px;
+    background: #ffffff;
+    border-radius: 16px;
+    top: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    // justify-content: center;
+    font-size: 14px;
+    color: $item-name;
+    padding-top: 8px;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+    border: 1px solid rgba(65, 65, 76, 0.2);
+    img {
+      margin-top: 6px;
+      width: 92px;
+      height: 92px;
+    }
+  }
+}
+@media screen and (max-width: 1200px) {
+  .main {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 879px) {
+  .download-info {
+    position: relative;
+    padding: vw(32) 0 0;
+    border-radius: vw(32);
+    margin: vw(48) vw(46);
+    box-shadow: 5px 5px 4px 0px rgba(131, 169, 196, 0.3), -5px -5px 4px 0px #f8fdfd;
+
+    .base-info {
+      margin-bottom: 0;
+      padding: 0 vw(32);
+    }
+    .icon {
+      width: vw(160);
+      height: vw(160);
+      border-radius: vw(12);
+      float: none;
+      margin: 0 auto;
+    }
+    .name {
+      text-align: center;
+      font-size: vw(28);
+      line-height: vw(36);
+      @include ellipsis;
+      margin-bottom: vw(28);
+      padding-top: vw(12);
+    }
+    .version {
+      display: none;
+    }
+  }
+  .update {
+    display: none;
+  }
+  .icon-android,
+  .icon-ios {
+    width: vw(48);
+    height: vw(48);
+    margin-right: vw(16);
+  }
+  .platform {
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .android,
+    .ios {
+      width: vw(260);
+      height: vw(64);
+      border-radius: vw(56);
+      font-size: vw(28);
+      a {
+        position: absolute;
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .android {
+      background: $btn-bg2;
+      margin-right: vw(6);
+    }
+    .ios {
+      border: 2px solid #2ae6b9;
+      margin-left: vw(6);
+    }
+    .qrcode {
+      display: none;
+    }
+  }
+}
