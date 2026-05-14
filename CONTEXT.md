@@ -91,9 +91,10 @@
 - [x] `pages/standings/index.vue` — 积分榜页（分组 Tab + 标准积分表 + 晋级/淘汰颜色标识 + 广告）
 - [x] 测试验证：6语言路由全部 200，标题正确翻译，空状态正常展示
 
-### Day 4（待做）
-- [ ] `pages/_lang/matches/_slug.vue` — 比赛详情/回顾页
-- [ ] `pages/_lang/live-tv/index.vue` — 直播推荐页
+### Day 4（2026-05-14）✅
+- [x] `pages/matches/_slug.vue` — 比赛详情/回顾页（比分头部+数据统计条+文字评述+相关新闻+SportsEvent schema）
+- [x] `pages/live-tv/index.vue` — 直播推荐页（地区Tab+7地区静态频道数据+FAQ折叠+FAQPage schema+今日赛事快览）
+- [x] 测试验证：所有语言路由 200，标题正确，schema 正常注入，404 错误处理正确
 
 ### Day 5（待做）
 - [ ] `scripts/fetch_matches.js`
