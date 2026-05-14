@@ -9,6 +9,6 @@ export default async function ({ $axios, env, isServer }, inject) {
     inject("navData", data);
   } catch (error) {
     console.error("Failed to fetch navigation data:", error);
-    inject("navData", []);
+    inject("navData", { list: [] });
   }
 }

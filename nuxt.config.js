@@ -150,6 +150,7 @@ export default {
   i18n: {
     strategy: "prefix",
     defaultLocale: "en",
+    baseUrl: "https://soccerins.com",
     locales: [
       { code: "en", iso: "en-US", file: "en.js", name: "English" },
       { code: "es", iso: "es-ES", file: "es.js", name: "Español" },

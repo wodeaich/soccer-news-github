@@ -7,7 +7,7 @@
       <div class="search-box">
         <input
           v-model="input"
-          :placeholder="searchText[lang] || searchText['en']"
+          :placeholder="$t('common.search')"
           class="search"
           name="search"
           @keyup.enter="search"
