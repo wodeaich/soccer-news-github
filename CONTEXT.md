@@ -1,7 +1,7 @@
 # SoccerIns 项目上下文记忆文档
 
 > 供 Claude Code 每次会话开始时读取，快速恢复项目背景。
-> 最后更新：2026-05-14（涵盖 Day1–Day6 全部开发记录）
+> 最后更新：2026-05-14（涵盖 Day1–Day7 全部开发记录）
 
 ---
 
@@ -246,7 +246,10 @@ node scripts/translate_content.js <article_id> # 翻译指定文章
 | SportsEvent JSON-LD | ✅ | `pages/matches/_slug.vue`（`innerHTML` 写法） |
 | FAQPage JSON-LD | ✅ | `pages/live-tv/index.vue`（`innerHTML` 写法） |
 | Sitemap 精细化 | ✅ | 6语言全路由，changefreq/priority/lastmod 已配置 |
+| Sitemap 动态文章 URL | ✅ | async routes() 从 API 拉取所有文章 slug，6语言展开 |
 | `llms.txt` | ✅ | `static/llms.txt` 已创建，告知 AI 爬虫站点结构 |
+| NewsArticle JSON-LD | ✅ | `pages/news/_slug.vue`（headline/image/datePublished/author/publisher） |
+| BreadcrumbList JSON-LD | ✅ | 全部6个页面（news/schedule/results/standings/live-tv + 详情页） |
 | Canonical 标签 | ⏳ | nuxt-i18n 自动处理，上线前验证 |
 | E-E-A-T About 页面 | ⏳ | 上线后持续优化 |
 
@@ -367,12 +370,46 @@ yarn dev
 
 ---
 
-## 下一步（Day 7）
+## Day 7 已完成（2026-05-14）✅
 
-1. **确认后端文章上架接口** — `generate_news.js` 的 `POST /api/article/create` 字段是否与实际接口匹配
-2. **配置定时任务（Cron）** — 5个脚本按频率自动运行（详见 `TODO.md`）
-3. **上线部署** — CDN验证 → Google Search Console 提交 → 灰度英语版 → 全量发布
+### 模块1+2：GitHub Actions CI/CD + Cron 定时任务
+| 文件 | 说明 |
+|------|------|
+| `.github/workflows/deploy.yml` | push to master → yarn generate → rsync 部署，所有密钥从 GitHub Secrets 注入 |
+| `.github/workflows/cron.yml` | 5个脚本定时执行（fetch-matches/results/standings/generate-news/translate-content），支持 workflow_dispatch 手动选择 |
+
+**GitHub Secrets 需配置（上线前在 GitHub 仓库 Settings → Secrets 设置）：**
+```
+SITE_ID / SITE_AFS / PROD_API_URL / TEST_API_URL
+API_FOOTBALL_KEY / API_FOOTBALL_BASE / WORLD_CUP_LEAGUE_ID / WORLD_CUP_SEASON
+MINIMAX_API_KEY / MINIMAX_BASE / CDN_BASE_URL
+DEPLOY_HOST / DEPLOY_USER / DEPLOY_KEY / DEPLOY_PATH / DEPLOY_PORT（可选，默认22）
+```
+
+### 模块3：SEO JSON-LD 结构化数据
+- `pages/news/_slug.vue`：NewsArticle + BreadcrumbList（3级面包屑：Home → News → 文章）
+- `pages/news/index.vue`：BreadcrumbList + htmlAttrs 补全
+- `pages/schedule/index.vue`：BreadcrumbList
+- `pages/results/index.vue`：BreadcrumbList
+- `pages/standings/index.vue`：BreadcrumbList
+- `pages/live-tv/index.vue`：BreadcrumbList（追加，保留原有 FAQPage）
+
+### 模块4：Sitemap 动态文章 URL
+- `nuxt.config.js`：sitemap.routes 改为 async function
+- 从 `/api/article/get_all_path` 拉取所有文章 slug
+- 每个 slug 生成 6 语言 URL（priority 0.6，changefreq weekly）
+- API 失败自动降级返回静态路由
 
 ---
 
-*文档由 Claude Code 根据完整开发过程整理（Day1–Day6），每次会话开始时读取此文件恢复上下文。*
+## 下一步（Day 8 — 上线）
+
+1. **配置 GitHub Secrets** — 在仓库 Settings → Secrets and variables → Actions 中配置所有密钥
+2. **确认后端文章上架接口** — `generate_news.js` 的 `POST /api/article/create` 字段格式
+3. **灰度发布** — 先上英语版 `/en/`，监控报错和加载速度
+4. **Google Search Console** — 提交 `https://soccerins.com/sitemap.xml`
+5. **全量发布** — 确认无误后开启 6 种语言
+
+---
+
+*文档由 Claude Code 根据完整开发过程整理（Day1–Day7），每次会话开始时读取此文件恢复上下文。*

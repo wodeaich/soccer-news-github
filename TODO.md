@@ -1,8 +1,8 @@
 # SoccerIns 待办事项
 
-> 最后更新：2026-05-14
+> 最后更新：2026-05-14（Day7 完成）
 > 截止日期：2026-06-11（世界杯开幕）
-> 工作分支：`claude/review-codebase-BBc0l`
+> 工作分支：`claude/review-codebase-sync-08s8r`（已含 Day1–Day7 全部代码）
 
 ---
 
@@ -15,38 +15,42 @@
 
 ---
 
-## 🟡 Day 7 — 上线准备
+## ✅ Day 7 — 已完成（2026-05-14）
+
+### GitHub Actions CI/CD
+- [x] `.github/workflows/deploy.yml` — push to master 自动构建+rsync部署
+- [x] `.github/workflows/cron.yml` — 5个脚本定时执行（支持 workflow_dispatch）
+
+### SEO JSON-LD 结构化数据
+- [x] NewsArticle JSON-LD — `pages/news/_slug.vue`
+- [x] BreadcrumbList JSON-LD — 全部 6 个页面
+- [x] Sitemap 动态文章 URL — `nuxt.config.js` async routes()
+
+---
+
+## 🔴 Day 8 — 上线前必做（阻塞）
+
+- [ ] **配置 GitHub Secrets** — 在仓库 Settings → Secrets and variables → Actions 设置所有密钥（见 CONTEXT.md）
+- [ ] **确认后端 API 文章创建接口** — `generate_news.js` 的 `POST /api/article/create` 字段格式
+
+---
+
+## 🟡 Day 8 — 上线流程
 
 ### CDN
 - [ ] 确认是否继续使用 Cloudflare（bunchthings.com）还是切换新 CDN
-- [ ] CDN 确定后，替换 `nuxt.config.js` 中的 `image.provider` 配置
-- [ ] 全站图片地址统一替换（目前 `.env` 预留了 `CDN_BASE_URL`）
-
-### SEO 验证
-- [ ] 上线后登录 [Google Search Console](https://search.google.com/search-console) 提交站点
-- [ ] 提交 sitemap：`https://soccerins.com/sitemap.xml`
-- [ ] 验证 hreflang 标签生成正确（6语言 + x-default）
-- [ ] 验证 canonical 标签各语言指向自身
+- [ ] CDN 确定后替换 `nuxt.config.js` 中 `image.provider` 配置
 
 ### 部署
-- [ ] 配置 GitHub Actions 或 CI/CD 自动部署流程
 - [ ] 灰度上线英语版（`/en/`），监控报错和加载速度
 - [ ] 确认 6 语言路由全部可访问（200 状态）
 - [ ] 全量发布 6 语言
 
----
-
-## 🟡 Day 7 — 数据脚本定时运行
-
-- [ ] 配置定时任务（Cron）自动运行以下脚本：
-
-| 脚本 | 建议频率 | 说明 |
-|------|---------|------|
-| `node scripts/fetch_matches.js` | 每天1次 | 更新赛程 |
-| `node scripts/fetch_results.js` | 每天3次（赛后） | 更新赛果 |
-| `node scripts/fetch_standings.js` | 每天1次 | 更新积分榜 |
-| `node scripts/generate_news.js` | 每天1次 | 生成当日赛事文章 |
-| `node scripts/translate_content.js` | 每天1次（生成后） | 翻译新文章 |
+### SEO 验证
+- [ ] 上线后登录 Google Search Console 提交站点
+- [ ] 提交 sitemap：`https://soccerins.com/sitemap.xml`
+- [ ] 验证 hreflang 标签生成正确（6语言 + x-default）
+- [ ] 验证 canonical 标签各语言指向自身
 
 ---
 
