@@ -3,22 +3,15 @@
  * 用法: node scripts/translate_content.js [article_id]
  *   不传 article_id 则翻译所有未翻译文章
  *
- * ⚠️ 运行前先在 .env 填写 MINIMAX_GROUP_ID
  */
 
 require("dotenv").config();
 const axios = require("axios");
 
 const API_KEY = process.env.MINIMAX_API_KEY;
-const GROUP_ID = process.env.MINIMAX_GROUP_ID;
 const MINIMAX_BASE = process.env.MINIMAX_BASE || "https://api.minimaxi.chat";
 const BACKEND_URL = process.env.PROD_API_URL || "https://api.tapmygame.com";
 const SITE_ID = process.env.SITE_ID || "soccerins";
-
-if (!GROUP_ID) {
-  console.error("[translate] ❌ 缺少 MINIMAX_GROUP_ID，请在 .env 文件中填写");
-  process.exit(1);
-}
 
 const LANGUAGES = [
   { code: "es", name: "Spanish", note: "Latin American Spanish" },
@@ -38,7 +31,7 @@ const minimax = axios.create({
 });
 
 async function translateText(text, targetLang) {
-  const response = await minimax.post(`/v1/text/chatcompletion_v2?GroupId=${GROUP_ID}`, {
+  const response = await minimax.post(`/v1/text/chatcompletion_v2`, {
     model: "MiniMax-Text-01",
     messages: [
       {

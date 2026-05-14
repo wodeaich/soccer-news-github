@@ -8,7 +8,6 @@
  *   node scripts/generate_news.js            # 自动处理今日赛事
  *   node scripts/generate_news.js --days 3   # 拉未来3天 + 过去3天赛事
  *
- * ⚠️ 运行前先在 .env 填写 MINIMAX_GROUP_ID
  */
 
 require("dotenv").config();
@@ -23,7 +22,6 @@ const LEAGUE_ID     = process.env.WORLD_CUP_LEAGUE_ID || 1;
 const SEASON        = process.env.WORLD_CUP_SEASON || 2026;
 
 const MINIMAX_KEY   = process.env.MINIMAX_API_KEY;
-const MINIMAX_GID   = process.env.MINIMAX_GROUP_ID;
 const MINIMAX_BASE  = process.env.MINIMAX_BASE || "https://api.minimaxi.chat";
 
 const BACKEND_URL   = process.env.PROD_API_URL || "https://api.tapmygame.com";
@@ -31,12 +29,6 @@ const SITE_AFS      = process.env.SITE_AFS || "soccerins-afs";
 
 // 已生成文章的缓存（避免同一场比赛重复生成）
 const CACHE_FILE = path.join(__dirname, ".news_cache.json");
-
-if (!MINIMAX_GID) {
-  console.error("❌ 缺少 MINIMAX_GROUP_ID，请在 .env 填写");
-  console.error("   登录 platform.minimaxi.com → 右上角头像 → 账号信息 → Group ID");
-  process.exit(1);
-}
 
 // ─── HTTP 客户端 ──────────────────────────────────────────────────────────────
 const apif = axios.create({
@@ -136,7 +128,7 @@ async function generateArticle(fixture) {
   console.log(`[Step2] 生成 ${type}: ${home} vs ${away} (ID:${fixtureId})`);
 
   const res = await minimaxClient.post(
-    `/v1/text/chatcompletion_v2?GroupId=${MINIMAX_GID}`,
+    `/v1/text/chatcompletion_v2`,
     {
       model: "MiniMax-Text-01",
       messages: [

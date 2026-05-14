@@ -8,11 +8,6 @@
 
 ## 🔴 立刻要做（阻塞后续开发）
 
-- [ ] **填写 MINIMAX_GROUP_ID**
-  - 登录 [platform.minimaxi.com](https://platform.minimaxi.com)
-  - 右上角头像 → 账号信息 → 复制 Group ID（18位数字）
-  - 填入 `.env`：`MINIMAX_GROUP_ID=xxxxxxxxxxxxxxxxxx`
-
 - [ ] **确认后端 API 文章创建接口**
   - `generate_news.js` 目前调用 `POST /api/article/create`
   - 需确认 `api.tapmygame.com` 的实际接口路径和请求字段格式
@@ -124,7 +119,7 @@
 | site_afs | soccerins-afs |
 | API-Football Key | 已配置到 `.env` |
 | MiniMax Key | 已配置到 `.env` |
-| MiniMax Group ID | ⚠️ **待填写** |
+| MiniMax Group ID | 不需要（套餐直接调用）|
 | 世界杯 League ID | 1 |
 | 赛季 | 2026 |
 | CDN | Cloudflare（bunchthings.com，暂定） |
