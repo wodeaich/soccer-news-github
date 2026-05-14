@@ -75,10 +75,15 @@
 - [x] 创建 `plugins/lang-redirect.js`（浏览器语言检测 + Cookie 记忆）
 - [x] 改造 `components/Afs/Header.vue`（导航菜单 + 语言切换器）
 
-### Day 2（待做）
-- [ ] `pages/_lang/index.vue` — 多语言首页
-- [ ] `pages/_lang/news/index.vue` — 新闻列表页
-- [ ] `pages/_lang/news/_slug.vue` — 新闻详情页
+### Day 2（2026-05-14）✅
+- [x] `pages/index.vue` — 世界杯多语言首页（精选+趋势+无限滚动+广告）
+- [x] `pages/news/index.vue` — 新闻列表页（精选卡片+无限滚动+广告）
+- [x] `pages/news/_slug.vue` — 新闻详情页（文章+广告穿插+OG标签）
+- [x] `components/Soccer/NewsCardFeatured.vue` / `NewsCardGrid.vue` / `NewsCardRow.vue`
+- [x] 修复 Header/Sidebar `searchText` 未定义 bug
+- [x] 修复 nav-data.js 错误时注入类型不匹配 bug
+- [x] 添加 i18n.baseUrl 以生成完整 hreflang 标签
+- [x] 测试验证：6种语言首页全部 200，新闻列表 200，详情 404 错误处理正确
 
 ### Day 3（待做）
 - [ ] `pages/_lang/schedule/index.vue` — 赛程页
