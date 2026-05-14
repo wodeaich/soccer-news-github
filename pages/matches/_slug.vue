@@ -185,9 +185,11 @@ export default {
         { hid: 'og:locale', property: 'og:locale', content: localeMap[locale] || locale },
         { hid: 'og:type', property: 'og:type', content: 'article' }
       ],
+      __dangerouslyDisableSanitizers: ['script'],
       script: this.match.home_team ? [{
+        hid: 'ld-sports-event',
         type: 'application/ld+json',
-        json: {
+        innerHTML: JSON.stringify({
           '@context': 'https://schema.org',
           '@type': 'SportsEvent',
           name: `${this.match.home_team} vs ${this.match.away_team}`,
@@ -196,7 +198,7 @@ export default {
           homeTeam: { '@type': 'SportsTeam', name: this.match.home_team },
           awayTeam: { '@type': 'SportsTeam', name: this.match.away_team },
           sport: 'Soccer'
-        }
+        })
       }] : []
     }
   }

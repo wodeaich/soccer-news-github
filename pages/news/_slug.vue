@@ -74,7 +74,7 @@ export default {
       title: `${this.newInfo.name} - SoccerIns`,
       meta: [
         { hid: 'description', name: 'description', content: this.newInfo.first_paragraph },
-        { hid: 'keywords', name: 'keywords', content: this.newInfo.terms },
+        { hid: 'keywords', name: 'keywords', content: this.newInfo.terms || '' },
         { hid: 'og:title', property: 'og:title', content: this.newInfo.name },
         { hid: 'og:description', property: 'og:description', content: this.newInfo.first_paragraph },
         { hid: 'og:url', property: 'og:url', content: `https://soccerins.com/${locale}/news/${this.newInfo.path}/` },

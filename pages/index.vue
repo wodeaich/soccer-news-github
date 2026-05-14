@@ -56,7 +56,6 @@
           :page-size="10"
           mod-id="all"
           :initial-items="allNews"
-          :extra-params="{ site_id: siteAfs }"
           class="news-list"
         >
           <template #default="{ items }">
@@ -102,11 +101,6 @@ export default {
       }
     } catch (e) {
       return { featured: [], trending: [], allNews: [] }
-    }
-  },
-  data() {
-    return {
-      siteAfs: process.env.SITE_AFS
     }
   },
   head() {

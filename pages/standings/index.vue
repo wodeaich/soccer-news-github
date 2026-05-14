@@ -82,7 +82,7 @@
 
           <!-- 说明图例 -->
           <div class="legend">
-            <span class="legend-item qualify-dot">{{ $t('standings.allGroups') ? '▪' : '' }} {{ qualifyText }}</span>
+            <span class="legend-item qualify-dot">▪ {{ qualifyText }}</span>
             <span class="legend-item danger-dot">▪ {{ eliminationText }}</span>
           </div>
         </div>

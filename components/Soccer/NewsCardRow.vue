@@ -49,7 +49,7 @@ export default {
   overflow: hidden;
   margin-bottom: 6px;
 }
-.date { font-size: 12px; color: $font2; }
+.date { font-size: 12px; color: rgba($font1, 0.5); }
 
 @media screen and (max-width: 750px) {
   .img { width: vw(160); height: vw(110); border-radius: vw(8); }

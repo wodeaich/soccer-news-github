@@ -255,9 +255,11 @@ export default {
         { hid: 'og:locale', property: 'og:locale', content: localeMap[locale] || locale },
         { hid: 'og:type', property: 'og:type', content: 'website' }
       ],
+      __dangerouslyDisableSanitizers: ['script'],
       script: [{
+        hid: 'ld-faq',
         type: 'application/ld+json',
-        json: {
+        innerHTML: JSON.stringify({
           '@context': 'https://schema.org',
           '@type': 'FAQPage',
           mainEntity: faqs.map(faq => ({
@@ -265,7 +267,7 @@ export default {
             name: faq.q,
             acceptedAnswer: { '@type': 'Answer', text: faq.a }
           }))
-        }
+        })
       }]
     }
   }
