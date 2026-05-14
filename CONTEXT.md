@@ -1,7 +1,7 @@
 # SoccerIns 项目上下文记忆文档
 
 > 供 Claude Code 每次会话开始时读取，快速恢复项目背景。
-> 最后更新：2026-05-14（涵盖 Day1–Day4 + 全站联调完整记录）
+> 最后更新：2026-05-14（涵盖 Day1–Day6 全部开发记录）
 
 ---
 
@@ -9,7 +9,7 @@
 
 | 项目 | 说明 |
 |------|------|
-| 网站 | soccerins.com — 世界杯资讯站 |
+| 网站 | soccerins.com — 世界杯2026资讯站 |
 | 负责人 | 非技术背景，独自负责整个项目 |
 | 开发方式 | Claude Code 完成所有代码 |
 | 代码仓库 | wodeaich/soccer-news-github |
@@ -67,6 +67,24 @@ $bg: #f0f2f5         // 页面背景
 
 ---
 
+## API Keys（全部已配置到 .env）
+
+| 变量名 | 值/状态 | 用途 |
+|--------|--------|------|
+| `API_FOOTBALL_KEY` | `a59ad9d574617a71686ae458a25dafd2` | 赛程/比分/积分榜实时数据 |
+| `API_FOOTBALL_BASE` | `https://v3.football.api-sports.io` | API-Football 接口地址 |
+| `WORLD_CUP_LEAGUE_ID` | `1` | FIFA 世界杯赛事 ID |
+| `WORLD_CUP_SEASON` | `2026` | 赛季年份 |
+| `MINIMAX_API_KEY` | `sk-cp-GyV6...`（已配置） | AI新闻生成 + 6语言翻译 |
+| `MINIMAX_BASE` | `https://api.minimaxi.chat` | MiniMax 接口地址 |
+| `MINIMAX_GROUP_ID` | **不需要**（付费套餐直接用 API Key） | — |
+| `CDN_BASE_URL` | `https://bunchthings.com` | Cloudflare CDN（暂定继续使用） |
+| `PROD_API_URL` | `https://api.tapmygame.com` | 后端 API |
+
+> ⚠️ MiniMax 付费套餐无需 Group ID，直接 Bearer Token 鉴权即可。
+
+---
+
 ## 已完成页面（前端全部完成）✅
 
 ### 路由总表
@@ -105,7 +123,7 @@ $bg: #f0f2f5         // 页面背景
 **`pages/schedule/index.vue`（赛程）**
 - 阶段 Tab（全部/小组赛/16强/8强/半决赛/决赛）
 - 按日期 key 分组展示，含开球时间 + 场地
-- API 端点：`/api/match/schedule?site_id=soccerins`（API-Football 接入后生效）
+- API 端点：`/api/match/schedule?site_id=soccerins`
 - 无数据 → 空状态（⚽ + noData 文字）
 
 **`pages/results/index.vue`（比赛结果）**
@@ -150,20 +168,87 @@ $bg: #f0f2f5         // 页面背景
 
 ---
 
+## 数据采集脚本（Day5）✅
+
+| 脚本 | 功能 | 推送接口 |
+|------|------|---------|
+| `scripts/fetch_matches.js` | 抓全部赛程 | `POST /api/match/schedule/sync` |
+| `scripts/fetch_results.js` | 抓已完成赛果（本地缓存 `.results_cache.json`，防超100次/天额度） | `POST /api/match/results/sync` |
+| `scripts/fetch_standings.js` | 抓积分榜，转换为 `{ groups: [{name, table}] }` 格式 | `POST /api/match/standings/sync` |
+
+**运行方式：**
+```bash
+node scripts/fetch_matches.js
+node scripts/fetch_results.js
+node scripts/fetch_standings.js
+```
+
+---
+
+## AI内容生成脚本（Day6）✅
+
+### generate_news.js — 三步流程
+
+```
+Step 1: API-Football 拉今日前后 N 天世界杯赛事
+Step 2: MiniMax 按赛事状态生成文章
+         - 未开赛 → Match Preview（前瞻/预测，约350字）
+         - 已结束 → Match Review（赛后综述，约350字）
+Step 3: POST /api/article/create 上架到后台（site_id=soccerins-afs）
+```
+
+**本地缓存：** `.news_cache.json` 记录已生成 fixture_id，避免重复生成。
+
+**运行方式：**
+```bash
+node scripts/generate_news.js           # 今日赛事
+node scripts/generate_news.js --days 3  # 前后3天赛事
+```
+
+### translate_content.js — 6语言翻译
+
+- 读取后端未翻译的英文文章
+- 调 MiniMax 翻译为 ES / PT / AR / JA / KO
+- 批量上传翻译到 `POST /api/article/translations/sync`
+
+**运行方式：**
+```bash
+node scripts/translate_content.js              # 翻译所有未翻译文章
+node scripts/translate_content.js <article_id> # 翻译指定文章
+```
+
+---
+
 ## 联调已修复的 Bug（2026-05-14）
 
 | # | 文件 | Bug | 修复方式 |
 |---|------|-----|---------|
-| 1 | `components/Afs/Header.vue` | `searchText` 对象未定义，SSR 500 | 改用 `$t('common.search')` |
-| 2 | `components/Afs/Sidebar.vue` | 同上 `searchText` 未定义 | 改用 `$t('common.search')` |
-| 3 | `plugins/nav-data.js` | API 失败时注入 `[]`，但 Sidebar prop 期望 Object | 改为注入 `{ list: [] }` |
-| 4 | `nuxt.config.js` | i18n 缺少 `baseUrl`，hreflang 标签无法生成完整 URL | 添加 `baseUrl: 'https://soccerins.com'` |
-| 5 | `Soccer/NewsCardGrid.vue` + `NewsCardRow.vue` | 日期颜色 `$font2 = #fff`（白底白字不可见） | 改为 `rgba($font1, 0.5)` |
-| 6 | `pages/standings/index.vue` | 图例 `▪` 符号被错误条件包裹，可能不显示 | 简化为始终显示 |
-| 7 | `pages/news/_slug.vue` | `newInfo.terms` 可能 `undefined`，keywords meta 输出 `"undefined"` | 加 `\|\| ''` 兜底 |
-| 8 | `pages/index.vue` + `pages/news/index.vue` | 给 `InfiniteScrollList1` 传了不存在的 `extra-params` prop（Vue 警告） | 移除该 prop 及 `data()` 中冗余的 `siteAfs` |
-| 9 | `pages/matches/_slug.vue` | JSON-LD 使用 `json:` 属性，Nuxt 2 vue-meta 不支持，schema 不输出 | 改为 `innerHTML: JSON.stringify(...)` + `__dangerouslyDisableSanitizers` |
-| 10 | `pages/live-tv/index.vue` | FAQPage JSON-LD 同上问题 | 同上修复 |
+| 1 | `components/Afs/Header.vue` | `searchText` 未定义，SSR 500 | 改用 `$t('common.search')` |
+| 2 | `components/Afs/Sidebar.vue` | 同上 | 改用 `$t('common.search')` |
+| 3 | `plugins/nav-data.js` | API 失败注入 `[]`，Sidebar 期望 Object | 改为注入 `{ list: [] }` |
+| 4 | `nuxt.config.js` | i18n 缺 `baseUrl`，hreflang 无完整 URL | 添加 `baseUrl: 'https://soccerins.com'` |
+| 5 | `Soccer/NewsCardGrid.vue` + `NewsCardRow.vue` | 日期颜色 `$font2=#fff`（白底白字） | 改为 `rgba($font1, 0.5)` |
+| 6 | `pages/standings/index.vue` | 图例符号被错误条件包裹 | 简化为始终显示 |
+| 7 | `pages/news/_slug.vue` | `newInfo.terms` 可能 undefined，keywords 输出 "undefined" | 加 `\|\| ''` 兜底 |
+| 8 | `pages/index.vue` + `pages/news/index.vue` | `InfiniteScrollList1` 传了不存在的 `extra-params` prop | 移除该 prop |
+| 9 | `pages/matches/_slug.vue` | JSON-LD `json:` 属性 Nuxt 2 不支持 | 改为 `innerHTML + __dangerouslyDisableSanitizers` |
+| 10 | `pages/live-tv/index.vue` | FAQPage JSON-LD 同上 | 同上修复 |
+
+---
+
+## SEO / GEO 完成状态
+
+| 项目 | 状态 | 说明 |
+|------|------|------|
+| hreflang 标签 | ✅ | nuxt-i18n `seo:true` + `baseUrl` 自动注入 |
+| 动态 OG / Twitter Card | ✅ | 首页、新闻详情、比赛详情均已实现 |
+| `htmlAttrs` lang + dir | ✅ | 所有页面 `head()` 已设置，阿拉伯语 RTL 正确 |
+| SportsEvent JSON-LD | ✅ | `pages/matches/_slug.vue`（`innerHTML` 写法） |
+| FAQPage JSON-LD | ✅ | `pages/live-tv/index.vue`（`innerHTML` 写法） |
+| Sitemap 精细化 | ✅ | 6语言全路由，changefreq/priority/lastmod 已配置 |
+| `llms.txt` | ✅ | `static/llms.txt` 已创建，告知 AI 爬虫站点结构 |
+| Canonical 标签 | ⏳ | nuxt-i18n 自动处理，上线前验证 |
+| E-E-A-T About 页面 | ⏳ | 上线后持续优化 |
 
 ---
 
@@ -190,11 +275,11 @@ G-4ZQQBJW72Y           ← GA4
 ### 三个 AdmSlot 用法
 ```html
 <!-- 首屏位（页面加载立即执行） -->
-<adm-slot-preload adm-id="news-1" adm-unit="/23197833490/soccerins/soccerins_home_1" ads-slot="6667048681" />
+<adm-slot-preload adm-id="home-1" adm-unit="/23197833490/soccerins/soccerins_home_1" ads-slot="6667048681" />
 <!-- 通栏大位（滚动到视口前半屏预加载） -->
-<adm-slot-full adm-id="match-full" adm-unit="/23197833490/soccerins/soccerins_home_full" ads-slot="4080715115" />
+<adm-slot-full adm-id="home-full" adm-unit="/23197833490/soccerins/soccerins_home_full" ads-slot="4080715115" />
 <!-- 普通位（滚动进入视口时执行） -->
-<adm-slot adm-id="detail-3" adm-unit="/23197833490/soccerins/soccerins_home_3" ads-slot="6028318341" />
+<adm-slot adm-id="home-3" adm-unit="/23197833490/soccerins/soccerins_home_3" ads-slot="6028318341" />
 ```
 
 > 新页面需要新广告位时，必须在 GAM 后台申请新 ad unit，拿到正式 unit path 和 slot ID 再写代码。
@@ -203,101 +288,9 @@ G-4ZQQBJW72Y           ← GA4
 
 ## CDN 情况
 
-- 当前：Cloudflare（bunchthings.com）
-- 即将迁移到新 CDN（**地址待用户确认**）
-- **迁移完成前不上线**，CDN 确定后统一替换
+- 当前：**Cloudflare（bunchthings.com）**，决定暂时继续使用
 - 新图片全部用 `<img :src="imgUrl" loading="lazy" />`，**不用** `<NuxtImg>`
-- `.env` 里预留 `CDN_BASE_URL` 变量，确定后填入
-
----
-
-## API Keys 状态
-
-| Key | 状态 | 用途 |
-|-----|------|------|
-| API-Football | ❌ **未注册** | 赛程/比分/积分榜实时数据 |
-| MiniMax | ❌ **未注册** | AI生成新闻 + 6语言翻译 |
-| 后端 API | ✅ 可用 | api.tapmygame.com（新闻/文章） |
-
-**注册地址：**
-- API-Football：https://www.api-football.com/（免费 100次/天）
-- MiniMax：https://platform.minimaxi.com/
-
----
-
-## 后续待完成（Day 5–7）
-
-### Day 5 — 数据采集脚本 ✅ 已完成
-- [x] `scripts/fetch_matches.js` — 抓赛程，同步到后端 `/api/match/schedule/sync`
-- [x] `scripts/fetch_results.js` — 抓赛果，本地缓存防止超额度，同步到 `/api/match/results/sync`
-- [x] `scripts/fetch_standings.js` — 抓积分榜，同步到 `/api/match/standings/sync`
-
-### Day 6 — AI 内容生成 ✅ 已完成
-- [x] `scripts/generate_news.js` — 三步流程：① API-Football拉赛事 → ② MiniMax生成预测/综述 → ③ POST /api/article/create 上架
-- [x] `scripts/translate_content.js` — MiniMax将英文文章翻译为ES/PT/AR/JA/KO
-- [x] `static/llms.txt` — GEO优化，告知AI爬虫站点结构和更新频率
-- [x] Sitemap精细化 — 6语言全路由，changefreq/priority/lastmod全部配置
-
-### Day 7 — 上线
-- [ ] CDN 切换完成后统一替换图片地址
-- [ ] Google Search Console 提交
-- [ ] 灰度上线英语版，监控错误
-- [ ] 全量发布 6 语言
-
----
-
-## API Keys（已配置到 .env）
-
-| Key | 值 | 用途 |
-|-----|----|------|
-| API_FOOTBALL_KEY | a59ad9d574617a71686ae458a25dafd2 | 赛程/比分/积分榜 |
-| MINIMAX_API_KEY | sk-cp-GyV6... | AI新闻生成+翻译 |
-| MINIMAX_GROUP_ID | ⚠️ 待填写 | 登录 platform.minimaxi.com → 账号信息 → Group ID |
-| WORLD_CUP_LEAGUE_ID | 1 | API-Football 世界杯赛事ID |
-| WORLD_CUP_SEASON | 2026 | 赛季 |
-
-## generate_news.js 三步流程说明
-
-```
-Step 1: 从 API-Football 拉今日/近期世界杯赛事（即将开赛 + 刚结束）
-Step 2: 以赛事数据为上下文，调 MiniMax 生成对应文章
-         - 赛前：预测/前瞻文章（Match Preview）
-         - 赛后：赛评/总结文章（Match Review）
-Step 3: POST 到后台 /api/article/create 上架，site_id=soccerins-afs
-```
-
----
-
-## SEO/GEO 完成状态
-
-| 项目 | 状态 | 说明 |
-|------|------|------|
-| hreflang 标签 | ✅ | nuxt-i18n `seo:true` + `baseUrl` 自动注入 |
-| 动态 OG / Twitter Card | ✅ | 首页、新闻详情、比赛详情均已实现 |
-| `htmlAttrs` lang + dir | ✅ | 所有页面 `head()` 已设置，阿拉伯语 RTL 正确 |
-| SportsEvent JSON-LD | ✅ | `pages/matches/_slug.vue`（`innerHTML` 写法） |
-| FAQPage JSON-LD | ✅ | `pages/live-tv/index.vue`（`innerHTML` 写法） |
-| Canonical 标签 | ⏳ | nuxt-i18n 自动处理，上线前验证 |
-| Sitemap | ⏳ | 需补充 `lastmod`、`changefreq` |
-| `llms.txt` | ⏳ | Day 6 完成 |
-| E-E-A-T About 页面 | ⏳ | 上线后持续优化 |
-
----
-
-## 语言切换逻辑
-
-```
-用户访问 soccerins.com/
-  → cookie preferred_lang 存在？→ 直接跳对应语言
-  → 没有 → 读 navigator.languages → 跳匹配语言（兜底 /en/）
-  → 写入 cookie（1年有效）
-
-用户切换语言（Header 右上角下拉）
-  → switchLang(code) 更新 cookie
-  → switchLocalePath(code) 跳转同页面对应语言版本
-
-文章详情页切换语言 → 跳目标语言新闻列表页（后台无多语言关联字段，可接受）
-```
+- `.env` 里已配置 `CDN_BASE_URL=https://bunchthings.com`
 
 ---
 
@@ -313,11 +306,14 @@ Step 3: POST 到后台 /api/article/create 上架，site_id=soccerins-afs
 
 2. **广告组件参数一个字不改**，adm-id/adm-unit/ads-slot 严格按现有格式
 
-3. **图片不用 `<NuxtImg>`**，用 `<img>` + CDN 变量（CDN 迁移中）
+3. **图片不用 `<NuxtImg>`**，用 `<img>` + CDN 变量
 
-4. **阿拉伯语 RTL**：所有新页面的 `head()` 要加 `htmlAttrs: { dir: locale === 'ar' ? 'rtl' : 'ltr' }`
+4. **阿拉伯语 RTL**：所有新页面的 `head()` 要加：
+   ```js
+   htmlAttrs: { dir: this.$i18n.locale === 'ar' ? 'rtl' : 'ltr' }
+   ```
 
-5. **API-Football 额度**：100次/天，`fetch_results.js` 必须做缓存
+5. **API-Football 额度**：100次/天，`fetch_results.js` 已做缓存，其他脚本按需调用
 
 6. **JSON-LD 写法**（Nuxt 2 vue-meta 规范）：
    ```js
@@ -339,13 +335,30 @@ Step 3: POST 到后台 /api/article/create 上架，site_id=soccerins-afs
 
 ---
 
+## 语言切换逻辑
+
+```
+用户访问 soccerins.com/
+  → cookie preferred_lang 存在？→ 直接跳对应语言
+  → 没有 → 读 navigator.languages → 跳匹配语言（兜底 /en/）
+  → 写入 cookie（1年有效）
+
+用户切换语言（Header 右上角下拉）
+  → switchLang(code) 更新 cookie
+  → switchLocalePath(code) 跳转同页面对应语言版本
+
+文章详情页切换语言 → 跳目标语言新闻列表页（后台无多语言关联字段，可接受）
+```
+
+---
+
 ## 本地开发说明
 
 ```bash
 # 安装依赖
 yarn install
 
-# 启动开发服务器
+# 启动开发服务器（注意：运行在云端容器，本地浏览器无法通过 localhost 直接访问）
 yarn dev
 
 # 注意：本地开发时 api.tapmygame.com 会返回 403（IP 白名单限制）
@@ -354,4 +367,12 @@ yarn dev
 
 ---
 
-*文档由 Claude Code 根据完整开发过程整理，每次会话开始时读取此文件恢复上下文。*
+## 下一步（Day 7）
+
+1. **确认后端文章上架接口** — `generate_news.js` 的 `POST /api/article/create` 字段是否与实际接口匹配
+2. **配置定时任务（Cron）** — 5个脚本按频率自动运行（详见 `TODO.md`）
+3. **上线部署** — CDN验证 → Google Search Console 提交 → 灰度英语版 → 全量发布
+
+---
+
+*文档由 Claude Code 根据完整开发过程整理（Day1–Day6），每次会话开始时读取此文件恢复上下文。*
