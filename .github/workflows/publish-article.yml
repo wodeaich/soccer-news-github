@@ -1,0 +1,142 @@
+name: Publish Article
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "运行模式"
+        required: true
+        type: choice
+        options:
+          - auto
+          - fixture
+          - manual
+        default: auto
+
+      fixture_id:
+        description: "赛事 ID（mode=fixture 时必填，例：1234567）"
+        required: false
+        type: string
+        default: ""
+
+      article_type:
+        description: "文章类型（仅 manual 模式有效）"
+        required: false
+        type: choice
+        options:
+          - preview
+          - review
+          - news
+          - analysis
+        default: news
+
+      title:
+        description: "文章标题（仅 manual 模式）"
+        required: false
+        type: string
+        default: ""
+
+      content:
+        description: "文章正文（仅 manual 模式，500字以内）"
+        required: false
+        type: string
+        default: ""
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Validate inputs
+        run: |
+          MODE="${{ github.event.inputs.mode }}"
+          FIXTURE_ID="${{ github.event.inputs.fixture_id }}"
+          TITLE="${{ github.event.inputs.title }}"
+          CONTENT="${{ github.event.inputs.content }}"
+
+          echo "Mode: $MODE"
+
+          if [ "$MODE" = "fixture" ] && [ -z "$FIXTURE_ID" ]; then
+            echo "❌ fixture 模式需要填写 fixture_id"
+            exit 1
+          fi
+
+          if [ "$MODE" = "manual" ] && [ -z "$TITLE" ]; then
+            echo "❌ manual 模式需要填写 title"
+            exit 1
+          fi
+
+          if [ "$MODE" = "manual" ] && [ -z "$CONTENT" ]; then
+            echo "❌ manual 模式需要填写 content"
+            exit 1
+          fi
+
+          echo "✅ 参数校验通过"
+
+      - name: Run pipeline (auto)
+        if: github.event.inputs.mode == 'auto'
+        env:
+          API_FOOTBALL_KEY:    ${{ secrets.API_FOOTBALL_KEY }}
+          API_FOOTBALL_BASE:   ${{ secrets.API_FOOTBALL_BASE }}
+          WORLD_CUP_LEAGUE_ID: ${{ secrets.WORLD_CUP_LEAGUE_ID }}
+          WORLD_CUP_SEASON:    ${{ secrets.WORLD_CUP_SEASON }}
+          MINIMAX_API_KEY:     ${{ secrets.MINIMAX_API_KEY }}
+          MINIMAX_BASE:        ${{ secrets.MINIMAX_BASE }}
+          PROD_API_URL:        ${{ secrets.PROD_API_URL }}
+          SITE_AFS:            ${{ secrets.SITE_AFS }}
+          SITE_ID:             ${{ secrets.SITE_ID }}
+        run: node scripts/pipeline.js --auto
+
+      - name: Run pipeline (fixture)
+        if: github.event.inputs.mode == 'fixture'
+        env:
+          API_FOOTBALL_KEY:    ${{ secrets.API_FOOTBALL_KEY }}
+          API_FOOTBALL_BASE:   ${{ secrets.API_FOOTBALL_BASE }}
+          WORLD_CUP_LEAGUE_ID: ${{ secrets.WORLD_CUP_LEAGUE_ID }}
+          WORLD_CUP_SEASON:    ${{ secrets.WORLD_CUP_SEASON }}
+          MINIMAX_API_KEY:     ${{ secrets.MINIMAX_API_KEY }}
+          MINIMAX_BASE:        ${{ secrets.MINIMAX_BASE }}
+          PROD_API_URL:        ${{ secrets.PROD_API_URL }}
+          SITE_AFS:            ${{ secrets.SITE_AFS }}
+          SITE_ID:             ${{ secrets.SITE_ID }}
+        run: node scripts/pipeline.js --fixture "${{ github.event.inputs.fixture_id }}"
+
+      - name: Run pipeline (manual)
+        if: github.event.inputs.mode == 'manual'
+        env:
+          MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+          MINIMAX_BASE:    ${{ secrets.MINIMAX_BASE }}
+          PROD_API_URL:    ${{ secrets.PROD_API_URL }}
+          SITE_AFS:        ${{ secrets.SITE_AFS }}
+          SITE_ID:         ${{ secrets.SITE_ID }}
+        run: |
+          node scripts/pipeline.js \
+            --manual \
+            --title "${{ github.event.inputs.title }}" \
+            --content "${{ github.event.inputs.content }}" \
+            --type "${{ github.event.inputs.article_type }}"
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Publish Article Result" >> $GITHUB_STEP_SUMMARY
+          echo "| 字段 | 值 |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|-----|" >> $GITHUB_STEP_SUMMARY
+          echo "| 模式 | ${{ github.event.inputs.mode }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Fixture ID | ${{ github.event.inputs.fixture_id || '—' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 标题 | ${{ github.event.inputs.title || '—' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 状态 | ${{ job.status }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 时间 | $(date '+%Y-%m-%d %H:%M:%S UTC') |" >> $GITHUB_STEP_SUMMARY
