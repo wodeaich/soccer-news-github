@@ -232,11 +232,11 @@ G-4ZQQBJW72Y           ← GA4
 - [x] `scripts/fetch_results.js` — 抓赛果，本地缓存防止超额度，同步到 `/api/match/results/sync`
 - [x] `scripts/fetch_standings.js` — 抓积分榜，同步到 `/api/match/standings/sync`
 
-### Day 6 — AI 内容生成
-- [ ] `scripts/generate_news.js` — **三步流程**：① 拉赛事数据 → ② MiniMax生成相关文章 → ③ 后台上架
-- [ ] `scripts/translate_content.js` — 6 语言翻译 ✅ 已完成
-- [ ] `static/llms.txt` — GEO 优化，告知 AI 爬虫站点结构
-- [ ] Sitemap 精细化（`lastmod`、`changefreq`、图片 sitemap）
+### Day 6 — AI 内容生成 ✅ 已完成
+- [x] `scripts/generate_news.js` — 三步流程：① API-Football拉赛事 → ② MiniMax生成预测/综述 → ③ POST /api/article/create 上架
+- [x] `scripts/translate_content.js` — MiniMax将英文文章翻译为ES/PT/AR/JA/KO
+- [x] `static/llms.txt` — GEO优化，告知AI爬虫站点结构和更新频率
+- [x] Sitemap精细化 — 6语言全路由，changefreq/priority/lastmod全部配置
 
 ### Day 7 — 上线
 - [ ] CDN 切换完成后统一替换图片地址
