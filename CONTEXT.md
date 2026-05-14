@@ -85,10 +85,11 @@
 - [x] 添加 i18n.baseUrl 以生成完整 hreflang 标签
 - [x] 测试验证：6种语言首页全部 200，新闻列表 200，详情 404 错误处理正确
 
-### Day 3（待做）
-- [ ] `pages/_lang/schedule/index.vue` — 赛程页
-- [ ] `pages/_lang/results/index.vue` — 比赛结果页
-- [ ] `pages/_lang/standings/index.vue` — 积分榜页
+### Day 3（2026-05-14）✅
+- [x] `pages/schedule/index.vue` — 赛程页（阶段 Tab 筛选 + 按日分组 + 开球时间/场地 + 广告）
+- [x] `pages/results/index.vue` — 比赛结果页（今日/全部 Tab + 比分卡片 + 评述链接 + 广告）
+- [x] `pages/standings/index.vue` — 积分榜页（分组 Tab + 标准积分表 + 晋级/淘汰颜色标识 + 广告）
+- [x] 测试验证：6语言路由全部 200，标题正确翻译，空状态正常展示
 
 ### Day 4（待做）
 - [ ] `pages/_lang/matches/_slug.vue` — 比赛详情/回顾页
