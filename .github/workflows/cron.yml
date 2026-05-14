@@ -1,0 +1,121 @@
+name: SoccerIns Data & Content Cron Jobs
+
+on:
+  schedule:
+    # UTC 00:00 更新赛程 (北京时间 08:00)
+    - cron: "0 0 * * *"
+    # UTC 01:00 / 09:00 / 17:00 更新赛果 (赛后时段)
+    - cron: "0 1 * * *"
+    - cron: "0 9 * * *"
+    - cron: "0 17 * * *"
+    # UTC 06:00 AI 生成新闻 (北京时间 14:00)
+    - cron: "0 6 * * *"
+    # UTC 07:00 翻译文章 (生成后 1 小时)
+    - cron: "0 7 * * *"
+    # UTC 23:00 更新积分榜 (北京时间次日 07:00)
+    - cron: "0 23 * * *"
+  workflow_dispatch:
+    inputs:
+      job:
+        description: "Run a specific job manually"
+        required: true
+        type: choice
+        options:
+          - fetch-matches
+          - fetch-results
+          - fetch-standings
+          - generate-news
+          - translate-content
+          - all
+
+env:
+  PROD_API_URL: ${{ secrets.PROD_API_URL }}
+  API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+  API_FOOTBALL_BASE: ${{ secrets.API_FOOTBALL_BASE }}
+  WORLD_CUP_LEAGUE_ID: ${{ secrets.WORLD_CUP_LEAGUE_ID }}
+  WORLD_CUP_SEASON: ${{ secrets.WORLD_CUP_SEASON }}
+  MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+  MINIMAX_BASE: ${{ secrets.MINIMAX_BASE }}
+  SITE_ID: ${{ secrets.SITE_ID }}
+  SITE_AFS: ${{ secrets.SITE_AFS }}
+
+jobs:
+  fetch-matches:
+    name: Fetch match schedule
+    runs-on: ubuntu-latest
+    if: >-
+      (github.event_name == 'workflow_dispatch' && (github.event.inputs.job == 'fetch-matches' || github.event.inputs.job == 'all')) ||
+      (github.event_name == 'schedule' && github.event.schedule == '0 0 * * *')
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "yarn"
+      - run: yarn install --frozen-lockfile
+      - name: Fetch match schedule from API-Football
+        run: node scripts/fetch_matches.js
+
+  fetch-results:
+    name: Fetch match results
+    runs-on: ubuntu-latest
+    if: >-
+      (github.event_name == 'workflow_dispatch' && (github.event.inputs.job == 'fetch-results' || github.event.inputs.job == 'all')) ||
+      (github.event_name == 'schedule' && (github.event.schedule == '0 1 * * *' || github.event.schedule == '0 9 * * *' || github.event.schedule == '0 17 * * *'))
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "yarn"
+      - run: yarn install --frozen-lockfile
+      - name: Fetch match results from API-Football
+        run: node scripts/fetch_results.js
+
+  fetch-standings:
+    name: Fetch standings
+    runs-on: ubuntu-latest
+    if: >-
+      (github.event_name == 'workflow_dispatch' && (github.event.inputs.job == 'fetch-standings' || github.event.inputs.job == 'all')) ||
+      (github.event_name == 'schedule' && github.event.schedule == '0 23 * * *')
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "yarn"
+      - run: yarn install --frozen-lockfile
+      - name: Fetch standings from API-Football
+        run: node scripts/fetch_standings.js
+
+  generate-news:
+    name: Generate AI news articles
+    runs-on: ubuntu-latest
+    if: >-
+      (github.event_name == 'workflow_dispatch' && (github.event.inputs.job == 'generate-news' || github.event.inputs.job == 'all')) ||
+      (github.event_name == 'schedule' && github.event.schedule == '0 6 * * *')
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "yarn"
+      - run: yarn install --frozen-lockfile
+      - name: Generate news articles via MiniMax AI
+        run: node scripts/generate_news.js --days 1
+
+  translate-content:
+    name: Translate articles to 6 languages
+    runs-on: ubuntu-latest
+    if: >-
+      (github.event_name == 'workflow_dispatch' && (github.event.inputs.job == 'translate-content' || github.event.inputs.job == 'all')) ||
+      (github.event_name == 'schedule' && github.event.schedule == '0 7 * * *')
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "yarn"
+      - run: yarn install --frozen-lockfile
+      - name: Translate articles via MiniMax
+        run: node scripts/translate_content.js

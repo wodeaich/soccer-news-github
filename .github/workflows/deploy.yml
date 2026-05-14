@@ -1,0 +1,67 @@
+name: Build & Deploy SoccerIns
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Generate static site
+        env:
+          NODE_ENV: production
+          SITE_ID: ${{ secrets.SITE_ID }}
+          SITE_AFS: ${{ secrets.SITE_AFS }}
+          PROD_API_URL: ${{ secrets.PROD_API_URL }}
+          TEST_API_URL: ${{ secrets.TEST_API_URL }}
+          API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+          API_FOOTBALL_BASE: ${{ secrets.API_FOOTBALL_BASE }}
+          WORLD_CUP_LEAGUE_ID: ${{ secrets.WORLD_CUP_LEAGUE_ID }}
+          WORLD_CUP_SEASON: ${{ secrets.WORLD_CUP_SEASON }}
+          MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+          MINIMAX_BASE: ${{ secrets.MINIMAX_BASE }}
+          CDN_BASE_URL: ${{ secrets.CDN_BASE_URL }}
+        run: yarn generate
+
+      - name: Setup SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_KEY }}
+
+      - name: Add server to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p ${{ secrets.DEPLOY_PORT || '22' }} ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy via rsync
+        run: |
+          rsync -avz --delete \
+            -e "ssh -p ${{ secrets.DEPLOY_PORT || '22' }}" \
+            dist/ \
+            ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:${{ secrets.DEPLOY_PATH }}/
+
+      - name: Notify result
+        if: always()
+        run: |
+          if [ "${{ job.status }}" = "success" ]; then
+            echo "✅ Deploy completed at $(date '+%Y-%m-%d %H:%M:%S UTC')"
+          else
+            echo "❌ Deploy failed — check logs above"
+          fi
