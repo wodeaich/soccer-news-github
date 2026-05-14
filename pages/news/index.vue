@@ -81,13 +81,25 @@ export default {
     }
   },
   head() {
+    const locale = this.$i18n.locale
+    const breadcrumbSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: `https://soccerins.com/${locale}/` },
+        { '@type': 'ListItem', position: 2, name: this.$t('news.title'), item: `https://soccerins.com/${locale}/news/` }
+      ]
+    }
     return {
+      htmlAttrs: { lang: locale, dir: locale === 'ar' ? 'rtl' : 'ltr' },
       title: `${this.$t('news.title')} - SoccerIns`,
       meta: [
         { hid: 'description', name: 'description', content: 'Latest World Cup 2026 news, transfer updates and team news.' },
         { hid: 'og:title', property: 'og:title', content: `${this.$t('news.title')} - SoccerIns` },
         { hid: 'og:type', property: 'og:type', content: 'website' }
-      ]
+      ],
+      __dangerouslyDisableSanitizers: ['script'],
+      script: [{ hid: 'ld-breadcrumb', type: 'application/ld+json', innerHTML: JSON.stringify(breadcrumbSchema) }]
     }
   }
 }

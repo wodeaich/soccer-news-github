@@ -256,19 +256,33 @@ export default {
         { hid: 'og:type', property: 'og:type', content: 'website' }
       ],
       __dangerouslyDisableSanitizers: ['script'],
-      script: [{
-        hid: 'ld-faq',
-        type: 'application/ld+json',
-        innerHTML: JSON.stringify({
-          '@context': 'https://schema.org',
-          '@type': 'FAQPage',
-          mainEntity: faqs.map(faq => ({
-            '@type': 'Question',
-            name: faq.q,
-            acceptedAnswer: { '@type': 'Answer', text: faq.a }
-          }))
-        })
-      }]
+      script: [
+        {
+          hid: 'ld-faq',
+          type: 'application/ld+json',
+          innerHTML: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: faqs.map(faq => ({
+              '@type': 'Question',
+              name: faq.q,
+              acceptedAnswer: { '@type': 'Answer', text: faq.a }
+            }))
+          })
+        },
+        {
+          hid: 'ld-breadcrumb',
+          type: 'application/ld+json',
+          innerHTML: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'Home', item: `https://soccerins.com/${locale}/` },
+              { '@type': 'ListItem', position: 2, name: this.$t('liveTV.title'), item: `https://soccerins.com/${locale}/live-tv/` }
+            ]
+          })
+        }
+      ]
     }
   }
 }

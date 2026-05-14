@@ -69,6 +69,38 @@ export default {
   head() {
     const locale = this.$i18n.locale
     const localeMap = { en: 'en_US', es: 'es_ES', pt: 'pt_BR', ar: 'ar_SA', ja: 'ja_JP', ko: 'ko_KR' }
+    const canonicalUrl = `https://soccerins.com/${locale}/news/${this.newInfo.path}/`
+    const pubDate = this.newInfo.published_at || this.newInfo.created_at || new Date().toISOString()
+
+    const newsArticleSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'NewsArticle',
+      headline: this.newInfo.name,
+      image: [this.newInfo.cover].filter(Boolean),
+      datePublished: pubDate,
+      dateModified: this.newInfo.updated_at || pubDate,
+      author: [{ '@type': 'Organization', name: 'SoccerIns', url: 'https://soccerins.com' }],
+      publisher: {
+        '@type': 'Organization',
+        name: 'SoccerIns',
+        logo: { '@type': 'ImageObject', url: 'https://soccerins.com/icons/192.png' }
+      },
+      description: this.newInfo.first_paragraph,
+      url: canonicalUrl,
+      mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
+      inLanguage: locale
+    }
+
+    const breadcrumbSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: `https://soccerins.com/${locale}/` },
+        { '@type': 'ListItem', position: 2, name: 'News', item: `https://soccerins.com/${locale}/news/` },
+        { '@type': 'ListItem', position: 3, name: this.newInfo.name, item: canonicalUrl }
+      ]
+    }
+
     return {
       htmlAttrs: { lang: locale, dir: locale === 'ar' ? 'rtl' : 'ltr' },
       title: `${this.newInfo.name} - SoccerIns`,
@@ -77,10 +109,15 @@ export default {
         { hid: 'keywords', name: 'keywords', content: this.newInfo.terms || '' },
         { hid: 'og:title', property: 'og:title', content: this.newInfo.name },
         { hid: 'og:description', property: 'og:description', content: this.newInfo.first_paragraph },
-        { hid: 'og:url', property: 'og:url', content: `https://soccerins.com/${locale}/news/${this.newInfo.path}/` },
+        { hid: 'og:url', property: 'og:url', content: canonicalUrl },
         { hid: 'og:locale', property: 'og:locale', content: localeMap[locale] || locale },
         { hid: 'og:image', property: 'og:image', content: this.newInfo.cover },
         { hid: 'og:type', property: 'og:type', content: 'article' }
+      ],
+      __dangerouslyDisableSanitizers: ['script'],
+      script: [
+        { hid: 'ld-news-article', type: 'application/ld+json', innerHTML: JSON.stringify(newsArticleSchema) },
+        { hid: 'ld-breadcrumb', type: 'application/ld+json', innerHTML: JSON.stringify(breadcrumbSchema) }
       ]
     }
   }

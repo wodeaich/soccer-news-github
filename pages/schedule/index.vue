@@ -142,6 +142,14 @@ export default {
   head() {
     const locale = this.$i18n.locale
     const localeMap = { en: 'en_US', es: 'es_ES', pt: 'pt_BR', ar: 'ar_SA', ja: 'ja_JP', ko: 'ko_KR' }
+    const breadcrumbSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: `https://soccerins.com/${locale}/` },
+        { '@type': 'ListItem', position: 2, name: this.$t('schedule.title'), item: `https://soccerins.com/${locale}/schedule/` }
+      ]
+    }
     return {
       htmlAttrs: { lang: locale, dir: locale === 'ar' ? 'rtl' : 'ltr' },
       title: `${this.$t('schedule.title')} - SoccerIns`,
@@ -150,7 +158,9 @@ export default {
         { hid: 'og:title', property: 'og:title', content: `${this.$t('schedule.title')} - SoccerIns` },
         { hid: 'og:locale', property: 'og:locale', content: localeMap[locale] || locale },
         { hid: 'og:type', property: 'og:type', content: 'website' }
-      ]
+      ],
+      __dangerouslyDisableSanitizers: ['script'],
+      script: [{ hid: 'ld-breadcrumb', type: 'application/ld+json', innerHTML: JSON.stringify(breadcrumbSchema) }]
     }
   }
 }
