@@ -1,0 +1,51 @@
+# soccerins.com
+
+> SoccerIns: World Cup 2026 Multilingual News & Match Coverage
+
+## About
+
+SoccerIns (soccerins.com) is a dedicated World Cup 2026 media site providing
+real-time match coverage, news, schedules, standings, and live TV guides in
+6 languages: English, Spanish, Portuguese, Arabic, Japanese, and Korean.
+
+All match data is sourced from official API-Football feeds.
+News articles are produced by our editorial team with AI assistance.
+
+## Content Sections
+
+- /en/          : Homepage — featured news, trending articles, latest updates
+- /en/news/     : World Cup 2026 news index (all articles)
+- /en/news/:slug : Individual news article (match previews, reviews, analysis)
+- /en/schedule/ : Full World Cup 2026 match schedule by stage
+- /en/results/  : Match results with scores and match review links
+- /en/standings/: Group stage standings (A–H) with promotion/elimination indicators
+- /en/matches/:slug : Match detail page with stats, commentary, and lineups
+- /en/live-tv/  : Live broadcast guide by region (US, UK, Brazil, Mexico, Japan, Korea, Middle East)
+
+## Multilingual URLs
+
+All sections available in:
+- English:    /en/
+- Spanish:    /es/
+- Portuguese: /pt/
+- Arabic:     /ar/  (RTL layout)
+- Japanese:   /ja/
+- Korean:     /ko/
+
+## Data Sources
+
+- Match fixtures, results, standings: API-Football (official data partner)
+- News & analysis: Original reporting + MiniMax AI-assisted content
+- Live TV guide: Curated regional broadcast data
+
+## Update Frequency
+
+- Match results: Updated after each match concludes
+- News articles: 5–20 new articles per match day
+- Standings: Updated after each match day
+- Schedule: Updated when fixture dates/times change
+
+## Contact
+
+Email: service@soccerins.com
+Site: https://soccerins.com

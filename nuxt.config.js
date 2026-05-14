@@ -172,7 +172,58 @@ export default {
   },
   modules: ["@nuxtjs/axios", "@nuxtjs/i18n"],
   sitemap: {
-    hostname: "https://soccerins.com/"
+    hostname: "https://soccerins.com/",
+    gzip: true,
+    i18n: true,
+    defaults: {
+      changefreq: "daily",
+      priority: 0.7,
+      lastmod: new Date().toISOString(),
+    },
+    routes: [
+      // 首页
+      { url: "/en/", changefreq: "hourly", priority: 1.0 },
+      { url: "/es/", changefreq: "hourly", priority: 1.0 },
+      { url: "/pt/", changefreq: "hourly", priority: 1.0 },
+      { url: "/ar/", changefreq: "hourly", priority: 1.0 },
+      { url: "/ja/", changefreq: "hourly", priority: 1.0 },
+      { url: "/ko/", changefreq: "hourly", priority: 1.0 },
+      // 比赛结果（高频更新）
+      { url: "/en/results/", changefreq: "daily", priority: 0.9 },
+      { url: "/es/results/", changefreq: "daily", priority: 0.9 },
+      { url: "/pt/results/", changefreq: "daily", priority: 0.9 },
+      { url: "/ar/results/", changefreq: "daily", priority: 0.9 },
+      { url: "/ja/results/", changefreq: "daily", priority: 0.9 },
+      { url: "/ko/results/", changefreq: "daily", priority: 0.9 },
+      // 积分榜
+      { url: "/en/standings/", changefreq: "daily", priority: 0.9 },
+      { url: "/es/standings/", changefreq: "daily", priority: 0.9 },
+      { url: "/pt/standings/", changefreq: "daily", priority: 0.9 },
+      { url: "/ar/standings/", changefreq: "daily", priority: 0.9 },
+      { url: "/ja/standings/", changefreq: "daily", priority: 0.9 },
+      { url: "/ko/standings/", changefreq: "daily", priority: 0.9 },
+      // 新闻列表
+      { url: "/en/news/", changefreq: "daily", priority: 0.8 },
+      { url: "/es/news/", changefreq: "daily", priority: 0.8 },
+      { url: "/pt/news/", changefreq: "daily", priority: 0.8 },
+      { url: "/ar/news/", changefreq: "daily", priority: 0.8 },
+      { url: "/ja/news/", changefreq: "daily", priority: 0.8 },
+      { url: "/ko/news/", changefreq: "daily", priority: 0.8 },
+      // 赛程
+      { url: "/en/schedule/", changefreq: "daily", priority: 0.8 },
+      { url: "/es/schedule/", changefreq: "daily", priority: 0.8 },
+      { url: "/pt/schedule/", changefreq: "daily", priority: 0.8 },
+      { url: "/ar/schedule/", changefreq: "daily", priority: 0.8 },
+      { url: "/ja/schedule/", changefreq: "daily", priority: 0.8 },
+      { url: "/ko/schedule/", changefreq: "daily", priority: 0.8 },
+      // 直播推荐
+      { url: "/en/live-tv/", changefreq: "weekly", priority: 0.7 },
+      { url: "/es/live-tv/", changefreq: "weekly", priority: 0.7 },
+      { url: "/pt/live-tv/", changefreq: "weekly", priority: 0.7 },
+      { url: "/ar/live-tv/", changefreq: "weekly", priority: 0.7 },
+      { url: "/ja/live-tv/", changefreq: "weekly", priority: 0.7 },
+      { url: "/ko/live-tv/", changefreq: "weekly", priority: 0.7 },
+    ],
   },
   pwa: {
     manifest: {
