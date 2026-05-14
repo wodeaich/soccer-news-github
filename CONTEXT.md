@@ -227,14 +227,14 @@ G-4ZQQBJW72Y           ← GA4
 
 ## 后续待完成（Day 5–7）
 
-### Day 5 — 数据采集脚本（需要 API-Football 账号）
-- [ ] `scripts/fetch_matches.js` — 抓赛程，写入后端 `/api/match/schedule`
-- [ ] `scripts/fetch_results.js` — 抓赛果，**需做缓存**（100次/天额度）
-- [ ] `scripts/fetch_standings.js` — 抓积分榜
+### Day 5 — 数据采集脚本 ✅ 已完成
+- [x] `scripts/fetch_matches.js` — 抓赛程，同步到后端 `/api/match/schedule/sync`
+- [x] `scripts/fetch_results.js` — 抓赛果，本地缓存防止超额度，同步到 `/api/match/results/sync`
+- [x] `scripts/fetch_standings.js` — 抓积分榜，同步到 `/api/match/standings/sync`
 
-### Day 6 — AI 内容生成（需要 MiniMax Key）
-- [ ] `scripts/generate_news.js` — 调 MiniMax 生成世界杯新闻
-- [ ] `scripts/translate_content.js` — 6 语言翻译
+### Day 6 — AI 内容生成
+- [ ] `scripts/generate_news.js` — **三步流程**：① 拉赛事数据 → ② MiniMax生成相关文章 → ③ 后台上架
+- [ ] `scripts/translate_content.js` — 6 语言翻译 ✅ 已完成
 - [ ] `static/llms.txt` — GEO 优化，告知 AI 爬虫站点结构
 - [ ] Sitemap 精细化（`lastmod`、`changefreq`、图片 sitemap）
 
@@ -243,6 +243,28 @@ G-4ZQQBJW72Y           ← GA4
 - [ ] Google Search Console 提交
 - [ ] 灰度上线英语版，监控错误
 - [ ] 全量发布 6 语言
+
+---
+
+## API Keys（已配置到 .env）
+
+| Key | 值 | 用途 |
+|-----|----|------|
+| API_FOOTBALL_KEY | a59ad9d574617a71686ae458a25dafd2 | 赛程/比分/积分榜 |
+| MINIMAX_API_KEY | sk-cp-GyV6... | AI新闻生成+翻译 |
+| MINIMAX_GROUP_ID | ⚠️ 待填写 | 登录 platform.minimaxi.com → 账号信息 → Group ID |
+| WORLD_CUP_LEAGUE_ID | 1 | API-Football 世界杯赛事ID |
+| WORLD_CUP_SEASON | 2026 | 赛季 |
+
+## generate_news.js 三步流程说明
+
+```
+Step 1: 从 API-Football 拉今日/近期世界杯赛事（即将开赛 + 刚结束）
+Step 2: 以赛事数据为上下文，调 MiniMax 生成对应文章
+         - 赛前：预测/前瞻文章（Match Preview）
+         - 赛后：赛评/总结文章（Match Review）
+Step 3: POST 到后台 /api/article/create 上架，site_id=soccerins-afs
+```
 
 ---
 
