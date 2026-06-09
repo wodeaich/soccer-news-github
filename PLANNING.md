@@ -238,7 +238,7 @@ export default ({ app }) => {
 ### 方案：浏览器语言检测 + Cookie 记忆（纯客户端，零服务器配置）
 
 ```
-用户访问 soccerins.com/
+用户访问 compsoccer.com/
         ↓
 有 cookie preferred_lang？
   ├── 有 → 直接跳对应语言（回访用户）
@@ -306,7 +306,7 @@ switchLang(langCode) {
 每个页面 canonical 指向自身，不指向英语版：
 
 ```html
-<link rel="canonical" href="https://soccerins.com/es/news/copa-mundial/" />
+<link rel="canonical" href="https://compsoccer.com/es/news/copa-mundial/" />
 ```
 
 nuxt-i18n `seo: true` 会自动处理，但需验证动态路由页面。
@@ -332,7 +332,7 @@ head() {
 
 ```xml
 <url>
-  <loc>https://soccerins.com/en/news/world-cup-preview/</loc>
+  <loc>https://compsoccer.com/en/news/world-cup-preview/</loc>
   <lastmod>2026-05-13</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.8</priority>
@@ -367,7 +367,7 @@ GEO 针对 ChatGPT、Perplexity、Google AI Overview、Bing Copilot 等 AI 搜�
 **1. `llms.txt` 文件（放根目录）**
 
 ```
-# soccerins.com/llms.txt
+# compsoccer.com/llms.txt
 
 > SoccerIns: World Cup 2026 multilingual news and match coverage
 

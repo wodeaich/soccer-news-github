@@ -69,7 +69,7 @@ export default {
   head() {
     const locale = this.$i18n.locale
     const localeMap = { en: 'en_US', es: 'es_ES', pt: 'pt_BR', ar: 'ar_SA', ja: 'ja_JP', ko: 'ko_KR' }
-    const canonicalUrl = `https://soccerins.com/${locale}/news/${this.newInfo.path}/`
+    const canonicalUrl = `https://compsoccer.com/${locale}/news/${this.newInfo.path}/`
     const pubDate = this.newInfo.published_at || this.newInfo.created_at || new Date().toISOString()
 
     const newsArticleSchema = {
@@ -79,11 +79,11 @@ export default {
       image: [this.newInfo.cover].filter(Boolean),
       datePublished: pubDate,
       dateModified: this.newInfo.updated_at || pubDate,
-      author: [{ '@type': 'Organization', name: 'SoccerIns', url: 'https://soccerins.com' }],
+      author: [{ '@type': 'Organization', name: 'SoccerIns', url: 'https://compsoccer.com' }],
       publisher: {
         '@type': 'Organization',
         name: 'SoccerIns',
-        logo: { '@type': 'ImageObject', url: 'https://soccerins.com/icons/192.png' }
+        logo: { '@type': 'ImageObject', url: 'https://compsoccer.com/icons/192.png' }
       },
       description: this.newInfo.first_paragraph,
       url: canonicalUrl,
@@ -95,8 +95,8 @@ export default {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Home', item: `https://soccerins.com/${locale}/` },
-        { '@type': 'ListItem', position: 2, name: 'News', item: `https://soccerins.com/${locale}/news/` },
+        { '@type': 'ListItem', position: 1, name: 'Home', item: `https://compsoccer.com/${locale}/` },
+        { '@type': 'ListItem', position: 2, name: 'News', item: `https://compsoccer.com/${locale}/news/` },
         { '@type': 'ListItem', position: 3, name: this.newInfo.name, item: canonicalUrl }
       ]
     }

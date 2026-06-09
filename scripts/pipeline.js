@@ -114,7 +114,7 @@ function buildPrompt(fixture) {
     return {
       type: "review",
       title: `Match Review: ${home} ${sH}-${sA} ${away} | World Cup 2026`,
-      prompt: `Write a professional 350-word match review for soccerins.com about this World Cup 2026 match:
+      prompt: `Write a professional 350-word match review for compsoccer.com about this World Cup 2026 match:
 - ${home} vs ${away}, played on ${date} at ${venue} (${round})
 - Final score: ${home} ${sH} - ${sA} ${away}
 ${winner ? `- Winner: ${winner}` : "- Result: Draw"}
@@ -126,7 +126,7 @@ Format: engaging paragraphs in clear English. No markdown headers. No bullet poi
   return {
     type: "preview",
     title: `Match Preview: ${home} vs ${away} | World Cup 2026`,
-    prompt: `Write a professional 350-word match preview for soccerins.com about this upcoming World Cup 2026 match:
+    prompt: `Write a professional 350-word match preview for compsoccer.com about this upcoming World Cup 2026 match:
 - ${home} vs ${away}, Date: ${date}, Venue: ${venue} (${round})
 
 Cover: team form, key players to watch, tactical matchup, prediction.
@@ -147,7 +147,7 @@ async function generateFromFixture(fixture) {
     messages: [
       {
         role: "system",
-        content: "You are a professional football journalist for soccerins.com. Write factual, engaging World Cup 2026 articles in fluent English.",
+        content: "You are a professional football journalist for compsoccer.com. Write factual, engaging World Cup 2026 articles in fluent English.",
       },
       { role: "user", content: prompt },
     ],

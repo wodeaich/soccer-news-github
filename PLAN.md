@@ -294,11 +294,11 @@ export default ({ app }) => {
 `seo: true` 后 nuxt-i18n 自动注入，无需手动维护：
 
 ```html
-<link rel="alternate" hreflang="en-US" href="https://soccerins.com/en/news/world-cup/" />
-<link rel="alternate" hreflang="es-ES" href="https://soccerins.com/es/noticias/copa-mundial/" />
-<link rel="alternate" hreflang="pt-BR" href="https://soccerins.com/pt/noticias/copa-do-mundo/" />
+<link rel="alternate" hreflang="en-US" href="https://compsoccer.com/en/news/world-cup/" />
+<link rel="alternate" hreflang="es-ES" href="https://compsoccer.com/es/noticias/copa-mundial/" />
+<link rel="alternate" hreflang="pt-BR" href="https://compsoccer.com/pt/noticias/copa-do-mundo/" />
 <!-- ... -->
-<link rel="alternate" hreflang="x-default" href="https://soccerins.com/en/news/world-cup/" />
+<link rel="alternate" hreflang="x-default" href="https://compsoccer.com/en/news/world-cup/" />
 ```
 
 ---
@@ -324,7 +324,7 @@ export default ({ app }) => {
 
 ```html
 <!-- /es/noticias/copa-mundial/ -->
-<link rel="canonical" href="https://soccerins.com/es/noticias/copa-mundial/" />
+<link rel="canonical" href="https://compsoccer.com/es/noticias/copa-mundial/" />
 ```
 
 #### 2. 根路径重定向
@@ -335,7 +335,7 @@ export default ({ app }) => {
 
 ```xml
 <url>
-  <loc>https://soccerins.com/en/news/world-cup-preview/</loc>
+  <loc>https://compsoccer.com/en/news/world-cup-preview/</loc>
   <lastmod>2026-05-13</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.8</priority>
@@ -413,7 +413,7 @@ head() {
 放置于站点根目录，告知 AI 爬虫站点结构：
 
 ```
-# soccerins.com/llms.txt
+# compsoccer.com/llms.txt
 
 > SoccerIns: World Cup 2026 multilingual news and match coverage
 

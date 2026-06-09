@@ -97,7 +97,7 @@ function buildPrompt(fixture) {
     return {
       type: "review",
       title: `Match Review: ${home} ${scoreH}-${scoreA} ${away} | World Cup 2026`,
-      prompt: `Write a professional 350-word match review for soccerins.com about this World Cup 2026 match:
+      prompt: `Write a professional 350-word match review for compsoccer.com about this World Cup 2026 match:
 - ${home} vs ${away}, played on ${date} at ${venue} (${round})
 - Final score: ${home} ${scoreH} - ${scoreA} ${away}
 ${winner ? `- Winner: ${winner}` : "- Result: Draw"}
@@ -109,7 +109,7 @@ Format: engaging match review in clear English paragraphs. No markdown headers. 
     return {
       type: "preview",
       title: `Match Preview: ${home} vs ${away} | World Cup 2026`,
-      prompt: `Write a professional 350-word match preview for soccerins.com about this upcoming World Cup 2026 match:
+      prompt: `Write a professional 350-word match preview for compsoccer.com about this upcoming World Cup 2026 match:
 - ${home} vs ${away}
 - Date: ${date}, Venue: ${venue} (${round})
 
@@ -135,7 +135,7 @@ async function generateArticle(fixture) {
         {
           role: "system",
           content:
-            "You are a professional football journalist for soccerins.com. Write factual, engaging World Cup 2026 articles in fluent English.",
+            "You are a professional football journalist for compsoccer.com. Write factual, engaging World Cup 2026 articles in fluent English.",
         },
         { role: "user", content: prompt },
       ],

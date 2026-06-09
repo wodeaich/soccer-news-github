@@ -1,10 +1,10 @@
-# soccerins.com
+# compsoccer.com
 
 > SoccerIns: World Cup 2026 Multilingual News & Match Coverage
 
 ## About
 
-SoccerIns (soccerins.com) is a dedicated World Cup 2026 media site providing
+SoccerIns (compsoccer.com) is a dedicated World Cup 2026 media site providing
 real-time match coverage, news, schedules, standings, and live TV guides in
 6 languages: English, Spanish, Portuguese, Arabic, Japanese, and Korean.
 
@@ -47,5 +47,5 @@ All sections available in:
 
 ## Contact
 
-Email: service@soccerins.com
-Site: https://soccerins.com
+Email: service@compsoccer.com
+Site: https://compsoccer.com

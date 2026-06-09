@@ -99,7 +99,7 @@ jobs:
         run: |
           if [ "${{ job.status }}" = "success" ]; then
             echo "✅ Deploy completed at $(date '+%Y-%m-%d %H:%M:%S UTC')"
-            echo "Site: https://soccerins.com"
+            echo "Site: https://compsoccer.com"
           else
             echo "❌ Deploy failed — check logs above"
           fi

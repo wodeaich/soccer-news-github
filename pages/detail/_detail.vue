@@ -91,7 +91,7 @@ export default {
         {
           hid: "og:url",
           property: "og:url",
-          content: `https://soccerins.com/detail/${this.newInfo.path}/`
+          content: `https://compsoccer.com/detail/${this.newInfo.path}/`
         },
         {
           hid: "og:locale",

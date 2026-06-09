@@ -150,7 +150,7 @@ export default {
   i18n: {
     strategy: "prefix",
     defaultLocale: "en",
-    baseUrl: "https://soccerins.com",
+    baseUrl: "https://compsoccer.com",
     locales: [
       { code: "en", iso: "en-US", file: "en.js", name: "English" },
       { code: "es", iso: "es-ES", file: "es.js", name: "Español" },
@@ -172,7 +172,7 @@ export default {
   },
   modules: ["@nuxtjs/axios", "@nuxtjs/i18n"],
   sitemap: {
-    hostname: "https://soccerins.com/",
+    hostname: "https://compsoccer.com/",
     gzip: true,
     i18n: true,
     defaults: {

@@ -147,8 +147,8 @@ export default {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Home', item: `https://soccerins.com/${locale}/` },
-        { '@type': 'ListItem', position: 2, name: this.$t('results.title'), item: `https://soccerins.com/${locale}/results/` }
+        { '@type': 'ListItem', position: 1, name: 'Home', item: `https://compsoccer.com/${locale}/` },
+        { '@type': 'ListItem', position: 2, name: this.$t('results.title'), item: `https://compsoccer.com/${locale}/results/` }
       ]
     }
     return {

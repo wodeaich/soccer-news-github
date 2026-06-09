@@ -48,7 +48,7 @@
 
 ### SEO 验证
 - [ ] 上线后登录 Google Search Console 提交站点
-- [ ] 提交 sitemap：`https://soccerins.com/sitemap.xml`
+- [ ] 提交 sitemap：`https://compsoccer.com/sitemap.xml`
 - [ ] 验证 hreflang 标签生成正确（6语言 + x-default）
 - [ ] 验证 canonical 标签各语言指向自身
 
@@ -117,7 +117,7 @@
 
 | 项目 | 内容 |
 |------|------|
-| 站点域名 | soccerins.com |
+| 站点域名 | compsoccer.com |
 | 后端 API | api.tapmygame.com |
 | site_id | soccerins |
 | site_afs | soccerins-afs |

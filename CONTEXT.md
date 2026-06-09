@@ -9,7 +9,7 @@
 
 | 项目 | 说明 |
 |------|------|
-| 网站 | soccerins.com — 世界杯2026资讯站 |
+| 网站 | compsoccer.com — 世界杯2026资讯站 |
 | 负责人 | 非技术背景，独自负责整个项目 |
 | 开发方式 | Claude Code 完成所有代码 |
 | 代码仓库 | wodeaich/soccer-news-github |
@@ -226,7 +226,7 @@ node scripts/translate_content.js <article_id> # 翻译指定文章
 | 1 | `components/Afs/Header.vue` | `searchText` 未定义，SSR 500 | 改用 `$t('common.search')` |
 | 2 | `components/Afs/Sidebar.vue` | 同上 | 改用 `$t('common.search')` |
 | 3 | `plugins/nav-data.js` | API 失败注入 `[]`，Sidebar 期望 Object | 改为注入 `{ list: [] }` |
-| 4 | `nuxt.config.js` | i18n 缺 `baseUrl`，hreflang 无完整 URL | 添加 `baseUrl: 'https://soccerins.com'` |
+| 4 | `nuxt.config.js` | i18n 缺 `baseUrl`，hreflang 无完整 URL | 添加 `baseUrl: 'https://compsoccer.com'` |
 | 5 | `Soccer/NewsCardGrid.vue` + `NewsCardRow.vue` | 日期颜色 `$font2=#fff`（白底白字） | 改为 `rgba($font1, 0.5)` |
 | 6 | `pages/standings/index.vue` | 图例符号被错误条件包裹 | 简化为始终显示 |
 | 7 | `pages/news/_slug.vue` | `newInfo.terms` 可能 undefined，keywords 输出 "undefined" | 加 `\|\| ''` 兜底 |
@@ -341,7 +341,7 @@ G-4ZQQBJW72Y           ← GA4
 ## 语言切换逻辑
 
 ```
-用户访问 soccerins.com/
+用户访问 compsoccer.com/
   → cookie preferred_lang 存在？→ 直接跳对应语言
   → 没有 → 读 navigator.languages → 跳匹配语言（兜底 /en/）
   → 写入 cookie（1年有效）
@@ -407,7 +407,7 @@ DEPLOY_HOST / DEPLOY_USER / DEPLOY_KEY / DEPLOY_PATH / DEPLOY_PORT（可选，�
 1. **配置 GitHub Secrets** — 在仓库 Settings → Secrets and variables → Actions 中配置所有密钥
 2. **确认后端文章上架接口** — `generate_news.js` 的 `POST /api/article/create` 字段格式
 3. **灰度发布** — 先上英语版 `/en/`，监控报错和加载速度
-4. **Google Search Console** — 提交 `https://soccerins.com/sitemap.xml`
+4. **Google Search Console** — 提交 `https://compsoccer.com/sitemap.xml`
 5. **全量发布** — 确认无误后开启 6 种语言
 
 ---

@@ -20,7 +20,7 @@
           >
             {{ cookiesText[lang] || cookiesText["en"] }}
           </Afs-CustomLink>
-          <a href="mailto:service@soccerins.com">
+          <a href="mailto:service@compsoccer.com">
             {{ contactText[lang] || contactText["en"] }}
           </a>
         </div>

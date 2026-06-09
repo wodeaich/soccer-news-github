@@ -451,7 +451,7 @@ async function submitArticle() {
     if (!articleId) throw new Error("未返回 article_id，响应: " + JSON.stringify(json));
 
     // 显示结果
-    const publicUrl = `https://soccerins.com/${lang}/news/${slug}/`;
+    const publicUrl = `https://compsoccer.com/${lang}/news/${slug}/`;
     document.getElementById("result-content").innerHTML = `
       <div class="field"><label>Article ID</label><span><strong>${articleId}</strong></span></div>
       <div class="field"><label>Slug</label><span>${slug}</span></div>
@@ -651,7 +651,7 @@ function renderHistory() {
         <div class="title">${h.title || "(无标题)"}</div>
         <div class="meta">ID: ${h.articleId} · ${h.lang} · ${h.type} · ${new Date(h.time).toLocaleString()}</div>
       </div>
-      <a href="https://soccerins.com/${h.lang}/news/${h.slug}/" target="_blank" style="font-size:12px;color:#2980b9;white-space:nowrap;margin-left:12px;">查看 →</a>
+      <a href="https://compsoccer.com/${h.lang}/news/${h.slug}/" target="_blank" style="font-size:12px;color:#2980b9;white-space:nowrap;margin-left:12px;">查看 →</a>
     </div>
   `).join("");
 }
