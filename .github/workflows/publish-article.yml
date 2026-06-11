@@ -42,6 +42,14 @@ on:
         type: string
         default: ""
 
+permissions:
+  contents: write   # push content/
+  actions: write    # dispatch deploy.yml
+
+concurrency:
+  group: content-sync
+  cancel-in-progress: false
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -95,9 +103,6 @@ jobs:
           WORLD_CUP_SEASON:    ${{ secrets.WORLD_CUP_SEASON }}
           MINIMAX_API_KEY:     ${{ secrets.MINIMAX_API_KEY }}
           MINIMAX_BASE:        ${{ secrets.MINIMAX_BASE }}
-          PROD_API_URL:        ${{ secrets.PROD_API_URL }}
-          SITE_AFS:            ${{ secrets.SITE_AFS }}
-          SITE_ID:             ${{ secrets.SITE_ID }}
         run: node scripts/pipeline.js --auto
 
       - name: Run pipeline (fixture)
@@ -109,9 +114,6 @@ jobs:
           WORLD_CUP_SEASON:    ${{ secrets.WORLD_CUP_SEASON }}
           MINIMAX_API_KEY:     ${{ secrets.MINIMAX_API_KEY }}
           MINIMAX_BASE:        ${{ secrets.MINIMAX_BASE }}
-          PROD_API_URL:        ${{ secrets.PROD_API_URL }}
-          SITE_AFS:            ${{ secrets.SITE_AFS }}
-          SITE_ID:             ${{ secrets.SITE_ID }}
         run: node scripts/pipeline.js --fixture "${{ github.event.inputs.fixture_id }}"
 
       - name: Run pipeline (manual)
@@ -119,15 +121,45 @@ jobs:
         env:
           MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
           MINIMAX_BASE:    ${{ secrets.MINIMAX_BASE }}
-          PROD_API_URL:    ${{ secrets.PROD_API_URL }}
-          SITE_AFS:        ${{ secrets.SITE_AFS }}
-          SITE_ID:         ${{ secrets.SITE_ID }}
         run: |
           node scripts/pipeline.js \
             --manual \
             --title "${{ github.event.inputs.title }}" \
             --content "${{ github.event.inputs.content }}" \
             --type "${{ github.event.inputs.article_type }}"
+
+      # 把 pipeline 写入的 content/ 提交回仓库并触发发版
+      - name: Commit & push content changes
+        id: sync
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content
+          if git diff --cached --quiet; then
+            echo "No content changes."
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "chore(content): publish article via pipeline (${{ github.event.inputs.mode }})"
+          for i in 1 2 3 4; do
+            if git push origin "HEAD:${{ github.ref_name }}"; then
+              echo "pushed=true" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            git pull --rebase origin "${{ github.ref_name }}"
+            sleep $((2 ** i))
+          done
+          echo "Push failed after retries" >&2
+          exit 1
+
+      - name: Trigger deploy workflow
+        if: steps.sync.outputs.pushed == 'true'
+        run: |
+          curl -sf -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/deploy.yml/dispatches" \
+            -d "{\"ref\":\"${{ github.ref_name }}\"}"
 
       - name: Summary
         if: always()

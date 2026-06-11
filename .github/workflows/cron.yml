@@ -1,5 +1,10 @@
 name: CompSoccer Data & Content Cron Jobs
 
+# 纯静态数据管线：
+#   脚本抓取/生成 → 写 content/*.json → commit+push 回仓库 → 显式触发 deploy 工作流重建发版
+# 注意：GITHUB_TOKEN 的 push 不会触发 push 工作流（GitHub 防递归），
+#       因此提交后通过 workflow_dispatch API 显式触发 deploy.yml。
+
 on:
   schedule:
     # UTC 00:00 更新赛程 (北京时间 08:00)
@@ -28,94 +33,118 @@ on:
           - translate-content
           - all
 
+permissions:
+  contents: write   # push content/
+  actions: write    # dispatch deploy.yml
+
+# 串行化所有内容更新，避免并发 push 冲突
+concurrency:
+  group: content-sync
+  cancel-in-progress: false
+
 env:
-  PROD_API_URL: ${{ secrets.PROD_API_URL }}
   API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
   API_FOOTBALL_BASE: ${{ secrets.API_FOOTBALL_BASE }}
   WORLD_CUP_LEAGUE_ID: ${{ secrets.WORLD_CUP_LEAGUE_ID }}
   WORLD_CUP_SEASON: ${{ secrets.WORLD_CUP_SEASON }}
   MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
   MINIMAX_BASE: ${{ secrets.MINIMAX_BASE }}
-  SITE_ID: ${{ secrets.SITE_ID }}
-  SITE_AFS: ${{ secrets.SITE_AFS }}
 
 jobs:
-  fetch-matches:
-    name: Fetch match schedule
+  run-data-jobs:
+    name: Fetch data / generate content / sync repo
     runs-on: ubuntu-latest
-    if: >-
-      (github.event_name == 'workflow_dispatch' && (github.event.inputs.job == 'fetch-matches' || github.event.inputs.job == 'all')) ||
-      (github.event_name == 'schedule' && github.event.schedule == '0 0 * * *')
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
+        with:
+          # 取该工作流所在分支的最新提交
+          ref: ${{ github.ref_name }}
+
       - uses: actions/setup-node@v4
         with:
           node-version: "18"
           cache: "yarn"
+
       - run: yarn install --frozen-lockfile
-      - name: Fetch match schedule from API-Football
+
+      # 按触发时间/手动选择决定要跑哪些脚本（同一 run 内串行执行，天然无并发冲突）
+      - name: Resolve jobs to run
+        id: plan
+        run: |
+          EVENT="${{ github.event_name }}"
+          SCHEDULE="${{ github.event.schedule }}"
+          INPUT_JOB="${{ github.event.inputs.job }}"
+          JOBS=""
+          if [ "$EVENT" = "workflow_dispatch" ]; then
+            if [ "$INPUT_JOB" = "all" ]; then
+              JOBS="fetch-matches fetch-results fetch-standings generate-news translate-content"
+            else
+              JOBS="$INPUT_JOB"
+            fi
+          else
+            case "$SCHEDULE" in
+              "0 0 * * *")  JOBS="fetch-matches" ;;
+              "0 1 * * *"|"0 9 * * *"|"0 17 * * *") JOBS="fetch-results" ;;
+              "0 6 * * *")  JOBS="generate-news" ;;
+              "0 7 * * *")  JOBS="translate-content" ;;
+              "0 23 * * *") JOBS="fetch-standings" ;;
+            esac
+          fi
+          echo "jobs=$JOBS" >> "$GITHUB_OUTPUT"
+          echo "Will run: $JOBS"
+
+      - name: Fetch match schedule
+        if: contains(steps.plan.outputs.jobs, 'fetch-matches')
         run: node scripts/fetch_matches.js
 
-  fetch-results:
-    name: Fetch match results
-    runs-on: ubuntu-latest
-    if: >-
-      (github.event_name == 'workflow_dispatch' && (github.event.inputs.job == 'fetch-results' || github.event.inputs.job == 'all')) ||
-      (github.event_name == 'schedule' && (github.event.schedule == '0 1 * * *' || github.event.schedule == '0 9 * * *' || github.event.schedule == '0 17 * * *'))
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "18"
-          cache: "yarn"
-      - run: yarn install --frozen-lockfile
-      - name: Fetch match results from API-Football
+      - name: Fetch match results
+        if: contains(steps.plan.outputs.jobs, 'fetch-results')
         run: node scripts/fetch_results.js
 
-  fetch-standings:
-    name: Fetch standings
-    runs-on: ubuntu-latest
-    if: >-
-      (github.event_name == 'workflow_dispatch' && (github.event.inputs.job == 'fetch-standings' || github.event.inputs.job == 'all')) ||
-      (github.event_name == 'schedule' && github.event.schedule == '0 23 * * *')
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "18"
-          cache: "yarn"
-      - run: yarn install --frozen-lockfile
-      - name: Fetch standings from API-Football
+      - name: Fetch standings
+        if: contains(steps.plan.outputs.jobs, 'fetch-standings')
         run: node scripts/fetch_standings.js
 
-  generate-news:
-    name: Generate AI news articles
-    runs-on: ubuntu-latest
-    if: >-
-      (github.event_name == 'workflow_dispatch' && (github.event.inputs.job == 'generate-news' || github.event.inputs.job == 'all')) ||
-      (github.event_name == 'schedule' && github.event.schedule == '0 6 * * *')
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "18"
-          cache: "yarn"
-      - run: yarn install --frozen-lockfile
-      - name: Generate news articles via MiniMax AI
+      - name: Generate AI news articles
+        if: contains(steps.plan.outputs.jobs, 'generate-news')
         run: node scripts/generate_news.js --days 1
 
-  translate-content:
-    name: Translate articles to 6 languages
-    runs-on: ubuntu-latest
-    if: >-
-      (github.event_name == 'workflow_dispatch' && (github.event.inputs.job == 'translate-content' || github.event.inputs.job == 'all')) ||
-      (github.event_name == 'schedule' && github.event.schedule == '0 7 * * *')
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "18"
-          cache: "yarn"
-      - run: yarn install --frozen-lockfile
-      - name: Translate articles via MiniMax
+      - name: Translate articles to 6 languages
+        if: contains(steps.plan.outputs.jobs, 'translate-content')
         run: node scripts/translate_content.js
+
+      # 把 content/ 变更提交回仓库（带 rebase 重试，防止竞态）
+      - name: Commit & push content changes
+        id: sync
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content
+          if git diff --cached --quiet; then
+            echo "No content changes."
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "chore(content): scheduled data sync (${{ steps.plan.outputs.jobs }})"
+          for i in 1 2 3 4; do
+            if git push origin "HEAD:${{ github.ref_name }}"; then
+              echo "pushed=true" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            git pull --rebase origin "${{ github.ref_name }}"
+            sleep $((2 ** i))
+          done
+          echo "Push failed after retries" >&2
+          exit 1
+
+      # 显式触发部署（GITHUB_TOKEN 的 push 不会自动触发 deploy）
+      - name: Trigger deploy workflow
+        if: steps.sync.outputs.pushed == 'true'
+        run: |
+          curl -sf -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/deploy.yml/dispatches" \
+            -d "{\"ref\":\"${{ github.ref_name }}\"}"
+          echo "Deploy dispatched on ${{ github.ref_name }}"
