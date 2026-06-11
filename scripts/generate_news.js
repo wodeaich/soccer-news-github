@@ -2,7 +2,7 @@
  * AI新闻生成脚本 - 三步流程：
  *   Step 1: 从 API-Football 拉今日/近期世界杯赛事
  *   Step 2: 以赛事数据为上下文，调 MiniMax 生成赛前预测或赛后综述文章
- *   Step 3: POST 到后台 /api/article/create 上架（site_id=soccerins-afs）
+ *   Step 3: 写入 content/articles/<id>.json（纯静态，无后台）
  *
  * 用法:
  *   node scripts/generate_news.js            # 自动处理今日赛事
@@ -14,6 +14,7 @@ require("dotenv").config();
 const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
+const store = require("./lib/store");
 
 // ─── 配置 ────────────────────────────────────────────────────────────────────
 const FOOTBALL_KEY  = process.env.API_FOOTBALL_KEY;
@@ -23,9 +24,6 @@ const SEASON        = process.env.WORLD_CUP_SEASON || 2026;
 
 const MINIMAX_KEY   = process.env.MINIMAX_API_KEY;
 const MINIMAX_BASE  = process.env.MINIMAX_BASE || "https://api.minimaxi.chat";
-
-const BACKEND_URL   = process.env.PROD_API_URL || "https://api.tapmygame.com";
-const SITE_AFS      = process.env.SITE_AFS || "soccerins-afs";
 
 // 已生成文章的缓存（避免同一场比赛重复生成）
 const CACHE_FILE = path.join(__dirname, ".news_cache.json");
@@ -41,12 +39,6 @@ const minimaxClient = axios.create({
   baseURL: MINIMAX_BASE,
   headers: { "Content-Type": "application/json", Authorization: `Bearer ${MINIMAX_KEY}` },
   timeout: 90000,
-});
-
-const backend = axios.create({
-  baseURL: BACKEND_URL,
-  headers: { "Content-Type": "application/json" },
-  timeout: 15000,
 });
 
 // ─── 缓存工具 ─────────────────────────────────────────────────────────────────
@@ -163,26 +155,10 @@ async function generateArticle(fixture) {
   };
 }
 
-// ─── Step 3: 后台上架 ─────────────────────────────────────────────────────────
+// ─── Step 3: 写入 content/articles/<id>.json ──────────────────────────────────
 async function publishArticle(article) {
-  const payload = {
-    site_id: SITE_AFS,
-    title: article.title,
-    content: article.content,
-    first_paragraph: article.summary,
-    cover: article.cover_image,
-    slug: article.slug,
-    keywords: article.tags.join(","),
-    lang: article.lang,
-    status: "published",
-    source: "minimax-ai",
-    fixture_id: article.fixture_id,
-    article_type: article.article_type,
-  };
-
-  const { data } = await backend.post("/api/article/create", payload);
-  const articleId = data?.id || data?.article_id || data?.data?.id;
-  console.log(`[Step3] ✅ 上架成功，article_id=${articleId}`);
+  const articleId = store.upsertArticleEn(article);
+  console.log(`[Step3] ✅ 已写入 content/articles/${articleId}.json`);
   return articleId;
 }
 

@@ -1,0 +1,21 @@
+{
+  "id": "900100",
+  "slug": "argentina-vs-brazil-900100",
+  "fixture_id": 900100,
+  "article_type": "review",
+  "cover": "https://media.api-sports.io/football/teams/BRA.png",
+  "keywords": "world-cup-2026,argentina,brazil",
+  "published_at": "2026-06-11T06:05:33.686Z",
+  "i18n": {
+    "en": {
+      "title": "Argentina edge Brazil in a World Cup 2026 classic",
+      "summary": "Argentina produced a commanding display to defeat Brazil in a World Cup 2026 classic.",
+      "content": "<p>Argentina produced a commanding display to defeat Brazil in one of the standout fixtures of the 2026 FIFA World Cup group stage.</p><p>Driven by relentless pressing and clinical finishing, La Albiceleste controlled the tempo from the opening whistle and never relinquished their grip on the contest.</p>"
+    },
+    "es": {
+      "title": "Argentina supera a Brasil en un clásico del Mundial 2026",
+      "summary": "Argentina ofreció una actuación dominante para vencer a Brasil en un clásico del Mundial 2026.",
+      "content": "<p>Argentina ofreció una actuación dominante para vencer a Brasil en uno de los partidos más destacados de la fase de grupos del Mundial 2026.</p>"
+    }
+  }
+}

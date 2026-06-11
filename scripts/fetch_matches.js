@@ -5,13 +5,12 @@
 
 require("dotenv").config();
 const axios = require("axios");
+const store = require("./lib/store");
 
 const API_KEY = process.env.API_FOOTBALL_KEY;
 const API_BASE = process.env.API_FOOTBALL_BASE || "https://v3.football.api-sports.io";
 const LEAGUE_ID = process.env.WORLD_CUP_LEAGUE_ID || 1;
 const SEASON = process.env.WORLD_CUP_SEASON || 2026;
-const BACKEND_URL = process.env.PROD_API_URL || "https://api.tapmygame.com";
-const SITE_ID = process.env.SITE_ID || "soccerins";
 
 const apif = axios.create({
   baseURL: API_BASE,
@@ -84,15 +83,10 @@ async function fetchAndStore() {
     slug: `${f.teams.home.name.toLowerCase().replace(/\s+/g, "-")}-vs-${f.teams.away.name.toLowerCase().replace(/\s+/g, "-")}-${f.fixture.id}`,
   }));
 
-  // 2. 推送到后端
-  await axios.post(`${BACKEND_URL}/api/match/schedule/sync`, {
-    site_id: SITE_ID,
-    fixtures: allFixtures,
-    by_date: byDate,
-    updated_at: new Date().toISOString(),
-  });
+  // 2. 写入 content/matches/schedule.json（整体覆盖）
+  store.writeSchedule(allFixtures, byDate);
 
-  console.log(`[fetch_matches] 已同步 ${allFixtures.length} 场赛程到后端`);
+  console.log(`[fetch_matches] 已写入 ${allFixtures.length} 场赛程到 content/matches/schedule.json`);
 }
 
 fetchAndStore().catch((err) => {

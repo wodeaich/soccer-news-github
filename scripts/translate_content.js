@@ -7,11 +7,10 @@
 
 require("dotenv").config();
 const axios = require("axios");
+const store = require("./lib/store");
 
 const API_KEY = process.env.MINIMAX_API_KEY;
 const MINIMAX_BASE = process.env.MINIMAX_BASE || "https://api.minimaxi.chat";
-const BACKEND_URL = process.env.PROD_API_URL || "https://api.tapmygame.com";
-const SITE_ID = process.env.SITE_ID || "soccerins";
 
 const LANGUAGES = [
   { code: "es", name: "Spanish", note: "Latin American Spanish" },
@@ -57,40 +56,32 @@ Rules:
   return content.trim();
 }
 
-async function getUntranslatedArticles(articleId) {
-  const url = articleId
-    ? `${BACKEND_URL}/api/article/detail?site_id=${SITE_ID}&id=${articleId}`
-    : `${BACKEND_URL}/api/article/untranslated?site_id=${SITE_ID}&lang=en&limit=10`;
-
-  const { data } = await axios.get(url);
+function getUntranslatedArticles(articleId) {
   if (articleId) {
-    return data.data ? [data.data] : [];
+    const a = store.readArticle(articleId);
+    return a ? [a] : [];
   }
-  return data.list || [];
+  return store.listArticlesMissingLang(LANGUAGES.map((l) => l.code)).slice(0, 10);
 }
 
 async function translateArticle(article) {
-  console.log(`\n[translate] 翻译文章: "${article.title}" (ID: ${article.id})`);
-  const translations = [];
+  const en = (article.i18n && article.i18n.en) || {};
+  console.log(`\n[translate] 翻译文章: "${en.title}" (ID: ${article.id})`);
+  let done = 0;
 
   for (const lang of LANGUAGES) {
+    // 已有该语言译文则跳过
+    if (article.i18n && article.i18n[lang.code]) continue;
     try {
       console.log(`  → ${lang.name}...`);
       const [title, content, summary] = await Promise.all([
-        translateText(article.title, lang),
-        translateText(article.content, lang),
-        translateText(article.summary || article.content.slice(0, 150), lang),
+        translateText(en.title, lang),
+        translateText(en.content, lang),
+        translateText(en.summary || (en.content || "").slice(0, 150), lang),
       ]);
 
-      translations.push({
-        article_id: article.id,
-        lang: lang.code,
-        title,
-        content,
-        summary,
-        translated_at: new Date().toISOString(),
-      });
-
+      store.addTranslation(article.id, lang.code, { title, summary, content });
+      done++;
       console.log(`  ✅ ${lang.name} 完成`);
       await new Promise((r) => setTimeout(r, 800));
     } catch (err) {
@@ -98,16 +89,8 @@ async function translateArticle(article) {
     }
   }
 
-  // 批量上传翻译
-  if (translations.length > 0) {
-    await axios.post(`${BACKEND_URL}/api/article/translations/sync`, {
-      site_id: SITE_ID,
-      translations,
-    });
-    console.log(`  📤 已上传 ${translations.length} 个语言版本`);
-  }
-
-  return translations;
+  console.log(`  📦 已写入 ${done} 个语言版本到 content/articles/${article.id}.json`);
+  return done;
 }
 
 async function run() {
@@ -123,8 +106,7 @@ async function run() {
   let total = 0;
 
   for (const article of articles) {
-    const results = await translateArticle(article);
-    total += results.length;
+    total += await translateArticle(article);
   }
 
   console.log(`\n[translate] ✅ 完成！共生成 ${total} 个翻译版本`);

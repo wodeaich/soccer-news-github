@@ -1,0 +1,297 @@
+{
+  "groups": [
+    {
+      "name": "A",
+      "table": [
+        {
+          "rank": 1,
+          "team": {
+            "id": 100,
+            "name": "Brazil",
+            "logo": "https://media.api-sports.io/football/teams/BRA.png"
+          },
+          "played": 3,
+          "won": 3,
+          "drawn": 0,
+          "lost": 0,
+          "goals_for": 8,
+          "goals_against": 2,
+          "goal_diff": 6,
+          "points": 9,
+          "form": ""
+        },
+        {
+          "rank": 2,
+          "team": {
+            "id": 101,
+            "name": "Argentina",
+            "logo": "https://media.api-sports.io/football/teams/ARG.png"
+          },
+          "played": 3,
+          "won": 2,
+          "drawn": 0,
+          "lost": 1,
+          "goals_for": 6,
+          "goals_against": 4,
+          "goal_diff": 2,
+          "points": 6,
+          "form": ""
+        },
+        {
+          "rank": 3,
+          "team": {
+            "id": 102,
+            "name": "France",
+            "logo": "https://media.api-sports.io/football/teams/FRA.png"
+          },
+          "played": 3,
+          "won": 1,
+          "drawn": 0,
+          "lost": 2,
+          "goals_for": 4,
+          "goals_against": 6,
+          "goal_diff": -2,
+          "points": 3,
+          "form": ""
+        },
+        {
+          "rank": 4,
+          "team": {
+            "id": 103,
+            "name": "England",
+            "logo": "https://media.api-sports.io/football/teams/ENG.png"
+          },
+          "played": 3,
+          "won": 0,
+          "drawn": 0,
+          "lost": 3,
+          "goals_for": 2,
+          "goals_against": 8,
+          "goal_diff": -6,
+          "points": 0,
+          "form": ""
+        }
+      ]
+    },
+    {
+      "name": "B",
+      "table": [
+        {
+          "rank": 1,
+          "team": {
+            "id": 104,
+            "name": "Spain",
+            "logo": "https://media.api-sports.io/football/teams/ESP.png"
+          },
+          "played": 3,
+          "won": 3,
+          "drawn": 0,
+          "lost": 0,
+          "goals_for": 8,
+          "goals_against": 2,
+          "goal_diff": 6,
+          "points": 9,
+          "form": ""
+        },
+        {
+          "rank": 2,
+          "team": {
+            "id": 105,
+            "name": "Germany",
+            "logo": "https://media.api-sports.io/football/teams/GER.png"
+          },
+          "played": 3,
+          "won": 2,
+          "drawn": 0,
+          "lost": 1,
+          "goals_for": 6,
+          "goals_against": 4,
+          "goal_diff": 2,
+          "points": 6,
+          "form": ""
+        },
+        {
+          "rank": 3,
+          "team": {
+            "id": 106,
+            "name": "Portugal",
+            "logo": "https://media.api-sports.io/football/teams/POR.png"
+          },
+          "played": 3,
+          "won": 1,
+          "drawn": 0,
+          "lost": 2,
+          "goals_for": 4,
+          "goals_against": 6,
+          "goal_diff": -2,
+          "points": 3,
+          "form": ""
+        },
+        {
+          "rank": 4,
+          "team": {
+            "id": 107,
+            "name": "Netherlands",
+            "logo": "https://media.api-sports.io/football/teams/NED.png"
+          },
+          "played": 3,
+          "won": 0,
+          "drawn": 0,
+          "lost": 3,
+          "goals_for": 2,
+          "goals_against": 8,
+          "goal_diff": -6,
+          "points": 0,
+          "form": ""
+        }
+      ]
+    },
+    {
+      "name": "C",
+      "table": [
+        {
+          "rank": 1,
+          "team": {
+            "id": 108,
+            "name": "USA",
+            "logo": "https://media.api-sports.io/football/teams/USA.png"
+          },
+          "played": 3,
+          "won": 3,
+          "drawn": 0,
+          "lost": 0,
+          "goals_for": 8,
+          "goals_against": 2,
+          "goal_diff": 6,
+          "points": 9,
+          "form": ""
+        },
+        {
+          "rank": 2,
+          "team": {
+            "id": 109,
+            "name": "Mexico",
+            "logo": "https://media.api-sports.io/football/teams/MEX.png"
+          },
+          "played": 3,
+          "won": 2,
+          "drawn": 0,
+          "lost": 1,
+          "goals_for": 6,
+          "goals_against": 4,
+          "goal_diff": 2,
+          "points": 6,
+          "form": ""
+        },
+        {
+          "rank": 3,
+          "team": {
+            "id": 110,
+            "name": "Japan",
+            "logo": "https://media.api-sports.io/football/teams/JPN.png"
+          },
+          "played": 3,
+          "won": 1,
+          "drawn": 0,
+          "lost": 2,
+          "goals_for": 4,
+          "goals_against": 6,
+          "goal_diff": -2,
+          "points": 3,
+          "form": ""
+        },
+        {
+          "rank": 4,
+          "team": {
+            "id": 111,
+            "name": "Korea",
+            "logo": "https://media.api-sports.io/football/teams/KOR.png"
+          },
+          "played": 3,
+          "won": 0,
+          "drawn": 0,
+          "lost": 3,
+          "goals_for": 2,
+          "goals_against": 8,
+          "goal_diff": -6,
+          "points": 0,
+          "form": ""
+        }
+      ]
+    },
+    {
+      "name": "D",
+      "table": [
+        {
+          "rank": 1,
+          "team": {
+            "id": 112,
+            "name": "Croatia",
+            "logo": "https://media.api-sports.io/football/teams/CRO.png"
+          },
+          "played": 3,
+          "won": 3,
+          "drawn": 0,
+          "lost": 0,
+          "goals_for": 8,
+          "goals_against": 2,
+          "goal_diff": 6,
+          "points": 9,
+          "form": ""
+        },
+        {
+          "rank": 2,
+          "team": {
+            "id": 113,
+            "name": "Morocco",
+            "logo": "https://media.api-sports.io/football/teams/MAR.png"
+          },
+          "played": 3,
+          "won": 2,
+          "drawn": 0,
+          "lost": 1,
+          "goals_for": 6,
+          "goals_against": 4,
+          "goal_diff": 2,
+          "points": 6,
+          "form": ""
+        },
+        {
+          "rank": 3,
+          "team": {
+            "id": 114,
+            "name": "Belgium",
+            "logo": "https://media.api-sports.io/football/teams/BEL.png"
+          },
+          "played": 3,
+          "won": 1,
+          "drawn": 0,
+          "lost": 2,
+          "goals_for": 4,
+          "goals_against": 6,
+          "goal_diff": -2,
+          "points": 3,
+          "form": ""
+        },
+        {
+          "rank": 4,
+          "team": {
+            "id": 115,
+            "name": "Uruguay",
+            "logo": "https://media.api-sports.io/football/teams/URU.png"
+          },
+          "played": 3,
+          "won": 0,
+          "drawn": 0,
+          "lost": 3,
+          "goals_for": 2,
+          "goals_against": 8,
+          "goal_diff": -6,
+          "points": 0,
+          "form": ""
+        }
+      ]
+    }
+  ],
+  "updated_at": "2026-06-11T06:05:33.685Z"
+}

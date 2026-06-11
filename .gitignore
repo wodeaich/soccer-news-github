@@ -90,3 +90,7 @@ sw.*
 *.swp
 .vscode
 dist.zip
+
+# 脚本运行时缓存
+scripts/.news_cache.json
+scripts/.results_cache.json

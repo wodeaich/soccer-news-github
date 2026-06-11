@@ -18,6 +18,7 @@ require("dotenv").config();
 const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
+const store = require("./lib/store");
 
 // ─── 配置 ────────────────────────────────────────────────────────────────────
 const FOOTBALL_KEY  = process.env.API_FOOTBALL_KEY;
@@ -27,10 +28,6 @@ const SEASON        = process.env.WORLD_CUP_SEASON || 2026;
 
 const MINIMAX_KEY   = process.env.MINIMAX_API_KEY;
 const MINIMAX_BASE  = process.env.MINIMAX_BASE || "https://api.minimaxi.chat";
-
-const BACKEND_URL   = process.env.PROD_API_URL || "https://api.tapmygame.com";
-const SITE_AFS      = process.env.SITE_AFS || "soccerins-afs";
-const SITE_ID       = process.env.SITE_ID  || "soccerins";
 
 const CACHE_FILE    = path.join(__dirname, ".news_cache.json");
 
@@ -53,12 +50,6 @@ const minimax = axios.create({
   baseURL: MINIMAX_BASE,
   headers: { "Content-Type": "application/json", Authorization: `Bearer ${MINIMAX_KEY}` },
   timeout: 90000,
-});
-
-const backend = axios.create({
-  baseURL: BACKEND_URL,
-  headers: { "Content-Type": "application/json" },
-  timeout: 15000,
 });
 
 // ─── 缓存 ─────────────────────────────────────────────────────────────────────
@@ -204,27 +195,10 @@ async function generateFromManual(args) {
   };
 }
 
-// ─── Step 3: 上架英文文章 ─────────────────────────────────────────────────────
+// ─── Step 3: 写入英文文章 ─────────────────────────────────────────────────────
 async function publishArticle(article) {
-  const payload = {
-    site_id: SITE_AFS,
-    title: article.title,
-    content: article.content,
-    first_paragraph: article.summary,
-    cover: article.cover_image,
-    slug: article.slug,
-    keywords: article.tags.join(","),
-    lang: article.lang,
-    status: "published",
-    source: "minimax-ai",
-    fixture_id: article.fixture_id,
-    article_type: article.article_type,
-  };
-
-  const { data } = await backend.post("/api/article/create", payload);
-  const articleId = data?.id || data?.article_id || data?.data?.id;
-  if (!articleId) throw new Error("未获取到 article_id，响应: " + JSON.stringify(data));
-  console.log(`  [Backend] ✅ 英文文章上架，article_id=${articleId}`);
+  const articleId = store.upsertArticleEn(article);
+  console.log(`  [Content] ✅ 英文文章已写入 content/articles/${articleId}.json`);
   return articleId;
 }
 
@@ -264,14 +238,8 @@ async function translateAndPublish(article, articleId) {
         translateText(article.summary, lang),
       ]);
 
-      translations.push({
-        article_id: articleId,
-        lang: lang.code,
-        title,
-        content,
-        summary,
-        translated_at: new Date().toISOString(),
-      });
+      store.addTranslation(articleId, lang.code, { title, summary, content });
+      translations.push(lang.code);
       console.log(`    ✅ ${lang.name} 完成`);
       await new Promise((r) => setTimeout(r, 800));
     } catch (err) {
@@ -280,11 +248,7 @@ async function translateAndPublish(article, articleId) {
   }
 
   if (translations.length > 0) {
-    await backend.post("/api/article/translations/sync", {
-      site_id: SITE_ID,
-      translations,
-    });
-    console.log(`  [Backend] 📤 已上传 ${translations.length} 个语言版本`);
+    console.log(`  [Content] 📦 已写入 ${translations.length} 个语言版本到 content/articles/${articleId}.json`);
   }
 
   return translations.length;

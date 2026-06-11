@@ -8,13 +8,12 @@ require("dotenv").config();
 const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
+const store = require("./lib/store");
 
 const API_KEY = process.env.API_FOOTBALL_KEY;
 const API_BASE = process.env.API_FOOTBALL_BASE || "https://v3.football.api-sports.io";
 const LEAGUE_ID = process.env.WORLD_CUP_LEAGUE_ID || 1;
 const SEASON = process.env.WORLD_CUP_SEASON || 2026;
-const BACKEND_URL = process.env.PROD_API_URL || "https://api.tapmygame.com";
-const SITE_ID = process.env.SITE_ID || "soccerins";
 
 // 本地缓存：记录已同步过的 fixture_id，避免重复请求
 const CACHE_FILE = path.join(__dirname, ".results_cache.json");
@@ -105,19 +104,15 @@ async function fetchAndStore() {
 
   const results = fixtures.map(formatResult);
 
-  // 推送到后端
-  await axios.post(`${BACKEND_URL}/api/match/results/sync`, {
-    site_id: SITE_ID,
-    results,
-    updated_at: new Date().toISOString(),
-  });
+  // 写入 content/matches/results.json（按 id 累积合并）
+  const total = store.mergeResults(results);
 
   // 更新缓存
   cache.synced_ids.push(...results.map((r) => r.id));
   cache.last_run = new Date().toISOString();
   saveCache(cache);
 
-  console.log(`[fetch_results] 已同步 ${results.length} 场结果，总缓存 ${cache.synced_ids.length} 场`);
+  console.log(`[fetch_results] 已写入 ${results.length} 场新结果，content 累计 ${total} 场`);
 }
 
 fetchAndStore().catch((err) => {

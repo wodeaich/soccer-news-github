@@ -5,13 +5,12 @@
 
 require("dotenv").config();
 const axios = require("axios");
+const store = require("./lib/store");
 
 const API_KEY = process.env.API_FOOTBALL_KEY;
 const API_BASE = process.env.API_FOOTBALL_BASE || "https://v3.football.api-sports.io";
 const LEAGUE_ID = process.env.WORLD_CUP_LEAGUE_ID || 1;
 const SEASON = process.env.WORLD_CUP_SEASON || 2026;
-const BACKEND_URL = process.env.PROD_API_URL || "https://api.tapmygame.com";
-const SITE_ID = process.env.SITE_ID || "soccerins";
 
 const apif = axios.create({
   baseURL: API_BASE,
@@ -67,14 +66,10 @@ async function fetchAndStore() {
   console.log(`[fetch_standings] 获取到 ${rawStandings.length} 个小组`);
   const standings = transformStandings(rawStandings);
 
-  // 推送到后端
-  await axios.post(`${BACKEND_URL}/api/match/standings/sync`, {
-    site_id: SITE_ID,
-    ...standings,
-    updated_at: new Date().toISOString(),
-  });
+  // 写入 content/matches/standings.json（整体覆盖）
+  store.writeStandings(standings.groups);
 
-  console.log(`[fetch_standings] 已同步 ${standings.groups.length} 个小组积分榜到后端`);
+  console.log(`[fetch_standings] 已写入 ${standings.groups.length} 个小组积分榜到 content/matches/standings.json`);
 }
 
 fetchAndStore().catch((err) => {

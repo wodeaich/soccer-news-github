@@ -1,0 +1,101 @@
+{
+  "results": [
+    {
+      "id": 900003,
+      "timestamp": 1781463600,
+      "date": "2026-06-14T19:00:00.000Z",
+      "venue": "AT&T Stadium",
+      "city": "",
+      "status": "FT",
+      "stage": "Group Stage - 1",
+      "home": {
+        "id": 106,
+        "name": "Portugal",
+        "logo": "https://media.api-sports.io/football/teams/POR.png"
+      },
+      "away": {
+        "id": 107,
+        "name": "Netherlands",
+        "logo": "https://media.api-sports.io/football/teams/NED.png"
+      },
+      "score": {
+        "home": 3,
+        "away": 1
+      },
+      "slug": "portugal-vs-netherlands-900003"
+    },
+    {
+      "id": 900002,
+      "timestamp": 1781377200,
+      "date": "2026-06-13T19:00:00.000Z",
+      "venue": "Estadio Azteca",
+      "city": "",
+      "status": "FT",
+      "stage": "Group Stage - 1",
+      "home": {
+        "id": 104,
+        "name": "Spain",
+        "logo": "https://media.api-sports.io/football/teams/ESP.png"
+      },
+      "away": {
+        "id": 105,
+        "name": "Germany",
+        "logo": "https://media.api-sports.io/football/teams/GER.png"
+      },
+      "score": {
+        "home": 2,
+        "away": 0
+      },
+      "slug": "spain-vs-germany-900002"
+    },
+    {
+      "id": 900001,
+      "timestamp": 1781290800,
+      "date": "2026-06-12T19:00:00.000Z",
+      "venue": "SoFi Stadium",
+      "city": "",
+      "status": "FT",
+      "stage": "Group Stage - 1",
+      "home": {
+        "id": 102,
+        "name": "France",
+        "logo": "https://media.api-sports.io/football/teams/FRA.png"
+      },
+      "away": {
+        "id": 103,
+        "name": "England",
+        "logo": "https://media.api-sports.io/football/teams/ENG.png"
+      },
+      "score": {
+        "home": 1,
+        "away": 2
+      },
+      "slug": "france-vs-england-900001"
+    },
+    {
+      "id": 900000,
+      "timestamp": 1781204400,
+      "date": "2026-06-11T19:00:00.000Z",
+      "venue": "MetLife Stadium",
+      "city": "",
+      "status": "FT",
+      "stage": "Group Stage - 1",
+      "home": {
+        "id": 100,
+        "name": "Brazil",
+        "logo": "https://media.api-sports.io/football/teams/BRA.png"
+      },
+      "away": {
+        "id": 101,
+        "name": "Argentina",
+        "logo": "https://media.api-sports.io/football/teams/ARG.png"
+      },
+      "score": {
+        "home": 0,
+        "away": 1
+      },
+      "slug": "brazil-vs-argentina-900000"
+    }
+  ],
+  "updated_at": "2026-06-11T06:05:33.684Z"
+}
