@@ -105,10 +105,10 @@ export default {
   },
   head() {
     return {
-      title: `SoccerIns - ${this.$t('home.latestNews')}`,
+      title: `CompSoccer - ${this.$t('home.latestNews')}`,
       meta: [
         { hid: 'description', name: 'description', content: 'World Cup 2026 news, schedules, results and live TV guide in 6 languages.' },
-        { hid: 'og:title', property: 'og:title', content: `SoccerIns - ${this.$t('home.latestNews')}` },
+        { hid: 'og:title', property: 'og:title', content: `CompSoccer - ${this.$t('home.latestNews')}` },
         { hid: 'og:description', property: 'og:description', content: 'World Cup 2026 news, schedules, results and live TV guide.' },
         { hid: 'og:type', property: 'og:type', content: 'website' }
       ]

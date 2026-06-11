@@ -151,10 +151,10 @@ export default {
     }
     return {
       htmlAttrs: { lang: locale, dir: locale === 'ar' ? 'rtl' : 'ltr' },
-      title: `${this.$t('standings.title')} - SoccerIns`,
+      title: `${this.$t('standings.title')} - CompSoccer`,
       meta: [
         { hid: 'description', name: 'description', content: 'World Cup 2026 group standings. Live table with points, goals and qualification status.' },
-        { hid: 'og:title', property: 'og:title', content: `${this.$t('standings.title')} - SoccerIns` },
+        { hid: 'og:title', property: 'og:title', content: `${this.$t('standings.title')} - CompSoccer` },
         { hid: 'og:locale', property: 'og:locale', content: localeMap[locale] || locale },
         { hid: 'og:type', property: 'og:type', content: 'website' }
       ],

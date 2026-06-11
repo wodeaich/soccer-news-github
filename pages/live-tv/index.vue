@@ -248,10 +248,10 @@ export default {
     const faqs = this.faqs
     return {
       htmlAttrs: { lang: locale, dir: locale === 'ar' ? 'rtl' : 'ltr' },
-      title: `${this.$t('liveTV.title')} - SoccerIns`,
+      title: `${this.$t('liveTV.title')} - CompSoccer`,
       meta: [
         { hid: 'description', name: 'description', content: 'Where to watch World Cup 2026 live. Full TV guide by region — USA, UK, Brazil, Mexico, Japan, Korea and Middle East.' },
-        { hid: 'og:title', property: 'og:title', content: `${this.$t('liveTV.title')} - SoccerIns` },
+        { hid: 'og:title', property: 'og:title', content: `${this.$t('liveTV.title')} - CompSoccer` },
         { hid: 'og:locale', property: 'og:locale', content: localeMap[locale] || locale },
         { hid: 'og:type', property: 'og:type', content: 'website' }
       ],

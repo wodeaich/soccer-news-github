@@ -66,7 +66,7 @@ export default {
       htmlAttrs: {
         lang: this.newInfo.language
       },
-      title: this.newInfo.name + " - SoccerIns",
+      title: this.newInfo.name + " - CompSoccer",
       meta: [
         {
           hid: "description",

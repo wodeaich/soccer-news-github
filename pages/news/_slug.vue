@@ -79,10 +79,10 @@ export default {
       image: [this.newInfo.cover].filter(Boolean),
       datePublished: pubDate,
       dateModified: this.newInfo.updated_at || pubDate,
-      author: [{ '@type': 'Organization', name: 'SoccerIns', url: 'https://compsoccer.com' }],
+      author: [{ '@type': 'Organization', name: 'CompSoccer', url: 'https://compsoccer.com' }],
       publisher: {
         '@type': 'Organization',
-        name: 'SoccerIns',
+        name: 'CompSoccer',
         logo: { '@type': 'ImageObject', url: 'https://compsoccer.com/icons/192.png' }
       },
       description: this.newInfo.first_paragraph,
@@ -103,7 +103,7 @@ export default {
 
     return {
       htmlAttrs: { lang: locale, dir: locale === 'ar' ? 'rtl' : 'ltr' },
-      title: `${this.newInfo.name} - SoccerIns`,
+      title: `${this.newInfo.name} - CompSoccer`,
       meta: [
         { hid: 'description', name: 'description', content: this.newInfo.first_paragraph },
         { hid: 'keywords', name: 'keywords', content: this.newInfo.terms || '' },

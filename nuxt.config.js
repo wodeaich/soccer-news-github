@@ -54,7 +54,7 @@ export default {
     trailingSlash: true
   },
   head: {
-    title: "SoccerIns - Global News at Your Fingertips!",
+    title: "CompSoccer - Global News at Your Fingertips!",
     meta: [
       // {
       //   name: "version",
@@ -68,7 +68,7 @@ export default {
       //   hid: "description",
       //   name: "description",
       //   content:
-      //     "SoccerIns is a platform that gathers countless young gamers with the best free online games. All of our games are designed to provide young people with a better way to relax and have fun, ≈ and a wide range of styles waiting for your selection. When you are looking for fun through games, SoccerIns will be your faithful choice, offering you a more comprehensive range of games, the most diverse selection and as many new surprises as possible!"
+      //     "CompSoccer is a platform that gathers countless young gamers with the best free online games. All of our games are designed to provide young people with a better way to relax and have fun, ≈ and a wide range of styles waiting for your selection. When you are looking for fun through games, CompSoccer will be your faithful choice, offering you a more comprehensive range of games, the most diverse selection and as many new surprises as possible!"
       // },
       // {
       //   hid: "keywords",
@@ -108,7 +108,7 @@ export default {
       {
         hid: "og:site_name",
         property: "og:site_name",
-        content: "SoccerIns"
+        content: "CompSoccer"
       }
     ],
     link: [
@@ -221,10 +221,10 @@ export default {
   },
   pwa: {
     manifest: {
-      name: "SoccerIns",
-      short_name: "SoccerIns",
+      name: "CompSoccer",
+      short_name: "CompSoccer",
       description:
-        "SoccerIns is a platform that gathers countless young gamers with the best free online games. All of our games are designed to provide young people with a better way to relax and have fun, with healthy gameplay and a wide range of styles waiting for your selection. When you are looking for fun through games, SoccerIns will be your faithful choice, offering you a more comprehensive range of games, the most diverse selection and as many new surprises as possible!",
+        "CompSoccer is a platform that gathers countless young gamers with the best free online games. All of our games are designed to provide young people with a better way to relax and have fun, with healthy gameplay and a wide range of styles waiting for your selection. When you are looking for fun through games, CompSoccer will be your faithful choice, offering you a more comprehensive range of games, the most diverse selection and as many new surprises as possible!",
       icons: [
         {
           src: "/icons/32.png",

@@ -1,4 +1,4 @@
-# SoccerIns 改版技术规划总结
+# CompSoccer 改版技术规划总结
 
 > 文档版本：v1.0 | 整理日期：2026-05-13
 
@@ -397,8 +397,8 @@ head() {
   "datePublished": "...",
   "dateModified": "...",
   "inLanguage": "en",
-  "author": { "@type": "Organization", "name": "SoccerIns" },
-  "publisher": { "@type": "Organization", "name": "SoccerIns", "logo": "..." }
+  "author": { "@type": "Organization", "name": "CompSoccer" },
+  "publisher": { "@type": "Organization", "name": "CompSoccer", "logo": "..." }
 }
 ```
 
@@ -415,10 +415,10 @@ head() {
 ```
 # compsoccer.com/llms.txt
 
-> SoccerIns: World Cup 2026 multilingual news and match coverage
+> CompSoccer: World Cup 2026 multilingual news and match coverage
 
 ## About
-SoccerIns covers World Cup 2026 news, match results, schedules,
+CompSoccer covers World Cup 2026 news, match results, schedules,
 standings and live TV guides in 6 languages (EN/ES/PT/AR/JA/KO).
 
 ## Content
@@ -441,7 +441,7 @@ standings and live TV guides in 6 languages (EN/ES/PT/AR/JA/KO).
 
 - 每篇文章加 `dateModified`（AI 引擎优先引用新鲜内容）
 - 比赛数据注明来源：「数据来源：API-Football」
-- 建立 About 页面，描述 SoccerIns 的定位和数据来源
+- 建立 About 页面，描述 CompSoccer 的定位和数据来源
 - 文章中引用权威来源：「According to FIFA official data...」
 
 #### 3. 内容结构对 AI 友好

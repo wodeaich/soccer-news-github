@@ -26,7 +26,7 @@
         </div>
         <span style="text-align: center">
           {{ copyRightText1[lang] || copyRightText1["en"] }}
-          ©&nbsp; 2025 SoccerIns &nbsp;
+          ©&nbsp; 2025 CompSoccer &nbsp;
           {{ copyRightText2[lang] || copyRightText2["en"] }}
         </span>
       </div>

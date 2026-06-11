@@ -174,8 +174,8 @@ export default {
     const locale = this.$i18n.locale
     const localeMap = { en: 'en_US', es: 'es_ES', pt: 'pt_BR', ar: 'ar_SA', ja: 'ja_JP', ko: 'ko_KR' }
     const title = this.match.home_team && this.match.away_team
-      ? `${this.match.home_team} vs ${this.match.away_team} - SoccerIns`
-      : `${this.$t('matches.title')} - SoccerIns`
+      ? `${this.match.home_team} vs ${this.match.away_team} - CompSoccer`
+      : `${this.$t('matches.title')} - CompSoccer`
     return {
       htmlAttrs: { lang: locale, dir: locale === 'ar' ? 'rtl' : 'ltr' },
       title,

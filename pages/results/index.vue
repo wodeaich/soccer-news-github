@@ -153,10 +153,10 @@ export default {
     }
     return {
       htmlAttrs: { lang: locale, dir: locale === 'ar' ? 'rtl' : 'ltr' },
-      title: `${this.$t('results.title')} - SoccerIns`,
+      title: `${this.$t('results.title')} - CompSoccer`,
       meta: [
         { hid: 'description', name: 'description', content: 'World Cup 2026 match results and scores. View all completed fixtures with match reviews.' },
-        { hid: 'og:title', property: 'og:title', content: `${this.$t('results.title')} - SoccerIns` },
+        { hid: 'og:title', property: 'og:title', content: `${this.$t('results.title')} - CompSoccer` },
         { hid: 'og:locale', property: 'og:locale', content: localeMap[locale] || locale },
         { hid: 'og:type', property: 'og:type', content: 'website' }
       ],

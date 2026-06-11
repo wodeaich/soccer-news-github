@@ -1,4 +1,4 @@
-name: Build & Deploy SoccerIns
+name: Build & Deploy CompSoccer
 
 on:
   push:

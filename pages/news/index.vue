@@ -92,10 +92,10 @@ export default {
     }
     return {
       htmlAttrs: { lang: locale, dir: locale === 'ar' ? 'rtl' : 'ltr' },
-      title: `${this.$t('news.title')} - SoccerIns`,
+      title: `${this.$t('news.title')} - CompSoccer`,
       meta: [
         { hid: 'description', name: 'description', content: 'Latest World Cup 2026 news, transfer updates and team news.' },
-        { hid: 'og:title', property: 'og:title', content: `${this.$t('news.title')} - SoccerIns` },
+        { hid: 'og:title', property: 'og:title', content: `${this.$t('news.title')} - CompSoccer` },
         { hid: 'og:type', property: 'og:type', content: 'website' }
       ],
       __dangerouslyDisableSanitizers: ['script'],

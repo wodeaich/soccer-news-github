@@ -1,4 +1,4 @@
-name: SoccerIns Data & Content Cron Jobs
+name: CompSoccer Data & Content Cron Jobs
 
 on:
   schedule:

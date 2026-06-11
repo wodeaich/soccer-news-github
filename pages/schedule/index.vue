@@ -152,10 +152,10 @@ export default {
     }
     return {
       htmlAttrs: { lang: locale, dir: locale === 'ar' ? 'rtl' : 'ltr' },
-      title: `${this.$t('schedule.title')} - SoccerIns`,
+      title: `${this.$t('schedule.title')} - CompSoccer`,
       meta: [
         { hid: 'description', name: 'description', content: 'World Cup 2026 match schedule. Find all upcoming fixtures, kick-off times and venues.' },
-        { hid: 'og:title', property: 'og:title', content: `${this.$t('schedule.title')} - SoccerIns` },
+        { hid: 'og:title', property: 'og:title', content: `${this.$t('schedule.title')} - CompSoccer` },
         { hid: 'og:locale', property: 'og:locale', content: localeMap[locale] || locale },
         { hid: 'og:type', property: 'og:type', content: 'website' }
       ],

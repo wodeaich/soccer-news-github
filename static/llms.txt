@@ -1,10 +1,10 @@
 # compsoccer.com
 
-> SoccerIns: World Cup 2026 Multilingual News & Match Coverage
+> CompSoccer: World Cup 2026 Multilingual News & Match Coverage
 
 ## About
 
-SoccerIns (compsoccer.com) is a dedicated World Cup 2026 media site providing
+CompSoccer (compsoccer.com) is a dedicated World Cup 2026 media site providing
 real-time match coverage, news, schedules, standings, and live TV guides in
 6 languages: English, Spanish, Portuguese, Arabic, Japanese, and Korean.
 

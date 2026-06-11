@@ -39,7 +39,7 @@
           ><CustomLink to="/cookies.html" target="_blank">Cookies Policy</CustomLink>
           <a href="mailto:Service@CompSoccer.com">Contact</a>
         </div>
-        <span>Copyright ©&nbsp; 2025 SoccerIns &nbsp;All rights reserved.</span>
+        <span>Copyright ©&nbsp; 2025 CompSoccer &nbsp;All rights reserved.</span>
       </div>
     </div>
     <Notification v-if="showNotification" :message="notificationMessage" />

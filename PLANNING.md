@@ -1,4 +1,4 @@
-# SoccerIns 世界杯改版 — 规划与技术决策文档
+# CompSoccer 世界杯改版 — 规划与技术决策文档
 
 > 本文档整理自项目规划讨论，记录代码现状、技术决策、开发规范和执行计划。
 > 最后更新：2026-05-13
@@ -369,10 +369,10 @@ GEO 针对 ChatGPT、Perplexity、Google AI Overview、Bing Copilot 等 AI 搜�
 ```
 # compsoccer.com/llms.txt
 
-> SoccerIns: World Cup 2026 multilingual news and match coverage
+> CompSoccer: World Cup 2026 multilingual news and match coverage
 
 ## About
-SoccerIns covers World Cup 2026 news, match results, schedules,
+CompSoccer covers World Cup 2026 news, match results, schedules,
 standings and live TV guides in 6 languages (EN/ES/PT/AR/JA/KO).
 
 ## Content

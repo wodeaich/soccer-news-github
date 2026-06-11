@@ -17,7 +17,7 @@
 
 ---
 
-## 二、与 SoccerIns 直接相关的模块
+## 二、与 CompSoccer 直接相关的模块
 
 ### 2.1 AFS 文章管理（3.3 节）
 
@@ -127,13 +127,13 @@ POST /fileUploadAndDownload/releaseFrontEnd
 https://bunchthings.com/cdncgi/image/w=366,h=244,f=auto,fit=cover/article_site/article_cover/xxx.jpeg
 ```
 
-> SoccerIns 目前暂用球队徽标 URL 作为封面，待后续完善封面图上传流程后接入此接口。
+> CompSoccer 目前暂用球队徽标 URL 作为封面，待后续完善封面图上传流程后接入此接口。
 
 ---
 
-## 三、暂不涉及的模块（与 SoccerIns 无关）
+## 三、暂不涉及的模块（与 CompSoccer 无关）
 
-以下模块属于其他业务线，SoccerIns 开发期间**不应接触**：
+以下模块属于其他业务线，CompSoccer 开发期间**不应接触**：
 
 | 模块 | 说明 |
 |------|------|
@@ -151,7 +151,7 @@ https://bunchthings.com/cdncgi/image/w=366,h=244,f=auto,fit=cover/article_site/a
 
 ## 四、爬取文章入库流程参考（附录）
 
-PDF 附带了竞品内容爬取入库的 SQL 和流程，与 SoccerIns AI 生成文章的存储路径相同（均写入 `article_library`），供参考：
+PDF 附带了竞品内容爬取入库的 SQL 和流程，与 CompSoccer AI 生成文章的存储路径相同（均写入 `article_library`），供参考：
 
 ```sql
 -- 去重查询
@@ -172,7 +172,7 @@ WHERE status = 1
   );
 ```
 
-> SoccerIns 通过 API 写入，无需直接操作 SQL，但此去重逻辑可参考用于判断重复生成。
+> CompSoccer 通过 API 写入，无需直接操作 SQL，但此去重逻辑可参考用于判断重复生成。
 
 ---
 
