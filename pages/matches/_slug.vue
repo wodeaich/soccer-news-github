@@ -116,20 +116,9 @@
 
 <script>
 export default {
-  async asyncData({ $axios, params, env, error }) {
-    try {
-      const slug = params.slug
-      const [matchRes, newsRes] = await Promise.all([
-        $axios.$get('/api/match/detail', { params: { site_id: env.SITE_ID, slug } }),
-        $axios.$get('/api/article/menu', { params: { site_id: env.SITE_AFS, mod_id: 'all', size: 3 } })
-      ])
-      return {
-        match: matchRes || {},
-        relatedNews: newsRes?.list || []
-      }
-    } catch {
-      error({ statusCode: 404, message: 'Match not found' })
-    }
+  asyncData({ payload, error }) {
+    if (payload && payload.match) return payload
+    return error({ statusCode: 404, message: 'Match not found' })
   },
   data() {
     return {

@@ -88,15 +88,8 @@
 
 <script>
 export default {
-  async asyncData({ $axios, env }) {
-    try {
-      const data = await $axios.$get('/api/match/results', {
-        params: { site_id: env.SITE_ID }
-      })
-      return { results: data.list || [] }
-    } catch {
-      return { results: [] }
-    }
+  asyncData({ payload }) {
+    return payload || { results: [] }
   },
   data() {
     return {

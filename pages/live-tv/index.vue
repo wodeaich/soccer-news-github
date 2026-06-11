@@ -190,19 +190,8 @@ const FAQS_BY_LANG = {
 }
 
 export default {
-  async asyncData({ $axios, env }) {
-    try {
-      const [channelsRes, matchesRes] = await Promise.all([
-        $axios.$get('/api/live/channels', { params: { site_id: env.SITE_ID } }),
-        $axios.$get('/api/match/today',   { params: { site_id: env.SITE_ID } })
-      ])
-      return {
-        channels: channelsRes?.list || [],
-        todayMatches: matchesRes?.list || []
-      }
-    } catch {
-      return { channels: [], todayMatches: [] }
-    }
+  asyncData({ payload }) {
+    return payload || { channels: [], todayMatches: [] }
   },
   data() {
     return {

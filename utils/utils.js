@@ -208,7 +208,7 @@ export function shuffleArray(array) {
 }
 
 export function getStarListStyle(scoreNum) {
-  let result = [];
+  const result = [];
   const score = Math.floor(scoreNum * 2) / 2; // 四舍五入到0.5分
   const integer = Math.floor(score);
   const hasDecimal = score % 1 !== 0;

@@ -11,9 +11,9 @@
  */
 
 require("dotenv").config();
-const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
+const axios = require("axios");
 const store = require("./lib/store");
 
 // ─── 配置 ────────────────────────────────────────────────────────────────────
@@ -156,7 +156,7 @@ async function generateArticle(fixture) {
 }
 
 // ─── Step 3: 写入 content/articles/<id>.json ──────────────────────────────────
-async function publishArticle(article) {
+function publishArticle(article) {
   const articleId = store.upsertArticleEn(article);
   console.log(`[Step3] ✅ 已写入 content/articles/${articleId}.json`);
   return articleId;
@@ -195,7 +195,7 @@ async function run() {
     try {
       // Step 2
       const article = await generateArticle(fixture);
-      await new Promise((r) => setTimeout(r, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Step 3
       await publishArticle(article);

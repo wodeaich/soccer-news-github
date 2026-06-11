@@ -5,9 +5,9 @@
  */
 
 require("dotenv").config();
-const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
+const axios = require("axios");
 const store = require("./lib/store");
 
 const API_KEY = process.env.API_FOOTBALL_KEY;

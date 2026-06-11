@@ -11,9 +11,10 @@
 <script>
 export default {
   props: {
+    // 纯静态模式下不传：列表只展示 initialItems，不再发起远程加载
     apiEndpoint: {
       type: String,
-      required: true
+      default: ""
     },
     initialPage: {
       type: Number,
@@ -35,14 +36,14 @@ export default {
   data() {
     return {
       loading: false,
-      endOfList: false,
+      endOfList: !this.apiEndpoint,
       currentPage: this.initialPage,
       items: [...this.initialItems]
     };
   },
   methods: {
     async loadMore() {
-      if (this.loading || this.endOfList) return;
+      if (this.loading || this.endOfList || !this.apiEndpoint) return;
       this.loading = true;
       try {
         const params = {

@@ -82,13 +82,19 @@ function i18nOf(article, lang) {
   return t;
 }
 
+/** ISO 时间 → 秒级时间戳（NewsCard 组件以 ts*1000 渲染日期） */
+function toEpochSec(iso) {
+  const ms = new Date(iso || 0).getTime();
+  return Number.isFinite(ms) ? Math.floor(ms / 1000) : null;
+}
+
 function mapArticleMenuItem(a, lang) {
   const t = i18nOf(a, lang);
   return {
     name: t.title || "",
     cover: a.cover || "",
     path: a.slug,
-    published_at: a.published_at,
+    published_at: toEpochSec(a.published_at),
     first_paragraph: t.summary || "",
   };
 }
@@ -130,7 +136,7 @@ function getToday() {
   });
 }
 
-/** 单场比赛详情（含赛后回顾，若存在对应文章）*/
+/** 单场比赛详情（含赛后回顾，若存在对应文章） */
 function getMatch(slug, lang = "en") {
   const all = [
     ...readJSON(path.join(MATCHES_DIR, "results.json"), { results: [] }).results || [],

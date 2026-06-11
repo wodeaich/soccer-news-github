@@ -51,7 +51,6 @@
       <section class="section">
         <h2 class="section-title">{{ $t('home.allArticles') }}</h2>
         <InfiniteScrollList1
-          api-endpoint="/api/article/menu"
           :initial-page="3"
           :page-size="10"
           mod-id="all"
@@ -86,22 +85,8 @@
 
 <script>
 export default {
-  async asyncData({ $axios, env }) {
-    try {
-      const siteAfs = env.SITE_AFS
-      const [featuredRes, trendingRes, allRes] = await Promise.all([
-        $axios.$get('/api/article/menu', { params: { site_id: siteAfs, mod_id: 'rec', size: 3 } }),
-        $axios.$get('/api/article/menu', { params: { site_id: siteAfs, mod_id: 'trending', size: 6 } }),
-        $axios.$get('/api/article/menu', { params: { site_id: siteAfs, mod_id: 'all', size: 10 } })
-      ])
-      return {
-        featured: featuredRes.list || [],
-        trending: trendingRes.list || [],
-        allNews: allRes.list || []
-      }
-    } catch (e) {
-      return { featured: [], trending: [], allNews: [] }
-    }
+  asyncData({ payload }) {
+    return payload || { featured: [], trending: [], allNews: [] }
   },
   head() {
     return {

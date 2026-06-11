@@ -83,7 +83,7 @@ async function translateArticle(article) {
       store.addTranslation(article.id, lang.code, { title, summary, content });
       done++;
       console.log(`  ✅ ${lang.name} 完成`);
-      await new Promise((r) => setTimeout(r, 800));
+      await new Promise((resolve) => setTimeout(resolve, 800));
     } catch (err) {
       console.error(`  ❌ ${lang.name} 失败:`, err.message);
     }

@@ -9,6 +9,8 @@ module.exports = {
     requireConfigFile: false
   },
   extends: ["@nuxtjs", "plugin:nuxt/recommended", "prettier"],
+  // 第三方压缩库与生成数据不参与 lint
+  ignorePatterns: ["static/", "content/", "dist/"],
   plugins: [],
   // add your custom rules here
   rules: {

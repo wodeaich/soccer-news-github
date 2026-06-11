@@ -31,7 +31,6 @@
       <!-- 文章列表无限滚动 -->
       <section class="section">
         <InfiniteScrollList1
-          api-endpoint="/api/article/menu"
           :initial-page="3"
           :page-size="10"
           mod-id="all"
@@ -65,20 +64,8 @@
 
 <script>
 export default {
-  async asyncData({ $axios, env }) {
-    try {
-      const siteAfs = env.SITE_AFS
-      const [featuredRes, allRes] = await Promise.all([
-        $axios.$get('/api/article/menu', { params: { site_id: siteAfs, mod_id: 'rec', size: 3 } }),
-        $axios.$get('/api/article/menu', { params: { site_id: siteAfs, mod_id: 'all', size: 10 } })
-      ])
-      return {
-        featured: featuredRes.list || [],
-        allNews: allRes.list || []
-      }
-    } catch (e) {
-      return { featured: [], allNews: [] }
-    }
+  asyncData({ payload }) {
+    return payload || { featured: [], allNews: [] }
   },
   head() {
     const locale = this.$i18n.locale

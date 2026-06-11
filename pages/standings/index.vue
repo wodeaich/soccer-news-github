@@ -108,16 +108,8 @@ const QUALIFY_TEXT = { en: 'Advance to Round of 16', es: 'Pasa a Octavos', pt: '
 const ELIM_TEXT    = { en: 'Elimination zone', es: 'Zona de eliminación', pt: 'Zona de eliminação', ar: 'منطقة الإقصاء', ja: '敗退圏', ko: '탈락권' }
 
 export default {
-  async asyncData({ $axios, env }) {
-    try {
-      const data = await $axios.$get('/api/match/standings', {
-        params: { site_id: env.SITE_ID }
-      })
-      const groups = data.groups || []
-      return { groups, activeGroup: groups[0]?.name || '' }
-    } catch {
-      return { groups: [], activeGroup: '' }
-    }
+  asyncData({ payload }) {
+    return payload || { groups: [], activeGroup: '' }
   },
   data() {
     return { activeGroup: '' }

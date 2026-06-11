@@ -28,7 +28,8 @@ function slug(h, a, id) {
 }
 
 function fixture(i, finished) {
-  const h = team(i * 2), a = team(i * 2 + 1);
+  const h = team(i * 2);
+  const a = team(i * 2 + 1);
   const id = 900000 + i;
   const ts = BASE_TS + i * 86400;
   return {
@@ -56,7 +57,9 @@ const groups = ["A", "B", "C", "D"].map((name, gi) => ({
   name,
   table: Array.from({ length: 4 }, (_, i) => {
     const t = team(gi * 4 + i);
-    const won = 3 - i, gf = 8 - i * 2, ga = 2 + i * 2;
+    const won = 3 - i;
+    const gf = 8 - i * 2;
+    const ga = 2 + i * 2;
     return {
       rank: i + 1, team: t,
       played: 3, won, drawn: 0, lost: i,

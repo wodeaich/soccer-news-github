@@ -1,4 +1,9 @@
+// 纯静态方案：/api/common/sj 上报后台已下线，禁用以避免无效请求。
+// 如需恢复埋点，请接入新的收集端点后将 DISABLED 改为 false。
+const DISABLED = true;
+
 export default ({ $axios, env }) => {
+  if (DISABLED) return;
   if (process.client) {
     function getCookie(name) {
       const cookieArr = document.cookie.split(";").map((cookie) => cookie.trim());

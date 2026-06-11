@@ -66,14 +66,21 @@ export default {
   methods: {
     async submitEmail() {
       if (validateEmail(this.input)) {
-        await this.$axios.$post("/api/game/subscribe", {
-          site_id: process.env.SITE_ID,
-          email: this.input
-        });
-        this.$globalMethod.showNotification({
-          message: "Thank you for subscribing!",
-          type: "success"
-        });
+        try {
+          await this.$axios.$post("/api/game/subscribe", {
+            site_id: process.env.SITE_ID,
+            email: this.input
+          });
+          this.$globalMethod.showNotification({
+            message: "Thank you for subscribing!",
+            type: "success"
+          });
+        } catch (e) {
+          this.$globalMethod.showNotification({
+            message: "Subscription is temporarily unavailable, please try again later.",
+            type: "warning"
+          });
+        }
       } else {
         this.$globalMethod.showNotification({
           message: "Please enter a valid email address",

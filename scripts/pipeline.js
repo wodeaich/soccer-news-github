@@ -15,9 +15,9 @@
  */
 
 require("dotenv").config();
-const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
+const axios = require("axios");
 const store = require("./lib/store");
 
 // ─── 配置 ────────────────────────────────────────────────────────────────────
@@ -165,7 +165,7 @@ async function generateFromFixture(fixture) {
   };
 }
 
-async function generateFromManual(args) {
+function generateFromManual(args) {
   const titleIdx = args.indexOf("--title");
   const contentIdx = args.indexOf("--content");
   const typeIdx = args.indexOf("--type");
@@ -196,7 +196,7 @@ async function generateFromManual(args) {
 }
 
 // ─── Step 3: 写入英文文章 ─────────────────────────────────────────────────────
-async function publishArticle(article) {
+function publishArticle(article) {
   const articleId = store.upsertArticleEn(article);
   console.log(`  [Content] ✅ 英文文章已写入 content/articles/${articleId}.json`);
   return articleId;
@@ -241,7 +241,7 @@ async function translateAndPublish(article, articleId) {
       store.addTranslation(articleId, lang.code, { title, summary, content });
       translations.push(lang.code);
       console.log(`    ✅ ${lang.name} 完成`);
-      await new Promise((r) => setTimeout(r, 800));
+      await new Promise((resolve) => setTimeout(resolve, 800));
     } catch (err) {
       console.error(`    ❌ ${lang.name} 失败: ${err.message}`);
     }
@@ -268,7 +268,7 @@ async function run() {
   console.log("=".repeat(60));
 
   const cache = loadCache();
-  let articles = [];
+  const articles = [];
 
   if (mode === "auto") {
     console.log("\n【Step 1】拉取赛事...");
@@ -281,7 +281,7 @@ async function run() {
       try {
         const article = await generateFromFixture(fixture);
         articles.push({ article, fixtureId: fixture.fixture.id });
-        await new Promise((r) => setTimeout(r, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       } catch (err) {
         console.error(`  ❌ 生成失败: ${err.message}`);
       }

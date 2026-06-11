@@ -41,25 +41,9 @@
 
 <script>
 export default {
-  async asyncData({ $axios, params, env, error }) {
-    try {
-      const slug = params.slug
-      const lastDash = slug.lastIndexOf('-')
-      const id = slug.substring(lastDash + 1)
-
-      const data = await $axios.$get('/api/article/detail', {
-        params: { site_id: env.SITE_AFS, article_id: id }
-      })
-
-      data.content = data.content.replace(
-        /<\/h4><p><br><br>|<br><br><\/p><h4>/g,
-        (match) => (match.includes('</h4><p>') ? '</h4><p>' : '</p><h4>')
-      )
-
-      return { newInfo: data }
-    } catch (e) {
-      error({ statusCode: 404, message: 'Article not found' })
-    }
+  asyncData({ payload, error }) {
+    if (payload && payload.newInfo) return payload
+    return error({ statusCode: 404, message: 'Article not found' })
   },
   data() {
     return {

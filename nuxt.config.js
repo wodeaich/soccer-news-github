@@ -14,36 +14,64 @@ export default {
     crawler: false,
     concurrency: 10,
     interval: 100,
-    async routes() {
-      const postsData = await fetch(
-        `${process.env.PROD_API_URL}/api/game/get_all_path_v2?site_id=${process.env.SITE_ID}`
-      );
-      const afsData = await fetch(
-        `${process.env.PROD_API_URL}/api/article/get_all_path?site_id=${process.env.SITE_AFS}`
-      );
-      const posts = await postsData.json();
-      const afs = await afsData.json();
-      // const gameCategoryPaths = posts.data.game_category.map((item) => `/category/${item}`);
-      // const appCategoryPaths = posts.data.app_category.map((item) => `/category/${item}`);
-      const gameDetailPaths = posts.data.game_detail.map((item) => `/game/${item}`);
-      const appDetailPaths = posts.data.app_detail.map((item) => `/game/${item}`);
-      const gameDownloadPaths = posts.data.game_detail.map((item) => `/download/${item}`);
-      // const appDownloadPaths = posts.data.app_detail.map((item) => `/download/${item}`);
+    // 排除遗留的游戏站页面（非世界杯产品，且依赖旧后台）。
+    // 后续可直接删除这些 pages/ 源文件。
+    exclude: [/\/(games|casual|hot|live|landing|search|afsearch|game|download|category|detail)(\/|$)/],
+    // 纯静态：在构建期(纯 Node)从本地 content/ 算好每个路由的数据，
+    // 通过 payload 注入页面 asyncData，页面不直接读文件，避免打包 fs。
+    routes() {
+      const content = require("./utils/content");
+      const langs = content.LOCALES;
+      const fixParagraphs = (html) =>
+        (html || "").replace(/<\/h4><p><br><br>|<br><br><\/p><h4>/g, (m) =>
+          m.includes("</h4><p>") ? "</h4><p>" : "</p><h4>"
+        );
 
-      const categoryPaths = afs.data.category.map((item) => `/category/${item}`);
-      const detailPaths = afs.data.detail.map((item) => `/detail/${item}`);
-      const urls = [
-        // ...gameCategoryPaths,
-        // ...appCategoryPaths,
-        ...gameDetailPaths,
-        ...appDetailPaths,
-        ...gameDownloadPaths,
-        // ...appDownloadPaths
+      const routes = [];
+      for (const l of langs) {
+        routes.push({
+          route: `/${l}/`,
+          payload: {
+            featured: content.getMenu(l, "rec", 3),
+            trending: content.getMenu(l, "trending", 6),
+            allNews: content.getMenu(l, "all", 10),
+          },
+        });
+        routes.push({
+          route: `/${l}/news/`,
+          payload: { featured: content.getMenu(l, "rec", 3), allNews: content.getMenu(l, "all", 10) },
+        });
+        routes.push({ route: `/${l}/schedule/`, payload: { matches: content.getSchedule() } });
+        routes.push({ route: `/${l}/results/`, payload: { results: content.getResults() } });
+        const groups = content.getStandings();
+        routes.push({
+          route: `/${l}/standings/`,
+          payload: { groups, activeGroup: (groups[0] && groups[0].name) || "" },
+        });
+        routes.push({
+          route: `/${l}/live-tv/`,
+          payload: { channels: content.getChannels(), todayMatches: content.getToday() },
+        });
 
-        ...categoryPaths,
-        ...detailPaths
-      ];
-      return urls;
+        // 文章详情
+        for (const slug of content.listArticleSlugs()) {
+          const id = slug.split("-").pop();
+          const newInfo = content.getArticle(l, id);
+          if (!newInfo) continue;
+          newInfo.content = fixParagraphs(newInfo.content);
+          routes.push({ route: `/${l}/news/${slug}/`, payload: { newInfo } });
+        }
+        // 比赛详情
+        for (const slug of content.listMatchSlugs()) {
+          const match = content.getMatch(slug, l);
+          if (!match) continue;
+          routes.push({
+            route: `/${l}/matches/${slug}/`,
+            payload: { match, relatedNews: content.getMenu(l, "all", 3) },
+          });
+        }
+      }
+      return routes;
     }
   },
   axios: {
@@ -180,7 +208,7 @@ export default {
       priority: 0.7,
       lastmod: new Date().toISOString(),
     },
-    async routes() {
+    routes() {
       const langs = ["en", "es", "pt", "ar", "ja", "ko"];
       const staticRoutes = [
         // 首页
@@ -197,15 +225,13 @@ export default {
         ...langs.map((l) => ({ url: `/${l}/live-tv/`, changefreq: "weekly", priority: 0.7 })),
       ];
 
-      // 动态文章 URL
+      // 动态 URL：从本地 content/ 读取文章与比赛 slug
       try {
-        const res = await fetch(
-          `${process.env.PROD_API_URL}/api/article/get_all_path?site_id=${process.env.SITE_AFS}`
-        );
-        const json = await res.json();
-        const slugs = (json.data && json.data.detail) || [];
+        const content = require("./utils/content");
         const lastmod = new Date().toISOString();
-        const articleRoutes = slugs.flatMap((slug) =>
+        const articleSlugs = content.listArticleSlugs();
+        const matchSlugs = content.listMatchSlugs();
+        const articleRoutes = articleSlugs.flatMap((slug) =>
           langs.map((l) => ({
             url: `/${l}/news/${slug}/`,
             changefreq: "weekly",
@@ -213,7 +239,15 @@ export default {
             lastmod,
           }))
         );
-        return [...staticRoutes, ...articleRoutes];
+        const matchRoutes = matchSlugs.flatMap((slug) =>
+          langs.map((l) => ({
+            url: `/${l}/matches/${slug}/`,
+            changefreq: "weekly",
+            priority: 0.6,
+            lastmod,
+          }))
+        );
+        return [...staticRoutes, ...articleRoutes, ...matchRoutes];
       } catch (_) {
         return staticRoutes;
       }
@@ -321,6 +355,14 @@ export default {
           }
         })
       ]
+    },
+    // 纯静态：content.js 在构建期(服务端)用 fs 读 content/，
+    // asyncData 代码也会进客户端包，这里把 fs 置空避免客户端构建报错
+    // （客户端用 process.server 守卫，不会真正调用 fs）。
+    extend(config, { isClient }) {
+      if (isClient) {
+        config.node = { ...(config.node || {}), fs: "empty" };
+      }
     }
   },
   purgeCSS: {
