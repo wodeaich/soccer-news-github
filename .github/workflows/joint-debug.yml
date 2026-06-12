@@ -1,0 +1,124 @@
+name: "Joint Debug (temporary, full-chain test)"
+
+# 临时联调工作流：推送本分支即运行，按顺序验证与真实后台的每个环节。
+# 联调通过后删除本文件。
+
+on:
+  push:
+    branches:
+      - claude/sweet-maxwell-GDeUH
+
+concurrency:
+  group: joint-debug
+  cancel-in-progress: true
+
+env:
+  ADMIN_BACKEND_URL: ${{ secrets.ADMIN_BACKEND_URL }}
+  ADMIN_JWT_TOKEN: ${{ secrets.ADMIN_JWT_TOKEN }}
+  RELEASE_SITE_ID: ${{ secrets.RELEASE_SITE_ID }}
+  BI_API_PREFIX: ${{ secrets.BI_API_PREFIX }}
+
+jobs:
+  full-chain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "yarn"
+
+      - run: yarn install --frozen-lockfile
+
+      # ── ① 后台连通性 + 鉴权 ────────────────────────────────────────────
+      - name: "Step 1 - Backend connectivity & auth"
+        run: |
+          echo "Backend: $ADMIN_BACKEND_URL  Prefix: ${BI_API_PREFIX:-/api/recArticle}  Site: $RELEASE_SITE_ID"
+          [ -z "$ADMIN_BACKEND_URL" ] && { echo "❌ ADMIN_BACKEND_URL 未配置"; exit 1; }
+          [ -z "$ADMIN_JWT_TOKEN" ] && { echo "❌ ADMIN_JWT_TOKEN 未配置"; exit 1; }
+          [ -z "$RELEASE_SITE_ID" ] && { echo "❌ RELEASE_SITE_ID 未配置"; exit 1; }
+          PREFIX="${BI_API_PREFIX:-/api/recArticle}"
+          CODE=$(curl -s -o /tmp/resp.json -w "%{http_code}" -m 20 \
+            -H "x-token: $ADMIN_JWT_TOKEN" \
+            "$ADMIN_BACKEND_URL$PREFIX/site/getSiteArticleList?siteId=$RELEASE_SITE_ID&page=1&pageSize=2")
+          echo "HTTP $CODE"
+          head -c 1500 /tmp/resp.json; echo
+          [ "$CODE" = "200" ] || { echo "❌ 后台不可达或鉴权失败（401=token 过期）"; exit 1; }
+          echo "✅ 后台连通，鉴权通过"
+
+      # ── ② 录入并上架一篇测试文章 ───────────────────────────────────────
+      - name: "Step 2 - Publish test article (create + up-site)"
+        run: |
+          node -e '
+          const { publishArticle } = require("./scripts/lib/publish");
+          (async () => {
+            const id = await publishArticle({
+              slug: "joint-debug-test-article",
+              language: "en",
+              title: "[TEST] Joint debug article - safe to delete",
+              summary: "Automated joint-debug test article. Safe to delete in admin.",
+              content: "<p>This is an automated joint-debug test article created by the publish pipeline. Safe to delete.</p>",
+              cover: "",
+              keywords: "test,joint-debug",
+              article_type: "news",
+            }, { siteId: process.env.RELEASE_SITE_ID });
+            console.log("✅ 测试文章已录入并上架 article_id =", id);
+          })().catch((e) => { console.error("❌ 录入/上架失败:", e.message); process.exit(1); });
+          '
+
+      # ── ③ 从后台拉回列表，验证测试文章在列、检查正文字段 ────────────────
+      - name: "Step 3 - Sync back & verify (checks content field too)"
+        run: |
+          node scripts/sync_articles.js
+          echo "--- 同步落盘文件 ---"
+          ls content/articles/ || true
+          node -e '
+          const c = require("./utils/content");
+          const arts = c.listArticles();
+          const t = arts.find(a => a.slug === "joint-debug-test-article");
+          if (!t) { console.error("❌ 同步结果中找不到测试文章"); process.exit(1); }
+          console.log("✅ 测试文章已同步回来 id=", t.id, "language=", t.language);
+          if (!t.content) console.warn("⚠️ 列表接口不带正文 content——需要后台补详情接口（影响文章页正文显示）");
+          else console.log("✅ 列表接口带正文，长度", t.content.length);
+          '
+
+      # ── ④ 构建静态站 ──────────────────────────────────────────────────
+      - name: "Step 4 - Generate static site"
+        env:
+          NODE_ENV: production
+          SITE_ID: ${{ secrets.SITE_ID }}
+          SITE_AFS: ${{ secrets.SITE_AFS }}
+          PROD_API_URL: ${{ secrets.PROD_API_URL }}
+          TEST_API_URL: ${{ secrets.TEST_API_URL }}
+        run: |
+          yarn generate
+          COUNT=$(find dist -name "*.html" | wc -l)
+          echo "Pages: $COUNT"
+          [ "$COUNT" -ge 10 ] || { echo "❌ 页面数异常"; exit 1; }
+          ls dist/en/news/ || true
+
+      # ── ⑤ 打包并上传后台 → 触发发版 ───────────────────────────────────
+      - name: "Step 5 - Upload ZIP & release"
+        run: |
+          cd dist && zip -qr ../deploy.zip . -x "*.DS_Store" && cd ..
+          echo "ZIP: $(du -m deploy.zip | cut -f1)MB"
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            "$ADMIN_BACKEND_URL/fileUploadAndDownload/uploadFrontEndZip" \
+            -H "x-token: $ADMIN_JWT_TOKEN" \
+            -F "file=@deploy.zip" \
+            -F "siteId=$RELEASE_SITE_ID" \
+            -F "env=prod")
+          CODE=$(echo "$RESPONSE" | tail -1); BODY=$(echo "$RESPONSE" | head -n -1)
+          echo "upload HTTP $CODE: $BODY"
+          [ "$CODE" = "200" ] || { echo "❌ 上传失败"; exit 1; }
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            "$ADMIN_BACKEND_URL/fileUploadAndDownload/releaseFrontEnd" \
+            -H "x-token: $ADMIN_JWT_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{\"siteId\":\"$RELEASE_SITE_ID\",\"env\":\"prod\"}")
+          CODE=$(echo "$RESPONSE" | tail -1); BODY=$(echo "$RESPONSE" | head -n -1)
+          echo "release HTTP $CODE: $BODY"
+          [ "$CODE" = "200" ] || { echo "❌ 发版失败"; exit 1; }
+          echo "✅ 全链路联调通过！"
