@@ -53,23 +53,23 @@ export default {
           payload: { channels: content.getChannels(), todayMatches: content.getToday() },
         });
 
-        // 文章详情
-        for (const slug of content.listArticleSlugs()) {
-          const id = slug.split("-").pop();
-          const newInfo = content.getArticle(l, id);
-          if (!newInfo) continue;
-          newInfo.content = fixParagraphs(newInfo.content);
-          routes.push({ route: `/${l}/news/${slug}/`, payload: { newInfo } });
-        }
-        // 比赛详情
+        // 比赛详情（6 语言全有，界面词条由 i18n 翻译）
         for (const slug of content.listMatchSlugs()) {
-          const match = content.getMatch(slug, l);
+          const match = content.getMatch(slug);
           if (!match) continue;
           routes.push({
             route: `/${l}/matches/${slug}/`,
             payload: { match, relatedNews: content.getMenu(l, "all", 3) },
           });
         }
+      }
+
+      // 文章详情：独立语言模式——每篇只生成在自己语言区
+      for (const r of content.listArticleRoutes()) {
+        const newInfo = content.getArticle(r.id);
+        if (!newInfo) continue;
+        newInfo.content = fixParagraphs(newInfo.content);
+        routes.push({ route: `/${r.lang}/news/${r.slug}/`, payload: { newInfo } });
       }
       return routes;
     }
@@ -258,15 +258,13 @@ export default {
       const langs = ["en", "es", "pt", "ar", "ja", "ko"];
       const buildTime = new Date().toISOString();
       let meta = {};
-      let articleSlugs = [];
+      let articleRouteList = [];
       let matchSlugs = [];
-      let lastmods = {};
       try {
         const content = require("./utils/content");
         meta = content.contentMeta();
-        articleSlugs = content.listArticleSlugs();
+        articleRouteList = content.listArticleRoutes();
         matchSlugs = content.listMatchSlugs();
-        lastmods = content.articleLastmods();
       } catch (_) {
         // content 缺失时退化为仅静态页 + 构建时间
       }
@@ -282,15 +280,13 @@ export default {
         ...langs.map((l) => ({ url: `/${l}/live-tv/`, changefreq: "weekly", priority: 0.7, lastmod: matchesAt })),
       ];
 
-      // 文章详情：lastmod 取该文章发布时间
-      const articleRoutes = articleSlugs.flatMap((slug) =>
-        langs.map((l) => ({
-          url: `/${l}/news/${slug}/`,
-          changefreq: "weekly",
-          priority: 0.6,
-          lastmod: lastmods[slug] || newsAt,
-        }))
-      );
+      // 文章详情：独立语言模式——每篇只在自己语言区出现一次
+      const articleRoutes = articleRouteList.map((r) => ({
+        url: `/${r.lang}/news/${r.slug}/`,
+        changefreq: "weekly",
+        priority: 0.6,
+        lastmod: r.published_at || newsAt,
+      }));
       // 比赛详情：lastmod 取赛果更新时间
       const matchRoutes = matchSlugs.flatMap((slug) =>
         langs.map((l) => ({

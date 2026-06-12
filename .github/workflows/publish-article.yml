@@ -101,6 +101,10 @@ jobs:
           API_FOOTBALL_BASE:   ${{ secrets.API_FOOTBALL_BASE }}
           WORLD_CUP_LEAGUE_ID: ${{ secrets.WORLD_CUP_LEAGUE_ID }}
           WORLD_CUP_SEASON:    ${{ secrets.WORLD_CUP_SEASON }}
+          ADMIN_BACKEND_URL:   ${{ secrets.ADMIN_BACKEND_URL }}
+          ADMIN_JWT_TOKEN:     ${{ secrets.ADMIN_JWT_TOKEN }}
+          RELEASE_SITE_ID:     ${{ secrets.RELEASE_SITE_ID }}
+          BI_API_PREFIX:       ${{ secrets.BI_API_PREFIX }}
           MINIMAX_API_KEY:     ${{ secrets.MINIMAX_API_KEY }}
           MINIMAX_BASE:        ${{ secrets.MINIMAX_BASE }}
         run: node scripts/pipeline.js --auto
@@ -112,6 +116,10 @@ jobs:
           API_FOOTBALL_BASE:   ${{ secrets.API_FOOTBALL_BASE }}
           WORLD_CUP_LEAGUE_ID: ${{ secrets.WORLD_CUP_LEAGUE_ID }}
           WORLD_CUP_SEASON:    ${{ secrets.WORLD_CUP_SEASON }}
+          ADMIN_BACKEND_URL:   ${{ secrets.ADMIN_BACKEND_URL }}
+          ADMIN_JWT_TOKEN:     ${{ secrets.ADMIN_JWT_TOKEN }}
+          RELEASE_SITE_ID:     ${{ secrets.RELEASE_SITE_ID }}
+          BI_API_PREFIX:       ${{ secrets.BI_API_PREFIX }}
           MINIMAX_API_KEY:     ${{ secrets.MINIMAX_API_KEY }}
           MINIMAX_BASE:        ${{ secrets.MINIMAX_BASE }}
         run: node scripts/pipeline.js --fixture "${{ github.event.inputs.fixture_id }}"
@@ -119,6 +127,10 @@ jobs:
       - name: Run pipeline (manual)
         if: github.event.inputs.mode == 'manual'
         env:
+          ADMIN_BACKEND_URL:   ${{ secrets.ADMIN_BACKEND_URL }}
+          ADMIN_JWT_TOKEN:     ${{ secrets.ADMIN_JWT_TOKEN }}
+          RELEASE_SITE_ID:     ${{ secrets.RELEASE_SITE_ID }}
+          BI_API_PREFIX:       ${{ secrets.BI_API_PREFIX }}
           MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
           MINIMAX_BASE:    ${{ secrets.MINIMAX_BASE }}
         run: |
@@ -128,32 +140,8 @@ jobs:
             --content "${{ github.event.inputs.content }}" \
             --type "${{ github.event.inputs.article_type }}"
 
-      # 把 pipeline 写入的 content/ 提交回仓库并触发发版
-      - name: Commit & push content changes
-        id: sync
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add content
-          if git diff --cached --quiet; then
-            echo "No content changes."
-            echo "pushed=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          git commit -m "chore(content): publish article via pipeline (${{ github.event.inputs.mode }})"
-          for i in 1 2 3 4; do
-            if git push origin "HEAD:${{ github.ref_name }}"; then
-              echo "pushed=true" >> "$GITHUB_OUTPUT"
-              exit 0
-            fi
-            git pull --rebase origin "${{ github.ref_name }}"
-            sleep $((2 ** i))
-          done
-          echo "Push failed after retries" >&2
-          exit 1
-
+      # 文章已录入后台并上架；触发部署（deploy 会从后台同步文章再构建）
       - name: Trigger deploy workflow
-        if: steps.sync.outputs.pushed == 'true'
         run: |
           curl -sf -X POST \
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \

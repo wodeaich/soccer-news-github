@@ -14,7 +14,10 @@ require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
-const store = require("./lib/store");
+const { publishArticle: biPublish } = require("./lib/publish");
+
+const SITE_ID = process.env.RELEASE_SITE_ID || "composoccer";
+const DRY_RUN = process.argv.includes("--dry-run");
 
 // ─── 配置 ────────────────────────────────────────────────────────────────────
 const FOOTBALL_KEY  = process.env.API_FOOTBALL_KEY;
@@ -155,10 +158,22 @@ async function generateArticle(fixture) {
   };
 }
 
-// ─── Step 3: 写入 content/articles/<id>.json ──────────────────────────────────
-function publishArticle(article) {
-  const articleId = store.upsertArticleEn(article);
-  console.log(`[Step3] ✅ 已写入 content/articles/${articleId}.json`);
+// ─── Step 3: 录入后台并绑定渠道上架 ──────────────────────────────────────────
+async function publishArticle(article) {
+  const articleId = await biPublish(
+    {
+      slug: article.slug,
+      language: article.lang || "en",
+      title: article.title,
+      summary: article.summary,
+      content: article.content,
+      cover: article.cover_image || "",
+      keywords: (article.tags || []).join(","),
+      article_type: article.article_type,
+    },
+    { siteId: SITE_ID, dryRun: DRY_RUN }
+  );
+  console.log(`[Step3] ✅ 已录入后台并上架，article_id=${articleId}`);
   return articleId;
 }
 

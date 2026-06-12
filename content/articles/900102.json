@@ -1,16 +1,12 @@
 {
-  "id": "900102",
-  "slug": "spain-vs-germany-900102",
-  "fixture_id": 900102,
+  "id": 900102,
+  "language": "en",
   "article_type": "review",
+  "slug": "spain-midfield-masterclass-sinks-germany",
+  "title": "Spain's midfield masterclass sinks Germany",
+  "summary": "Spain delivered a midfield masterclass to overcome a resilient Germany.",
+  "content": "<p>Spain delivered a midfield masterclass to overcome a resilient Germany at the 2026 FIFA World Cup.</p><p>Their patient build-up play unlocked a disciplined German defence after a goalless first half.</p>",
   "cover": "https://media.api-sports.io/football/teams/BRA.png",
-  "keywords": "world-cup-2026,spain,germany",
-  "published_at": "2026-06-11T06:05:33.688Z",
-  "i18n": {
-    "en": {
-      "title": "Spain's midfield masterclass sinks Germany",
-      "summary": "Spain delivered a midfield masterclass to overcome a resilient Germany.",
-      "content": "<p>Spain delivered a midfield masterclass to overcome a resilient Germany at the 2026 FIFA World Cup.</p><p>Their patient build-up play and sharp movement off the ball unlocked a disciplined German defence after a goalless first half.</p>"
-    }
-  }
+  "keywords": "world-cup-2026",
+  "published_at": "2026-06-12T05:30:49.190Z"
 }

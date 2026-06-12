@@ -18,7 +18,11 @@ require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
-const store = require("./lib/store");
+const { publishArticle: biPublish } = require("./lib/publish");
+
+// 目标站点（后台「种草站」composoccer）
+const SITE_ID = process.env.RELEASE_SITE_ID || "composoccer";
+const DRY_RUN = process.argv.includes("--dry-run");
 
 // ─── 配置 ────────────────────────────────────────────────────────────────────
 const FOOTBALL_KEY  = process.env.API_FOOTBALL_KEY;
@@ -195,11 +199,21 @@ function generateFromManual(args) {
   };
 }
 
-// ─── Step 3: 写入英文文章 ─────────────────────────────────────────────────────
+// ─── Step 3: 录入后台并绑定渠道上架（英文）──────────────────────────────────
 function publishArticle(article) {
-  const articleId = store.upsertArticleEn(article);
-  console.log(`  [Content] ✅ 英文文章已写入 content/articles/${articleId}.json`);
-  return articleId;
+  return biPublish(
+    {
+      slug: article.slug,
+      language: article.lang || "en",
+      title: article.title,
+      summary: article.summary,
+      content: article.content,
+      cover: article.cover_image || "",
+      keywords: (article.tags || []).join(","),
+      article_type: article.article_type,
+    },
+    { siteId: SITE_ID, dryRun: DRY_RUN }
+  );
 }
 
 // ─── Step 4: 翻译并上架多语言 ────────────────────────────────────────────────
@@ -225,9 +239,9 @@ Rules:
   return content.trim();
 }
 
-async function translateAndPublish(article, articleId) {
-  console.log(`\n  [Translate] 开始翻译 5 种语言...`);
-  const translations = [];
+async function translateAndPublish(article) {
+  console.log(`\n  [Translate] 翻译并独立上架 5 种语言...`);
+  let published = 0;
 
   for (const lang of TARGET_LANGS) {
     try {
@@ -238,20 +252,29 @@ async function translateAndPublish(article, articleId) {
         translateText(article.summary, lang),
       ]);
 
-      store.addTranslation(articleId, lang.code, { title, summary, content });
-      translations.push(lang.code);
-      console.log(`    ✅ ${lang.name} 完成`);
+      // 每个语言一篇独立文章：独立 slug（追加语言后缀，站内查重不冲突）
+      await biPublish(
+        {
+          slug: `${article.slug}-${lang.code}`,
+          language: lang.code,
+          title,
+          summary,
+          content,
+          cover: article.cover_image || "",
+          keywords: (article.tags || []).join(","),
+          article_type: article.article_type,
+        },
+        { siteId: SITE_ID, dryRun: DRY_RUN }
+      );
+      published += 1;
+      console.log(`    ✅ ${lang.name} 已录入并上架`);
       await new Promise((resolve) => setTimeout(resolve, 800));
     } catch (err) {
       console.error(`    ❌ ${lang.name} 失败: ${err.message}`);
     }
   }
 
-  if (translations.length > 0) {
-    console.log(`  [Content] 📦 已写入 ${translations.length} 个语言版本到 content/articles/${articleId}.json`);
-  }
-
-  return translations.length;
+  return published;
 }
 
 // ─── 主流程 ───────────────────────────────────────────────────────────────────
@@ -316,10 +339,10 @@ async function run() {
       console.log(`\n▶ 处理: "${article.title}"`);
 
       console.log("\n【Step 2】上架英文文章...");
-      const articleId = await publishArticle(article);
+      await publishArticle(article);
 
       console.log("\n【Step 3】翻译并上架多语言...");
-      const langs = await translateAndPublish(article, articleId);
+      const langs = await translateAndPublish(article);
       translationCount += langs;
 
       if (fixtureId) {

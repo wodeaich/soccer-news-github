@@ -52,7 +52,16 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      # 纯静态：页面数据全部来自仓库内 content/，构建不依赖任何后台 API
+      # 后台是文章唯一数据源：发版前把「已上架文章」镜像到 content/articles/
+      - name: Sync published articles from admin backend
+        env:
+          ADMIN_BACKEND_URL: ${{ secrets.ADMIN_BACKEND_URL }}
+          ADMIN_JWT_TOKEN: ${{ secrets.ADMIN_JWT_TOKEN }}
+          RELEASE_SITE_ID: ${{ secrets.RELEASE_SITE_ID }}
+          BI_API_PREFIX: ${{ secrets.BI_API_PREFIX }}
+        run: node scripts/sync_articles.js
+
+      # 比赛数据来自仓库内 content/matches/（cron 采集提交）；文章来自上一步同步
       - name: Generate static site
         env:
           NODE_ENV: production

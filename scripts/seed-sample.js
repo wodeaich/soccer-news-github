@@ -70,53 +70,60 @@ const groups = ["A", "B", "C", "D"].map((name, gi) => ({
 }));
 store.writeStandings(groups);
 
-// 4) 文章：3 篇，含 en + es 译文
-const sampleArticles = [
+// 4) 文章：独立语言模式——3 篇英文 + 2 篇西语，各自独立（与后台镜像格式一致）
+const flatArticles = [
   {
-    home: "Argentina", away: "Brazil",
+    id: 900100, language: "en", article_type: "review",
+    slug: "argentina-edge-brazil-world-cup-classic",
     title: "Argentina edge Brazil in a World Cup 2026 classic",
+    summary: "Argentina produced a commanding display to defeat Brazil in a World Cup 2026 classic.",
     content:
       "<p>Argentina produced a commanding display to defeat Brazil in one of the standout fixtures of the 2026 FIFA World Cup group stage.</p>" +
-      "<p>Driven by relentless pressing and clinical finishing, La Albiceleste controlled the tempo from the opening whistle and never relinquished their grip on the contest.</p>",
-    summary: "Argentina produced a commanding display to defeat Brazil in a World Cup 2026 classic.",
-    es: {
-      title: "Argentina supera a Brasil en un clásico del Mundial 2026",
-      summary: "Argentina ofreció una actuación dominante para vencer a Brasil en un clásico del Mundial 2026.",
-      content: "<p>Argentina ofreció una actuación dominante para vencer a Brasil en uno de los partidos más destacados de la fase de grupos del Mundial 2026.</p>",
-    },
+      "<p>Driven by relentless pressing and clinical finishing, La Albiceleste controlled the tempo from the opening whistle.</p>",
   },
   {
-    home: "France", away: "England",
+    id: 900101, language: "en", article_type: "preview",
+    slug: "france-vs-england-tactical-preview",
     title: "France vs England: tactical preview of a heavyweight clash",
+    summary: "Two of Europe's most talented squads meet in a blockbuster World Cup 2026 fixture.",
     content:
       "<p>Two of Europe's most talented squads meet in a blockbuster World Cup 2026 fixture that could shape the knockout bracket.</p>" +
-      "<p>France's pace on the counter will test an England side determined to control possession and dictate the rhythm of the game.</p>",
-    summary: "Two of Europe's most talented squads meet in a blockbuster World Cup 2026 fixture.",
+      "<p>France's pace on the counter will test an England side determined to control possession.</p>",
   },
   {
-    home: "Spain", away: "Germany",
+    id: 900102, language: "en", article_type: "review",
+    slug: "spain-midfield-masterclass-sinks-germany",
     title: "Spain's midfield masterclass sinks Germany",
+    summary: "Spain delivered a midfield masterclass to overcome a resilient Germany.",
     content:
       "<p>Spain delivered a midfield masterclass to overcome a resilient Germany at the 2026 FIFA World Cup.</p>" +
-      "<p>Their patient build-up play and sharp movement off the ball unlocked a disciplined German defence after a goalless first half.</p>",
-    summary: "Spain delivered a midfield masterclass to overcome a resilient Germany.",
+      "<p>Their patient build-up play unlocked a disciplined German defence after a goalless first half.</p>",
+  },
+  {
+    id: 900110, language: "es", article_type: "review",
+    slug: "argentina-supera-brasil-clasico-mundial",
+    title: "Argentina supera a Brasil en un clásico del Mundial 2026",
+    summary: "Argentina ofreció una actuación dominante para vencer a Brasil en un clásico del Mundial 2026.",
+    content:
+      "<p>Argentina ofreció una actuación dominante para vencer a Brasil en uno de los partidos más destacados de la fase de grupos del Mundial 2026.</p>",
+  },
+  {
+    id: 900111, language: "es", article_type: "preview",
+    slug: "francia-inglaterra-previa-tactica",
+    title: "Francia vs Inglaterra: previa táctica de un duelo de pesos pesados",
+    summary: "Dos de las selecciones más talentosas de Europa se enfrentan en un partidazo del Mundial 2026.",
+    content:
+      "<p>Dos de las selecciones más talentosas de Europa se enfrentan en un partidazo del Mundial 2026 que puede definir el cuadro eliminatorio.</p>",
   },
 ];
 
-sampleArticles.forEach((s, i) => {
-  const id = 900100 + i;
-  const slugStr = `${s.home.toLowerCase()}-vs-${s.away.toLowerCase()}-${id}`;
-  store.upsertArticleEn({
-    fixture_id: id,
-    article_type: i === 1 ? "preview" : "review",
-    title: s.title,
-    content: s.content,
-    summary: s.summary,
-    slug: slugStr,
-    cover_image: logo("BRA"),
-    tags: ["world-cup-2026", s.home.toLowerCase(), s.away.toLowerCase()],
+flatArticles.forEach((a, i) => {
+  store.writeArticleFlat({
+    ...a,
+    cover: logo("BRA"),
+    keywords: "world-cup-2026",
+    published_at: new Date(Date.now() - i * 3600_000).toISOString(),
   });
-  if (s.es) store.addTranslation(id, "es", s.es);
 });
 
-console.log("✅ 样本数据已写入 content/（8 场赛程 / 4 场赛果 / 4 组积分 / 3 篇文章）");
+console.log("✅ 样本数据已写入 content/（8 场赛程 / 4 场赛果 / 4 组积分 / 5 篇独立语言文章）");

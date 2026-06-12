@@ -1,16 +1,12 @@
 {
-  "id": "900101",
-  "slug": "france-vs-england-900101",
-  "fixture_id": 900101,
+  "id": 900101,
+  "language": "en",
   "article_type": "preview",
+  "slug": "france-vs-england-tactical-preview",
+  "title": "France vs England: tactical preview of a heavyweight clash",
+  "summary": "Two of Europe's most talented squads meet in a blockbuster World Cup 2026 fixture.",
+  "content": "<p>Two of Europe's most talented squads meet in a blockbuster World Cup 2026 fixture that could shape the knockout bracket.</p><p>France's pace on the counter will test an England side determined to control possession.</p>",
   "cover": "https://media.api-sports.io/football/teams/BRA.png",
-  "keywords": "world-cup-2026,france,england",
-  "published_at": "2026-06-11T06:05:33.687Z",
-  "i18n": {
-    "en": {
-      "title": "France vs England: tactical preview of a heavyweight clash",
-      "summary": "Two of Europe's most talented squads meet in a blockbuster World Cup 2026 fixture.",
-      "content": "<p>Two of Europe's most talented squads meet in a blockbuster World Cup 2026 fixture that could shape the knockout bracket.</p><p>France's pace on the counter will test an England side determined to control possession and dictate the rhythm of the game.</p>"
-    }
-  }
+  "keywords": "world-cup-2026",
+  "published_at": "2026-06-12T06:30:49.190Z"
 }

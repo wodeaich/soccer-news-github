@@ -13,10 +13,8 @@ on:
     - cron: "0 1 * * *"
     - cron: "0 9 * * *"
     - cron: "0 17 * * *"
-    # UTC 06:00 AI 生成新闻 (北京时间 14:00)
+    # UTC 06:00 AI 生成+翻译+录入后台上架（pipeline 一气呵成）
     - cron: "0 6 * * *"
-    # UTC 07:00 翻译文章 (生成后 1 小时)
-    - cron: "0 7 * * *"
     # UTC 23:00 更新积分榜 (北京时间次日 07:00)
     - cron: "0 23 * * *"
   workflow_dispatch:
@@ -29,8 +27,7 @@ on:
           - fetch-matches
           - fetch-results
           - fetch-standings
-          - generate-news
-          - translate-content
+          - pipeline
           - all
 
 permissions:
@@ -44,6 +41,10 @@ concurrency:
 
 env:
   API_FOOTBALL_KEY: ${{ secrets.API_FOOTBALL_KEY }}
+  ADMIN_BACKEND_URL: ${{ secrets.ADMIN_BACKEND_URL }}
+  ADMIN_JWT_TOKEN: ${{ secrets.ADMIN_JWT_TOKEN }}
+  RELEASE_SITE_ID: ${{ secrets.RELEASE_SITE_ID }}
+  BI_API_PREFIX: ${{ secrets.BI_API_PREFIX }}
   API_FOOTBALL_BASE: ${{ secrets.API_FOOTBALL_BASE }}
   WORLD_CUP_LEAGUE_ID: ${{ secrets.WORLD_CUP_LEAGUE_ID }}
   WORLD_CUP_SEASON: ${{ secrets.WORLD_CUP_SEASON }}
@@ -78,7 +79,7 @@ jobs:
           JOBS=""
           if [ "$EVENT" = "workflow_dispatch" ]; then
             if [ "$INPUT_JOB" = "all" ]; then
-              JOBS="fetch-matches fetch-results fetch-standings generate-news translate-content"
+              JOBS="fetch-matches fetch-results fetch-standings pipeline"
             else
               JOBS="$INPUT_JOB"
             fi
@@ -86,8 +87,7 @@ jobs:
             case "$SCHEDULE" in
               "0 0 * * *")  JOBS="fetch-matches" ;;
               "0 1 * * *"|"0 9 * * *"|"0 17 * * *") JOBS="fetch-results" ;;
-              "0 6 * * *")  JOBS="generate-news" ;;
-              "0 7 * * *")  JOBS="translate-content" ;;
+              "0 6 * * *")  JOBS="pipeline" ;;
               "0 23 * * *") JOBS="fetch-standings" ;;
             esac
           fi
@@ -106,13 +106,10 @@ jobs:
         if: contains(steps.plan.outputs.jobs, 'fetch-standings')
         run: node scripts/fetch_standings.js
 
-      - name: Generate AI news articles
-        if: contains(steps.plan.outputs.jobs, 'generate-news')
-        run: node scripts/generate_news.js --days 1
-
-      - name: Translate articles to 6 languages
-        if: contains(steps.plan.outputs.jobs, 'translate-content')
-        run: node scripts/translate_content.js
+      # 一气呵成：AI 生成英文 → 录入后台上架 → 翻译5语言 → 各语言独立录入上架
+      - name: Generate, translate and publish articles to admin backend
+        if: contains(steps.plan.outputs.jobs, 'pipeline')
+        run: node scripts/pipeline.js --auto
 
       # 把 content/ 变更提交回仓库（带 rebase 重试，防止竞态）
       - name: Commit & push content changes
@@ -140,7 +137,7 @@ jobs:
 
       # 显式触发部署（GITHUB_TOKEN 的 push 不会自动触发 deploy）
       - name: Trigger deploy workflow
-        if: steps.sync.outputs.pushed == 'true'
+        if: steps.sync.outputs.pushed == 'true' || contains(steps.plan.outputs.jobs, 'pipeline')
         run: |
           curl -sf -X POST \
             -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \

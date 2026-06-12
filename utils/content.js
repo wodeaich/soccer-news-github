@@ -76,36 +76,30 @@ function mapStandingGroup(g) {
   };
 }
 
-/** 取文章某语言内容，缺失回退英文 */
-function i18nOf(article, lang) {
-  const t = (article.i18n && (article.i18n[lang] || article.i18n.en)) || {};
-  return t;
-}
-
 /** ISO 时间 → 秒级时间戳（NewsCard 组件以 ts*1000 渲染日期） */
 function toEpochSec(iso) {
   const ms = new Date(iso || 0).getTime();
   return Number.isFinite(ms) ? Math.floor(ms / 1000) : null;
 }
 
-function mapArticleMenuItem(a, lang) {
-  const t = i18nOf(a, lang);
+// 文章为「独立语言」扁平格式（与后台一致）：
+// { id, slug, language, title, summary, content, cover, keywords, article_type, published_at }
+function mapArticleMenuItem(a) {
   return {
-    name: t.title || "",
+    name: a.title || "",
     cover: a.cover || "",
     path: a.slug,
     published_at: toEpochSec(a.published_at),
-    first_paragraph: t.summary || "",
+    first_paragraph: a.summary || "",
   };
 }
 
-function mapArticleDetail(a, lang) {
-  const t = i18nOf(a, lang);
+function mapArticleDetail(a) {
   return {
-    name: t.title || "",
+    name: a.title || "",
     cover: a.cover || "",
-    first_paragraph: t.summary || "",
-    content: t.content || "",
+    first_paragraph: a.summary || "",
+    content: a.content || "",
     path: a.slug,
     published_at: a.published_at,
     created_at: a.published_at,
@@ -136,8 +130,8 @@ function getToday() {
   });
 }
 
-/** 单场比赛详情（含赛后回顾，若存在对应文章） */
-function getMatch(slug, lang = "en") {
+/** 单场比赛详情。回顾文章作为独立新闻存在，不再内嵌到比赛页。 */
+function getMatch(slug) {
   const all = [
     ...readJSON(path.join(MATCHES_DIR, "results.json"), { results: [] }).results || [],
     ...readJSON(path.join(MATCHES_DIR, "schedule.json"), { fixtures: [] }).fixtures || [],
@@ -145,13 +139,8 @@ function getMatch(slug, lang = "en") {
   const raw = all.find((f) => f.slug === slug);
   if (!raw) return null;
   const match = mapMatch(raw);
-  const id = String(slug).split("-").pop();
-  const art = readJSON(path.join(ARTICLES_DIR, `${id}.json`), null);
-  if (art) {
-    const t = i18nOf(art, lang);
-    match.review = t.content || "";
-    match.review_summary = t.summary || "";
-  }
+  match.review = "";
+  match.review_summary = "";
   match.stats = match.stats || {}; // API-Football 统计数据后续可补
   return match;
 }
@@ -174,23 +163,40 @@ function listArticles() {
   }
 }
 
+/** 某语言的文章列表（独立语言模式：只取该语言自己的文章） */
+function listArticlesByLang(lang) {
+  return listArticles().filter((a) => (a.language || "en") === lang);
+}
+
 /** 文章列表（首页/news 列表用）modId: rec | trending | all */
 function getMenu(lang, modId = "all", size = 10) {
-  const all = listArticles();
+  const all = listArticlesByLang(lang);
   let slice;
   if (modId === "rec") slice = all.slice(0, size);
   else if (modId === "trending") slice = all.slice(size, size * 2).length ? all.slice(0, size) : all.slice(0, size);
   else slice = all.slice(0, size);
-  return slice.map((a) => mapArticleMenuItem(a, lang));
+  return slice.map(mapArticleMenuItem);
 }
 
-/** 文章详情 */
-function getArticle(lang, id) {
+/** 文章详情（按 id 读取；文章自带 language） */
+function getArticle(id) {
   const a = readJSON(path.join(ARTICLES_DIR, `${String(id)}.json`), null);
-  return a ? mapArticleDetail(a, lang) : null;
+  return a ? mapArticleDetail(a) : null;
 }
 
 // ─── 路由枚举（generate.routes / sitemap 用）─────────────────────────────────
+/** 全部文章的 {lang, slug, id, published_at}（每篇只属于自己的语言区） */
+function listArticleRoutes() {
+  return listArticles()
+    .filter((a) => a.slug)
+    .map((a) => ({
+      lang: a.language || "en",
+      slug: a.slug,
+      id: a.id,
+      published_at: a.published_at,
+    }));
+}
+
 function listArticleSlugs() {
   return listArticles().map((a) => a.slug).filter(Boolean);
 }
@@ -238,6 +244,8 @@ module.exports = {
   getArticle,
   listArticles,
   listArticleSlugs,
+  listArticleRoutes,
+  listArticlesByLang,
   listMatchSlugs,
   contentMeta,
   articleLastmods,

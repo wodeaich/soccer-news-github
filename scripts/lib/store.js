@@ -73,50 +73,15 @@ function writeStandings(groups) {
   return (groups || []).length;
 }
 
-// ─── 文章主记录（英文）─────────────────────────────────────────────────────────
-/**
- * article: { fixture_id, article_type, title, content, summary, slug, cover_image, tags }
- * 写入/更新 content/articles/<id>.json 的 i18n.en
- */
-function upsertArticleEn(article) {
-  const id = article.fixture_id != null ? String(article.fixture_id) : idFromSlug(article.slug);
-  const file = path.join(ARTICLES_DIR, `${id}.json`);
-  const prev = readJSON(file, null) || {
-    id,
-    slug: article.slug,
-    fixture_id: article.fixture_id ?? null,
-    article_type: article.article_type || "news",
-    cover: article.cover_image || "",
-    keywords: (article.tags || []).join(","),
-    published_at: new Date().toISOString(),
-    i18n: {},
-  };
-  prev.slug = article.slug;
-  prev.cover = article.cover_image || prev.cover || "";
-  prev.article_type = article.article_type || prev.article_type;
-  prev.keywords = (article.tags || []).join(",") || prev.keywords;
-  prev.i18n = prev.i18n || {};
-  prev.i18n.en = {
-    title: article.title,
-    summary: article.summary,
-    content: article.content,
-  };
-  writeJSON(file, prev);
+// ─── 文章（独立语言扁平格式；线上由 sync_articles.js 从后台镜像写入）─────────
+/** 写入一篇独立语言文章：{ id, slug, language, title, summary, content, ... } */
+function writeArticleFlat(article) {
+  const id = String(article.id);
+  writeJSON(path.join(ARTICLES_DIR, `${id}.json`), article);
   return id;
 }
 
-/** 给已存在文章追加某语言译文 */
-function addTranslation(id, langCode, { title, summary, content }) {
-  const file = path.join(ARTICLES_DIR, `${String(id)}.json`);
-  const art = readJSON(file, null);
-  if (!art) throw new Error(`文章 ${id} 不存在，无法写入 ${langCode} 译文`);
-  art.i18n = art.i18n || {};
-  art.i18n[langCode] = { title, summary, content };
-  writeJSON(file, art);
-  return id;
-}
-
-/** 列出所有文章主记录 */
+/** 列出所有文章 */
 function listArticles() {
   ensureDirs();
   return fs
@@ -126,28 +91,12 @@ function listArticles() {
     .filter(Boolean);
 }
 
-/** 读取单篇文章主记录 */
-function readArticle(id) {
-  return readJSON(path.join(ARTICLES_DIR, `${String(id)}.json`), null);
-}
-
-/** 列出缺某语言译文的文章（用于 translate 脚本） */
-function listArticlesMissingLang(langCodes) {
-  return listArticles().filter((a) => {
-    const have = Object.keys(a.i18n || {});
-    return langCodes.some((c) => !have.includes(c));
-  });
-}
-
 module.exports = {
   CONTENT_DIR,
   writeSchedule,
   mergeResults,
   writeStandings,
-  upsertArticleEn,
-  addTranslation,
+  writeArticleFlat,
   listArticles,
-  readArticle,
-  listArticlesMissingLang,
   idFromSlug,
 };
