@@ -97,13 +97,15 @@ jobs:
           fi
 
       - name: Upload ZIP to admin backend
+        env:
+          RELEASE_ENV: ${{ secrets.RELEASE_ENV }}
         run: |
           RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
             "${{ secrets.ADMIN_BACKEND_URL }}/fileUploadAndDownload/uploadFrontEndZip" \
             -H "x-token: ${{ secrets.ADMIN_JWT_TOKEN }}" \
             -F "file=@deploy.zip" \
             -F "siteId=${{ secrets.RELEASE_SITE_ID }}" \
-            -F "env=prod")
+            -F "env=${RELEASE_ENV:-test}")
 
           HTTP_CODE=$(echo "$RESPONSE" | tail -1)
           BODY=$(echo "$RESPONSE" | head -n -1)
@@ -117,12 +119,14 @@ jobs:
           echo "✅ Upload successful"
 
       - name: Trigger release on admin backend
+        env:
+          RELEASE_ENV: ${{ secrets.RELEASE_ENV }}
         run: |
           RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
             "${{ secrets.ADMIN_BACKEND_URL }}/fileUploadAndDownload/releaseFrontEnd" \
             -H "x-token: ${{ secrets.ADMIN_JWT_TOKEN }}" \
             -H "Content-Type: application/json" \
-            -d "{\"siteId\":\"${{ secrets.RELEASE_SITE_ID }}\",\"env\":\"prod\"}")
+            -d "{\"siteId\":\"${{ secrets.RELEASE_SITE_ID }}\",\"env\":\"${RELEASE_ENV:-test}\"}")
 
           HTTP_CODE=$(echo "$RESPONSE" | tail -1)
           BODY=$(echo "$RESPONSE" | head -n -1)

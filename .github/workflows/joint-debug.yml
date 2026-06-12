@@ -109,7 +109,7 @@ jobs:
             -H "x-token: $ADMIN_JWT_TOKEN" \
             -F "file=@deploy.zip" \
             -F "siteId=$RELEASE_SITE_ID" \
-            -F "env=prod")
+            -F "env=test")
           CODE=$(echo "$RESPONSE" | tail -1); BODY=$(echo "$RESPONSE" | head -n -1)
           echo "upload HTTP $CODE: $BODY"
           [ "$CODE" = "200" ] || { echo "❌ 上传失败"; exit 1; }
@@ -117,7 +117,7 @@ jobs:
             "$ADMIN_BACKEND_URL/fileUploadAndDownload/releaseFrontEnd" \
             -H "x-token: $ADMIN_JWT_TOKEN" \
             -H "Content-Type: application/json" \
-            -d "{\"siteId\":\"$RELEASE_SITE_ID\",\"env\":\"prod\"}")
+            -d "{\"siteId\":\"$RELEASE_SITE_ID\",\"env\":\"test\"}")
           CODE=$(echo "$RESPONSE" | tail -1); BODY=$(echo "$RESPONSE" | head -n -1)
           echo "release HTTP $CODE: $BODY"
           [ "$CODE" = "200" ] || { echo "❌ 发版失败"; exit 1; }
