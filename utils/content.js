@@ -200,6 +200,32 @@ function listMatchSlugs() {
   return results.map((r) => r.slug).filter(Boolean);
 }
 
+/** 内容真实更新时间，供 sitemap lastmod / GEO 使用 */
+function contentMeta() {
+  const articles = listArticles();
+  const latestArticleAt =
+    articles.length && articles[0].published_at ? articles[0].published_at : null;
+  const sched = readJSON(path.join(MATCHES_DIR, "schedule.json"), {});
+  const res = readJSON(path.join(MATCHES_DIR, "results.json"), {});
+  const standings = readJSON(path.join(MATCHES_DIR, "standings.json"), {});
+  const newest = (...ds) =>
+    ds.filter(Boolean).sort((a, b) => new Date(b) - new Date(a))[0] || null;
+  return {
+    latestArticleAt,
+    scheduleAt: sched.updated_at || null,
+    resultsAt: res.updated_at || null,
+    standingsAt: standings.updated_at || null,
+    matchesAt: newest(sched.updated_at, res.updated_at, standings.updated_at),
+  };
+}
+
+/** slug → 文章发布时间，供 sitemap lastmod */
+function articleLastmods() {
+  const map = {};
+  for (const a of listArticles()) if (a.slug) map[a.slug] = a.published_at;
+  return map;
+}
+
 module.exports = {
   LOCALES,
   getSchedule,
@@ -213,4 +239,6 @@ module.exports = {
   listArticles,
   listArticleSlugs,
   listMatchSlugs,
+  contentMeta,
+  articleLastmods,
 };

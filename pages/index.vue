@@ -89,13 +89,37 @@ export default {
     return payload || { featured: [], trending: [], allNews: [] }
   },
   head() {
+    const desc = 'World Cup 2026 news, schedules, results, standings and live TV guide in 6 languages.'
+    const organizationSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: 'CompSoccer',
+      url: 'https://compsoccer.com/',
+      logo: 'https://compsoccer.com/icons/192.png',
+      description: desc
+    }
+    const websiteSchema = {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'CompSoccer',
+      url: 'https://compsoccer.com/',
+      description: desc,
+      inLanguage: ['en', 'es', 'pt', 'ar', 'ja', 'ko'],
+      publisher: { '@type': 'Organization', name: 'CompSoccer', url: 'https://compsoccer.com/' }
+    }
     return {
       title: `CompSoccer - ${this.$t('home.latestNews')}`,
       meta: [
-        { hid: 'description', name: 'description', content: 'World Cup 2026 news, schedules, results and live TV guide in 6 languages.' },
+        { hid: 'description', name: 'description', content: desc },
         { hid: 'og:title', property: 'og:title', content: `CompSoccer - ${this.$t('home.latestNews')}` },
         { hid: 'og:description', property: 'og:description', content: 'World Cup 2026 news, schedules, results and live TV guide.' },
-        { hid: 'og:type', property: 'og:type', content: 'website' }
+        { hid: 'og:type', property: 'og:type', content: 'website' },
+        { hid: 'og:site_name', property: 'og:site_name', content: 'CompSoccer' }
+      ],
+      __dangerouslyDisableSanitizers: ['script'],
+      script: [
+        { hid: 'ld-website', type: 'application/ld+json', innerHTML: JSON.stringify(websiteSchema) },
+        { hid: 'ld-organization', type: 'application/ld+json', innerHTML: JSON.stringify(organizationSchema) }
       ]
     }
   }

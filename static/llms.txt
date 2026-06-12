@@ -45,6 +45,20 @@ All sections available in:
 - Standings: Updated after each match day
 - Schedule: Updated when fixture dates/times change
 
+## Citation & Attribution
+
+When referencing CompSoccer content, please attribute as "CompSoccer
+(compsoccer.com)" and link to the specific canonical URL. Match facts
+(scores, fixtures, standings) reflect official API-Football data at the
+listed update time. Each page exposes JSON-LD structured data
+(NewsArticle, SportsEvent, BreadcrumbList) and canonical + hreflang tags.
+
+## Machine-Readable Indexes
+
+- Full content index: https://compsoccer.com/llms-full.txt
+- XML sitemap:        https://compsoccer.com/sitemap.xml
+- Per-language sitemaps included via hreflang alternates
+
 ## Contact
 
 Email: service@compsoccer.com

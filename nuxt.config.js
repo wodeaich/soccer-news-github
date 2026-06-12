@@ -199,6 +199,52 @@ export default {
     scss: ["~/assets/css/_mixins.scss"]
   },
   modules: ["@nuxtjs/axios", "@nuxtjs/i18n"],
+  hooks: {
+    // GEO：构建完成后生成 llms-full.txt（AI 引擎全文索引）
+    generate: {
+      done(builder) {
+        try {
+          const fs = require("fs");
+          const path = require("path");
+          const content = require("./utils/content");
+          const meta = content.contentMeta();
+          const articles = content.listArticles();
+          const lines = [];
+          lines.push("# CompSoccer — World Cup 2026 Full Content Index");
+          lines.push("");
+          lines.push("> Machine-readable full index for AI/LLM engines.");
+          lines.push(`> Generated: ${new Date().toISOString()}`);
+          lines.push(`> Content updated: matches=${meta.matchesAt || "n/a"}, latest-article=${meta.latestArticleAt || "n/a"}`);
+          lines.push("");
+          lines.push("## Live Data Endpoints (HTML, structured-data enabled)");
+          lines.push("- Schedule: https://compsoccer.com/en/schedule/");
+          lines.push("- Results: https://compsoccer.com/en/results/");
+          lines.push("- Standings: https://compsoccer.com/en/standings/");
+          lines.push("- Live TV: https://compsoccer.com/en/live-tv/");
+          lines.push("");
+          lines.push(`## News Articles (${articles.length})`);
+          for (const a of articles) {
+            const en = (a.i18n && a.i18n.en) || {};
+            lines.push("");
+            lines.push(`### ${en.title || a.slug}`);
+            lines.push(`- URL: https://compsoccer.com/en/news/${a.slug}/`);
+            lines.push(`- Type: ${a.article_type || "news"} | Published: ${a.published_at || "n/a"}`);
+            const langs = Object.keys(a.i18n || {});
+            if (langs.length) lines.push(`- Languages: ${langs.join(", ")}`);
+            if (en.summary) lines.push(`- Summary: ${en.summary}`);
+          }
+          lines.push("");
+          const dist = (builder && builder.distPath) || path.join(__dirname, "dist");
+          fs.writeFileSync(path.join(dist, "llms-full.txt"), lines.join("\n"));
+          // eslint-disable-next-line no-console
+          console.log(`[GEO] llms-full.txt written (${articles.length} articles)`);
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.warn("[GEO] llms-full.txt generation skipped:", e.message);
+        }
+      },
+    },
+  },
   sitemap: {
     hostname: "https://compsoccer.com/",
     gzip: true,
@@ -210,47 +256,51 @@ export default {
     },
     routes() {
       const langs = ["en", "es", "pt", "ar", "ja", "ko"];
-      const staticRoutes = [
-        // 首页
-        ...langs.map((l) => ({ url: `/${l}/`, changefreq: "hourly", priority: 1.0 })),
-        // 比赛结果
-        ...langs.map((l) => ({ url: `/${l}/results/`, changefreq: "daily", priority: 0.9 })),
-        // 积分榜
-        ...langs.map((l) => ({ url: `/${l}/standings/`, changefreq: "daily", priority: 0.9 })),
-        // 新闻列表
-        ...langs.map((l) => ({ url: `/${l}/news/`, changefreq: "daily", priority: 0.8 })),
-        // 赛程
-        ...langs.map((l) => ({ url: `/${l}/schedule/`, changefreq: "daily", priority: 0.8 })),
-        // 直播推荐
-        ...langs.map((l) => ({ url: `/${l}/live-tv/`, changefreq: "weekly", priority: 0.7 })),
-      ];
-
-      // 动态 URL：从本地 content/ 读取文章与比赛 slug
+      const buildTime = new Date().toISOString();
+      let meta = {};
+      let articleSlugs = [];
+      let matchSlugs = [];
+      let lastmods = {};
       try {
         const content = require("./utils/content");
-        const lastmod = new Date().toISOString();
-        const articleSlugs = content.listArticleSlugs();
-        const matchSlugs = content.listMatchSlugs();
-        const articleRoutes = articleSlugs.flatMap((slug) =>
-          langs.map((l) => ({
-            url: `/${l}/news/${slug}/`,
-            changefreq: "weekly",
-            priority: 0.6,
-            lastmod,
-          }))
-        );
-        const matchRoutes = matchSlugs.flatMap((slug) =>
-          langs.map((l) => ({
-            url: `/${l}/matches/${slug}/`,
-            changefreq: "weekly",
-            priority: 0.6,
-            lastmod,
-          }))
-        );
-        return [...staticRoutes, ...articleRoutes, ...matchRoutes];
+        meta = content.contentMeta();
+        articleSlugs = content.listArticleSlugs();
+        matchSlugs = content.listMatchSlugs();
+        lastmods = content.articleLastmods();
       } catch (_) {
-        return staticRoutes;
+        // content 缺失时退化为仅静态页 + 构建时间
       }
+      // 静态列表页：lastmod 取对应数据的真实更新时间
+      const newsAt = meta.latestArticleAt || buildTime;
+      const matchesAt = meta.matchesAt || buildTime;
+      const staticRoutes = [
+        ...langs.map((l) => ({ url: `/${l}/`, changefreq: "hourly", priority: 1.0, lastmod: newsAt })),
+        ...langs.map((l) => ({ url: `/${l}/results/`, changefreq: "daily", priority: 0.9, lastmod: meta.resultsAt || matchesAt })),
+        ...langs.map((l) => ({ url: `/${l}/standings/`, changefreq: "daily", priority: 0.9, lastmod: meta.standingsAt || matchesAt })),
+        ...langs.map((l) => ({ url: `/${l}/news/`, changefreq: "daily", priority: 0.8, lastmod: newsAt })),
+        ...langs.map((l) => ({ url: `/${l}/schedule/`, changefreq: "daily", priority: 0.8, lastmod: meta.scheduleAt || matchesAt })),
+        ...langs.map((l) => ({ url: `/${l}/live-tv/`, changefreq: "weekly", priority: 0.7, lastmod: matchesAt })),
+      ];
+
+      // 文章详情：lastmod 取该文章发布时间
+      const articleRoutes = articleSlugs.flatMap((slug) =>
+        langs.map((l) => ({
+          url: `/${l}/news/${slug}/`,
+          changefreq: "weekly",
+          priority: 0.6,
+          lastmod: lastmods[slug] || newsAt,
+        }))
+      );
+      // 比赛详情：lastmod 取赛果更新时间
+      const matchRoutes = matchSlugs.flatMap((slug) =>
+        langs.map((l) => ({
+          url: `/${l}/matches/${slug}/`,
+          changefreq: "weekly",
+          priority: 0.6,
+          lastmod: meta.resultsAt || matchesAt,
+        }))
+      );
+      return [...staticRoutes, ...articleRoutes, ...matchRoutes];
     },
   },
   pwa: {
