@@ -1,17 +1,15 @@
 /**
  * 文章自动录入 + 上架（替代人工后台操作）
  *
- * 单篇流程（与既有 Python 上架脚本一致）：
+ * 单篇流程（沿用既有 Python 上架脚本的红线，本站无渠道机制）：
  *   1. slug 查重 —— 站点列表里同 slug 的旧文章先删除
  *   2. 取分类 category_id（老业务字段，随机一个即可）
  *   3. createArticle 录入（status=2 已发布；只创建，绝不更新）
- *   4. 取空闲渠道；无空闲渠道 → 抛错（文章已创建，记入 cache 防重复创建）
- *   5. seoArticleUpSite 绑定渠道（真正上架）
- *   6. getArticleUpSiteInfo 验证（非阻断）
+ *   4. seoArticleUpSite 上架（articleId + siteId）
+ *   5. getArticleUpSiteInfo 验证（非阻断）
  *
  * 断点续跑：scripts/.publish_cache.json 记录 slug → article_id 与状态，
- *           已上架(slug 状态 published)的直接跳过；创建成功但未绑渠道的
- *           (publish_no_channel) 下次只补绑定，不重复创建。
+ *           已上架的直接跳过；创建成功但未上架的下次只补上架，不重复创建。
  */
 
 const fs = require("fs");
@@ -108,21 +106,12 @@ async function publishArticle(article, { siteId, dryRun = false } = {}) {
     cache.items[article.slug] = { article_id: articleId, status: "created" };
     saveCache(cache);
   } else {
-    console.log(`  [publish] 复用已创建文章 article_id=${articleId}（补绑渠道）`);
+    console.log(`  [publish] 复用已创建文章 article_id=${articleId}（补上架）`);
   }
 
-  // ── 4. 空闲渠道 ───────────────────────────────────────────────────────────
-  const channels = await bi.getAvailableChannels(siteId);
-  if (!channels.length) {
-    cache.items[article.slug] = { article_id: articleId, status: "publish_no_channel" };
-    saveCache(cache);
-    throw new Error(`站点 ${siteId} 无空闲渠道（文章已创建 id=${articleId}，待渠道释放后重跑补绑）`);
-  }
-  const channel = channels[0];
-
-  // ── 5. 绑定渠道（上架）──────────────────────────────────────────────────
-  await bi.bindToSite(articleId, siteId, channel);
-  console.log(`  [publish] 绑定渠道成功 channel=${channel.channel}`);
+  // ── 4. 上架到站点（本站无渠道机制：articleId + siteId 即可）──────────────
+  await bi.bindToSite(articleId, siteId);
+  console.log(`  [publish] 上架成功（articleId=${articleId} → ${siteId}）`);
 
   // ── 6. 验证（非阻断）────────────────────────────────────────────────────
   await new Promise((resolve) => setTimeout(resolve, 2000));

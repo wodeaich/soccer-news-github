@@ -89,12 +89,8 @@ async function getCategoryList(siteId) {
   }
 }
 
-/** 空闲渠道列表（articleId 为 null 的渠道） */
-async function getAvailableChannels(siteId) {
-  const res = await get("/site/getSiteAvailableChannel", { siteId });
-  const channels = res.data || [];
-  return channels.filter((c) => c.articleId === null || c.articleId === undefined);
-}
+// 注：本站点（种草站 composoccer）无渠道机制，上架只需 articleId + siteId。
+// AFS 站的渠道接口（getSiteAvailableChannel）在此不使用。
 
 /** 后台全部文章列表（创建前后对比用，不限站点） */
 async function getArticleList(page = 1, pageSize = 50) {
@@ -133,15 +129,10 @@ async function createArticle(articleData) {
   throw new Error("createArticle 成功但无法确认新文章 ID");
 }
 
-/** 绑定文章到站点渠道（真正的“上架”动作） */
-async function bindToSite(articleId, siteId, channel) {
+/** 把文章上架到站点（无渠道机制：只需 articleId + siteId） */
+async function bindToSite(articleId, siteId) {
   okOrThrow(
-    await post("/site/seoArticleUpSite", {
-      articleId,
-      siteId,
-      channelId: channel.id,
-      channel: channel.channel,
-    }),
+    await post("/site/seoArticleUpSite", { articleId, siteId }),
     "seoArticleUpSite"
   );
 }
@@ -151,7 +142,6 @@ module.exports = {
   getSiteArticleList,
   getAllSiteArticles,
   getCategoryList,
-  getAvailableChannels,
   getArticleList,
   getUpSiteInfo,
   deleteArticle,
