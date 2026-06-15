@@ -6,7 +6,7 @@
  *   ★ 请求头必须小写 x-token
  *   ★ 创建后用「前后列表对比」双重确认新文章 ID
  *   ★ 同 slug 查重，重复的先删旧再建新
- *   ★ 文章创建成功 ≠ 上架；必须绑定站点渠道(seoArticleUpSite)才算上架
+ *   ★ 文章创建成功 ≠ 上架；必须绑定站点渠道(articleUpSite)才算上架
  *
  * 站点类型差异：composoccer 配置为「种草站」，接口前缀默认 /api/recArticle；
  * AFS 文章站为 /api/article。可用环境变量 BI_API_PREFIX 覆盖。
@@ -140,11 +140,11 @@ async function createArticle(articleData) {
   throw new Error("createArticle 成功但无法确认新文章 ID");
 }
 
-/** 把文章上架到站点（无渠道机制：只需 articleId + siteId） */
+/** 把文章上架到站点（种草站批量上架接口：ids[] + siteIds[]，无渠道） */
 async function bindToSite(articleId, siteId) {
   okOrThrow(
-    await post("/site/seoArticleUpSite", { articleId, siteId }),
-    "seoArticleUpSite"
+    await post("/site/articleUpSite", { ids: [articleId], siteIds: [siteId] }),
+    "articleUpSite"
   );
 }
 

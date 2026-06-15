@@ -5,8 +5,8 @@
  *   1. slug 查重 —— 站点列表里同 slug 的旧文章先删除
  *   2. 取分类 category_id（老业务字段，随机一个即可）
  *   3. createArticle 录入（status=2 已发布；只创建，绝不更新）
- *   4. seoArticleUpSite 上架（articleId + siteId）
- *   5. getArticleUpSiteInfo 验证（非阻断）
+ *   4. articleUpSite 上架（articleId + siteId）
+ *   5. 验证（非阻断）：查站点列表确认在站
  *
  * 断点续跑：scripts/.publish_cache.json 记录 slug → article_id 与状态，
  *           已上架的直接跳过；创建成功但未上架的下次只补上架，不重复创建。
@@ -113,14 +113,14 @@ async function publishArticle(article, { siteId, dryRun = false } = {}) {
   await bi.bindToSite(articleId, siteId);
   console.log(`  [publish] 上架成功（articleId=${articleId} → ${siteId}）`);
 
-  // ── 6. 验证（非阻断）────────────────────────────────────────────────────
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  // ── 5. 验证（非阻断）：查站点列表里是否出现该文章 ───────────────────────
+  await new Promise((resolve) => setTimeout(resolve, 1500));
   try {
-    const info = await bi.getUpSiteInfo(articleId);
-    if (info && info.data) console.log(`  [publish] 绑定验证通过`);
-    else console.warn(`  [publish] 绑定验证无数据（可能尚未生效）`);
+    const onSite = await bi.getAllSiteArticles(siteId);
+    const hit = onSite.some((a) => a.id === articleId || a.seoUrlSlug === article.slug);
+    console.log(hit ? `  [publish] 上架验证通过（已在站点列表）` : `  [publish] 上架验证：暂未在列表（可能稍后生效）`);
   } catch (e) {
-    console.warn(`  [publish] 绑定验证请求失败（非阻断）：${e.message}`);
+    console.warn(`  [publish] 上架验证请求失败（非阻断）：${e.message}`);
   }
 
   cache.items[article.slug] = { article_id: articleId, status: "published" };
