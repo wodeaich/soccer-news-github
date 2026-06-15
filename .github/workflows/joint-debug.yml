@@ -47,9 +47,24 @@ jobs:
             "$URL?siteId=$RELEASE_SITE_ID&page=1&pageSize=2")
           echo "HTTP $CODE"
           head -c 800 /tmp/resp.json; echo
-          if [ "$CODE" = "401" ]; then echo "❌ token 失效（异地登陆/过期）——请用新 token 更新 Secret"; exit 1; fi
+          if [ "$CODE" = "401" ]; then
+            echo "----- token 诊断 -----"
+            P=$(printf '%s' "$ADMIN_JWT_TOKEN" | cut -d. -f2)
+            case $(( ${#P} % 4 )) in 2) P="$P==";; 3) P="$P=";; esac
+            EXP=$(printf '%s' "$P" | tr '_-' '/+' | base64 -d 2>/dev/null | grep -oE '"exp":[0-9]+' | grep -oE '[0-9]+' | head -1)
+            NOW=$(date +%s)
+            echo "token exp=$EXP  now=$NOW"
+            if [ -n "$EXP" ] && [ "$EXP" -lt "$NOW" ]; then
+              echo "→ 诊断：token 已过期（exp 早于现在）。需要更新更长有效期的 token。"
+            elif [ -n "$EXP" ]; then
+              echo "→ 诊断：token 未过期，但被后台判失效 = 单点登录被顶替（你复制后又登录了后台）。"
+              echo "   解决：复制 token 后立即更新 Secret，且之后不要再登录该账号；或让后台开多点登录/长期令牌。"
+            else
+              echo "→ 诊断：无法解析 exp，token 可能格式不完整。"
+            fi
+            exit 1
+          fi
           [ "$CODE" = "200" ] || { echo "❌ 后台返回非 200（$CODE）"; exit 1; }
-          echo "✅ 后台连通，鉴权通过"
           echo "✅ 后台连通，鉴权通过"
 
       # ── ② 录入并上架一篇测试文章 ───────────────────────────────────────
