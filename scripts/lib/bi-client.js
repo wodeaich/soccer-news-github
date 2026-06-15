@@ -24,10 +24,21 @@ const TOKEN = process.env.ADMIN_JWT_TOKEN || "";
 const PREFIX = process.env.BI_API_PREFIX || "/api/recArticle";
 
 const http = axios.create({
-  baseURL: BASE,
   headers: { "x-token": TOKEN, "Content-Type": "application/json" }, // 必须小写 x-token
   timeout: 30000,
 });
+
+/**
+ * 拼接绝对 URL，并对 /api 重复免疫：
+ * 无论 ADMIN_BACKEND_URL 是否以 /api 结尾、BI_API_PREFIX 是否含 /api，
+ * 都折叠掉重复，得到正确路径。
+ */
+function buildUrl(p) {
+  let u = `${BASE}${PREFIX}${p}`;
+  u = u.replace(/([^:])\/{2,}/g, "$1/"); // 折叠多余的 //（保留 http://）
+  u = u.replace(/\/api(\/api)+\//g, "/api/"); // 折叠 /api/api/... → /api/
+  return u;
+}
 
 function assertConfigured() {
   if (!BASE) throw new Error("缺少 ADMIN_BACKEND_URL");
@@ -35,12 +46,12 @@ function assertConfigured() {
 }
 
 async function get(path, params) {
-  const { data } = await http.get(`${PREFIX}${path}`, { params });
+  const { data } = await http.get(buildUrl(path), { params });
   return data;
 }
 
 async function post(path, payload) {
-  const { data } = await http.post(`${PREFIX}${path}`, payload);
+  const { data } = await http.post(buildUrl(path), payload);
   return data;
 }
 

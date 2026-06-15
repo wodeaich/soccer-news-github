@@ -32,33 +32,24 @@ jobs:
 
       - run: yarn install --frozen-lockfile
 
-      # ── ① 路径探测：试多个候选地址，定位正确的接口前缀 ──────────────────
-      - name: "Step 1 - Probe API path"
+      # ── ① 后台连通性 + 鉴权（地址对 /api 重复免疫）─────────────────────
+      - name: "Step 1 - Backend connectivity & auth"
         run: |
           [ -z "$ADMIN_BACKEND_URL" ] && { echo "❌ ADMIN_BACKEND_URL 未配置"; exit 1; }
           [ -z "$ADMIN_JWT_TOKEN" ] && { echo "❌ ADMIN_JWT_TOKEN 未配置"; exit 1; }
           [ -z "$RELEASE_SITE_ID" ] && { echo "❌ RELEASE_SITE_ID 未配置"; exit 1; }
-          BASE="${ADMIN_BACKEND_URL%/}"   # 去掉结尾斜杠，避免 //
-          echo "BASE 末尾字符检查: ...$(printf '%s' "$BASE" | tail -c 12)"
-          echo "已配置 BI_API_PREFIX 是否为空: $([ -z "$BI_API_PREFIX" ] && echo 空 || echo 非空)"
-          q="siteId=$RELEASE_SITE_ID&page=1&pageSize=2"
-          probe () {
-            local url="$1"
-            local code
-            code=$(curl -s -o /tmp/r.json -w "%{http_code}" -m 20 -H "x-token: $ADMIN_JWT_TOKEN" "$url")
-            echo "---- HTTP $code  $2"
-            head -c 200 /tmp/r.json; echo
-          }
-          echo "===== 探测候选接口路径 ====="
-          probe "$BASE/api/recArticle/site/getSiteArticleList?$q"  "candidate A: /api/recArticle/site/..."
-          probe "$BASE/api/article/site/getSiteArticleList?$q"     "candidate B: /api/article/site/..."
-          probe "$BASE/recArticle/site/getSiteArticleList?$q"      "candidate C: /recArticle/site/..."
-          probe "$BASE${BI_API_PREFIX}/site/getSiteArticleList?$q" "candidate D: 用已配置的 BI_API_PREFIX"
-          echo "===== 探测结束（本轮仅探测，不发布）====="
-          exit 1
-      - name: "Step 1b - (skipped after probe)"
-        if: ${{ false }}
-        run: echo skip
+          BASE="${ADMIN_BACKEND_URL%/}"
+          PREFIX="${BI_API_PREFIX:-/api/recArticle}"
+          URL=$(echo "$BASE$PREFIX/site/getSiteArticleList" | sed -E 's#([^:])/{2,}#\1/#g; s#/api(/api)+/#/api/#g')
+          echo "解析后的接口地址尾段: .../$(echo "$URL" | rev | cut -d/ -f1-3 | rev)"
+          CODE=$(curl -s -o /tmp/resp.json -w "%{http_code}" -m 20 \
+            -H "x-token: $ADMIN_JWT_TOKEN" \
+            "$URL?siteId=$RELEASE_SITE_ID&page=1&pageSize=2")
+          echo "HTTP $CODE"
+          head -c 800 /tmp/resp.json; echo
+          if [ "$CODE" = "401" ]; then echo "❌ token 失效（异地登陆/过期）——请用新 token 更新 Secret"; exit 1; fi
+          [ "$CODE" = "200" ] || { echo "❌ 后台返回非 200（$CODE）"; exit 1; }
+          echo "✅ 后台连通，鉴权通过"
           echo "✅ 后台连通，鉴权通过"
 
       # ── ② 录入并上架一篇测试文章 ───────────────────────────────────────
