@@ -32,20 +32,33 @@ jobs:
 
       - run: yarn install --frozen-lockfile
 
-      # ── ① 后台连通性 + 鉴权 ────────────────────────────────────────────
-      - name: "Step 1 - Backend connectivity & auth"
+      # ── ① 路径探测：试多个候选地址，定位正确的接口前缀 ──────────────────
+      - name: "Step 1 - Probe API path"
         run: |
-          echo "Backend: $ADMIN_BACKEND_URL  Prefix: ${BI_API_PREFIX:-/api/recArticle}  Site: $RELEASE_SITE_ID"
           [ -z "$ADMIN_BACKEND_URL" ] && { echo "❌ ADMIN_BACKEND_URL 未配置"; exit 1; }
           [ -z "$ADMIN_JWT_TOKEN" ] && { echo "❌ ADMIN_JWT_TOKEN 未配置"; exit 1; }
           [ -z "$RELEASE_SITE_ID" ] && { echo "❌ RELEASE_SITE_ID 未配置"; exit 1; }
-          PREFIX="${BI_API_PREFIX:-/api/recArticle}"
-          CODE=$(curl -s -o /tmp/resp.json -w "%{http_code}" -m 20 \
-            -H "x-token: $ADMIN_JWT_TOKEN" \
-            "$ADMIN_BACKEND_URL$PREFIX/site/getSiteArticleList?siteId=$RELEASE_SITE_ID&page=1&pageSize=2")
-          echo "HTTP $CODE"
-          head -c 1500 /tmp/resp.json; echo
-          [ "$CODE" = "200" ] || { echo "❌ 后台不可达或鉴权失败（401=token 过期）"; exit 1; }
+          BASE="${ADMIN_BACKEND_URL%/}"   # 去掉结尾斜杠，避免 //
+          echo "BASE 末尾字符检查: ...$(printf '%s' "$BASE" | tail -c 12)"
+          echo "已配置 BI_API_PREFIX 是否为空: $([ -z "$BI_API_PREFIX" ] && echo 空 || echo 非空)"
+          q="siteId=$RELEASE_SITE_ID&page=1&pageSize=2"
+          probe () {
+            local url="$1"
+            local code
+            code=$(curl -s -o /tmp/r.json -w "%{http_code}" -m 20 -H "x-token: $ADMIN_JWT_TOKEN" "$url")
+            echo "---- HTTP $code  $2"
+            head -c 200 /tmp/r.json; echo
+          }
+          echo "===== 探测候选接口路径 ====="
+          probe "$BASE/api/recArticle/site/getSiteArticleList?$q"  "candidate A: /api/recArticle/site/..."
+          probe "$BASE/api/article/site/getSiteArticleList?$q"     "candidate B: /api/article/site/..."
+          probe "$BASE/recArticle/site/getSiteArticleList?$q"      "candidate C: /recArticle/site/..."
+          probe "$BASE${BI_API_PREFIX}/site/getSiteArticleList?$q" "candidate D: 用已配置的 BI_API_PREFIX"
+          echo "===== 探测结束（本轮仅探测，不发布）====="
+          exit 1
+      - name: "Step 1b - (skipped after probe)"
+        if: ${{ false }}
+        run: echo skip
           echo "✅ 后台连通，鉴权通过"
 
       # ── ② 录入并上架一篇测试文章 ───────────────────────────────────────
