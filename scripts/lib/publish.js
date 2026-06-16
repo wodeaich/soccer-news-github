@@ -83,12 +83,14 @@ async function publishArticle(article, { siteId, dryRun = false } = {}) {
     return null;
   }
 
-  // ── 1. slug 查重（站点列表内）────────────────────────────────────────────
+  // ── 1. 查重（站点列表内，按标题；后台无 slug）────────────────────────────
   const siteArticles = await bi.getAllSiteArticles(siteId);
-  const dupes = siteArticles.filter((a) => a.seoUrlSlug === article.slug);
+  const dupes = siteArticles.filter((s) => (s.article && s.article.name) === article.title);
   for (const d of dupes) {
-    console.log(`  [publish] 重复 slug，删除旧文章 id=${d.id}`);
-    await bi.deleteArticle(d.id);
+    const delId = d.articleId || (d.article && d.article.id);
+    if (!delId) continue;
+    console.log(`  [publish] 同标题旧文章，删除 articleId=${delId}`);
+    await bi.deleteArticle(delId);
   }
 
   let articleId = cached && cached.article_id;
@@ -117,7 +119,7 @@ async function publishArticle(article, { siteId, dryRun = false } = {}) {
   await new Promise((resolve) => setTimeout(resolve, 1500));
   try {
     const onSite = await bi.getAllSiteArticles(siteId);
-    const hit = onSite.some((a) => a.id === articleId || a.seoUrlSlug === article.slug);
+    const hit = onSite.some((s) => s.articleId === articleId || (s.article && s.article.id === articleId));
     console.log(hit ? `  [publish] 上架验证通过（已在站点列表）` : `  [publish] 上架验证：暂未在列表（可能稍后生效）`);
   } catch (e) {
     console.warn(`  [publish] 上架验证请求失败（非阻断）：${e.message}`);

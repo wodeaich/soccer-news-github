@@ -106,11 +106,11 @@ jobs:
           node -e '
           const c = require("./utils/content");
           const arts = c.listArticles();
-          const t = arts.find(a => a.slug === "joint-debug-test-article");
+          const t = arts.find(a => (a.title || "").includes("Joint debug"));
           if (!t) { console.error("❌ 同步结果中找不到测试文章"); process.exit(1); }
-          console.log("✅ 测试文章已同步回来 id=", t.id, "language=", t.language);
-          if (!t.content) console.warn("⚠️ 列表接口不带正文 content——需要后台补详情接口（影响文章页正文显示）");
-          else console.log("✅ 列表接口带正文，长度", t.content.length);
+          console.log("✅ 测试文章已同步回来 id=", t.id, "language=", t.language, "slug=", t.slug);
+          if (!t.content) console.warn("⚠️ 无正文 content");
+          else console.log("✅ 带正文，长度", t.content.length);
           '
 
       # ── ④ 构建静态站 ──────────────────────────────────────────────────

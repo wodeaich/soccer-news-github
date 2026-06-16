@@ -35,18 +35,37 @@ function toISO(v) {
   return Number.isFinite(d.getTime()) ? d.toISOString() : new Date().toISOString();
 }
 
+/** 由文本生成 URL slug（去标签、非字母数字转连字符） */
+function slugify(s) {
+  return String(s || "")
+    .replace(/<[^>]*>/g, " ")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 80)
+    .replace(/-+$/g, "");
+}
+
+/**
+ * 站点文章列表项 → 扁平文章。
+ * 注意：真正的文章嵌套在 raw.article 里；后台无 slug，由标题(或关键词)+articleId 生成。
+ */
 function mapArticle(raw) {
+  const a = raw.article || raw;
+  const articleId = raw.articleId || a.id || raw.id;
+  const title = pick(a, "name", "title", "seoTitle");
+  const base = slugify(title) || slugify(pick(a, "keywords")) || "article";
   return {
-    id: raw.id,
-    slug: pick(raw, "seoUrlSlug", "slug", "webSlug"),
-    language: pick(raw, "language", "lang") || "en",
-    title: pick(raw, "name", "title", "seoTitle"),
-    summary: pick(raw, "firstParagraph", "summary", "seoDesc"),
-    content: pick(raw, "content"),
-    cover: pick(raw, "cover"),
-    keywords: pick(raw, "keywords"),
-    article_type: pick(raw, "articleType", "article_type") || "news",
-    published_at: toISO(pick(raw, "publishedAt", "publishTime", "CreatedAt", "createdAt", "updatedAt")),
+    id: articleId,
+    slug: `${base}-${articleId}`,
+    language: pick(a, "language", "lang") || "en",
+    title,
+    summary: pick(a, "firstParagraph", "summary", "seoDesc"),
+    content: pick(a, "content"),
+    cover: pick(a, "cover") || pick(raw, "pcImg", "mobileImg"),
+    keywords: pick(a, "keywords"),
+    article_type: String(pick(a, "articleType", "article_type") || "news"),
+    published_at: toISO(pick(a, "publishedAt", "publishTime") || pick(raw, "createdAt", "updatedAt")),
   };
 }
 
