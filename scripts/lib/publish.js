@@ -89,8 +89,14 @@ async function publishArticle(article, { siteId, dryRun = false } = {}) {
   for (const d of dupes) {
     const delId = d.articleId || (d.article && d.article.id);
     if (!delId) continue;
-    console.log(`  [publish] 同标题旧文章，删除 articleId=${delId}`);
-    await bi.deleteArticle(delId);
+    console.log(`  [publish] 同标题旧文章，尝试删除 articleId=${delId}`);
+    try {
+      await bi.deleteArticle(delId);
+      console.log(`  [publish] 删除成功 articleId=${delId}`);
+    } catch (e) {
+      // 删除失败不阻断流程（404 = 后台接口路径不同或已删除）
+      console.warn(`  [publish] 删除旧文章失败（${e.message}），忽略并继续录入`);
+    }
   }
 
   let articleId = cached && cached.article_id;
