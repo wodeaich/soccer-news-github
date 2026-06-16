@@ -90,6 +90,16 @@ jobs:
       # ── ③ 从后台拉回列表，验证测试文章在列、检查正文字段 ────────────────
       - name: "Step 3 - Sync back & verify (checks content field too)"
         run: |
+          echo "===== 后台 getSiteArticleList 原始字段（用于对齐映射）====="
+          node -e '
+          const bi = require("./scripts/lib/bi-client");
+          bi.getAllSiteArticles(process.env.RELEASE_SITE_ID).then((list) => {
+            console.log("RAW count:", list.length);
+            console.log("RAW keys:", Object.keys(list[0] || {}).join(", "));
+            console.log("RAW first item:", JSON.stringify(list[0] || {}, null, 2).slice(0, 1500));
+          }).catch((e) => console.error("raw dump err:", e.message));
+          '
+          echo "===== 同步 ====="
           node scripts/sync_articles.js
           echo "--- 同步落盘文件 ---"
           ls content/articles/ || true
