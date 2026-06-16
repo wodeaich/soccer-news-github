@@ -129,12 +129,13 @@ jobs:
           ls dist/en/news/ || true
 
       # ── ⑤ 打包上传 → 触发发版（复用 release_frontend.js，env=test）────────
+      # 后台要求 ZIP 顶级目录为 dist/，所以从仓库根 zip dist 本身（不进 dist 再 zip .）
       - name: "Step 5 - Upload ZIP & release (test env)"
         env:
           RELEASE_ENV: test
         run: |
           ZIP="compsoccer-dist-$(date +%Y%m%d%H%M%S).zip"
-          cd dist && zip -qr "../$ZIP" . -x "*.DS_Store" && cd ..
-          echo "ZIP: $ZIP ($(du -m "$ZIP" | cut -f1)MB)"
+          zip -qr "$ZIP" dist -x "*.DS_Store"
+          echo "ZIP: $ZIP ($(du -m "$ZIP" | cut -f1)MB, 顶级目录 dist/)"
           node scripts/release_frontend.js --zip "$ZIP" --site_id "$RELEASE_SITE_ID" --env "$RELEASE_ENV"
           echo "✅ 全链路联调通过！"

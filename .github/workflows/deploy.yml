@@ -1,7 +1,7 @@
 name: Build & Deploy CompSoccer
 
 # 发版链路（与现有管理后台流程一致，见 docs/admin-backend-eval.md §2.2）：
-#   sync_articles → yarn generate → 打包 dist 为 ZIP
+#   sync_articles → yarn generate → 打包 dist 为 ZIP（顶级目录 dist/）
 #   → uploadFrontEndZip(?siteId&env) → releaseWebpack/release
 #   → 管理后台并发上传至 AWS S3 / Cloudflare R2 → 域名对外服务
 #
@@ -87,6 +87,7 @@ jobs:
           echo "✅ 产物校验通过"
 
       # 打包 + 上传 + 发版（复用 release_frontend.js，与联调同一套接口）
+      # 后台要求 ZIP 顶级目录为 dist/
       - name: Package, upload & release
         env:
           ADMIN_BACKEND_URL: ${{ secrets.ADMIN_BACKEND_URL }}
@@ -95,7 +96,7 @@ jobs:
           RELEASE_ENV: ${{ secrets.RELEASE_ENV }}
         run: |
           ZIP="compsoccer-dist-$(date +%Y%m%d%H%M%S).zip"
-          cd dist && zip -qr "../$ZIP" . -x "*.DS_Store" && cd ..
+          zip -qr "$ZIP" dist -x "*.DS_Store"
           SIZE_MB=$(du -m "$ZIP" | cut -f1)
           echo "ZIP size: ${SIZE_MB}MB, files: $(unzip -l "$ZIP" | tail -1 | awk '{print $2}')"
           if [ "$SIZE_MB" -ge 100 ]; then
