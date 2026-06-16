@@ -12,11 +12,18 @@
       <nuxt-link :to="localePath('/live-tv/')" class="nav-item">{{ $t('nav.liveTV') }}</nuxt-link>
     </nav>
 
-    <!-- 语言切换器 -->
-    <div class="lang-switcher">
-      <span class="lang-current">{{ currentLocaleName }}</span>
-      <ul class="lang-dropdown">
-        <li v-for="locale in availableLocales" :key="locale.code">
+    <!-- 语言切换器：点击展开，再次点击语言即切换 -->
+    <div ref="langSwitcher" class="lang-switcher" :class="{ open: langOpen }">
+      <span class="lang-current" @click.stop="toggleLang">
+        {{ currentLocaleName }}
+        <i class="caret"></i>
+      </span>
+      <ul v-show="langOpen" class="lang-dropdown">
+        <li
+          v-for="locale in availableLocales"
+          :key="locale.code"
+          :class="{ active: locale.code === $i18n.locale }"
+        >
           <span @click="switchLang(locale.code)">{{ locale.name }}</span>
         </li>
       </ul>
@@ -32,19 +39,41 @@ export default {
       default: "en"
     }
   },
+  data() {
+    return {
+      langOpen: false
+    };
+  },
   computed: {
     availableLocales() {
-      return this.$i18n.locales
+      return this.$i18n.locales;
     },
     currentLocaleName() {
-      const current = this.$i18n.locales.find(l => l.code === this.$i18n.locale)
-      return current ? current.name : 'EN'
+      const current = this.$i18n.locales.find((l) => l.code === this.$i18n.locale);
+      return current ? current.name : "EN";
     }
   },
+  mounted() {
+    document.addEventListener("click", this.onDocClick);
+  },
+  beforeDestroy() {
+    document.removeEventListener("click", this.onDocClick);
+  },
   methods: {
+    toggleLang() {
+      this.langOpen = !this.langOpen;
+    },
+    onDocClick(e) {
+      const el = this.$refs.langSwitcher;
+      if (el && !el.contains(e.target)) {
+        this.langOpen = false;
+      }
+    },
     switchLang(code) {
-      document.cookie = `preferred_lang=${code}; path=/; max-age=${60 * 60 * 24 * 365}`
-      this.$router.push(this.switchLocalePath(code))
+      this.langOpen = false;
+      if (code === this.$i18n.locale) return;
+      document.cookie = `preferred_lang=${code}; path=/; max-age=${60 * 60 * 24 * 365}`;
+      this.$router.push(this.switchLocalePath(code));
     }
   }
 };
@@ -78,7 +107,8 @@ export default {
 .logo {
   flex-shrink: 0;
   font-family: "rssb";
-  font-size: 26px;
+  // 仅比导航/标题略大一档，避免喧宾夺主
+  font-size: 20px;
   font-weight: bold;
   color: $color1;
   white-space: nowrap;
@@ -97,7 +127,8 @@ export default {
   font-size: 14px;
   color: $font1;
   white-space: nowrap;
-  &:hover, &.nuxt-link-active {
+  &:hover,
+  &.nuxt-link-active {
     color: $color1;
   }
 }
@@ -108,29 +139,47 @@ export default {
   z-index: 10;
 }
 .lang-current {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-family: "rssb";
   font-size: 14px;
   color: $font1;
   padding: 6px 12px;
   border: 1px solid $color1;
   border-radius: 20px;
-  &:hover { color: $color1; }
+  user-select: none;
+  &:hover {
+    color: $color1;
+  }
 }
-.lang-switcher:hover .lang-dropdown,
-.lang-dropdown:hover {
-  display: block;
+.caret {
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid currentColor;
+  transition: transform 0.2s;
+}
+.lang-switcher.open .caret {
+  transform: rotate(180deg);
 }
 .lang-dropdown {
-  display: none;
   position: absolute;
-  top: 36px;
+  top: 40px;
   right: 0;
   background: #fff;
-  box-shadow: 0px 4px 12px 0px rgba(0,0,0,0.12);
+  box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
   overflow: hidden;
-  min-width: 120px;
+  min-width: 130px;
+  max-height: 60vh;
+  overflow-y: auto;
   li {
+    &.active span {
+      color: $color1;
+      font-weight: bold;
+    }
     span {
       display: block;
       padding: 8px 16px;
@@ -139,7 +188,10 @@ export default {
       color: $font1;
       white-space: nowrap;
       cursor: pointer;
-      &:hover { background: rgba($color1, 0.1); color: $color1; }
+      &:hover {
+        background: rgba($color1, 0.1);
+        color: $color1;
+      }
     }
   }
 }
@@ -162,7 +214,7 @@ export default {
     gap: vw(24);
   }
   .logo {
-    font-size: vw(40);
+    font-size: vw(32);
   }
   // 导航横向滚动、左对齐、缩小字号，保证语言按钮始终可见
   .nav-menu {
@@ -173,7 +225,9 @@ export default {
     justify-content: flex-start;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    &::-webkit-scrollbar { display: none; }
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
   .nav-item {
     flex-shrink: 0;
@@ -185,8 +239,8 @@ export default {
     border-radius: vw(28);
   }
   .lang-dropdown {
-    top: vw(56);
-    min-width: vw(180);
+    top: vw(60);
+    min-width: vw(190);
     li span {
       font-size: vw(26);
       padding: vw(16) vw(24);

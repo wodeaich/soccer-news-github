@@ -9,8 +9,8 @@ export default {
   },
   home: {
     latestNews: 'آخر الأخبار',
-    trending: 'الأكثر تداولاً',
-    allArticles: 'جميع المقالات',
+    trending: 'نتائج المباريات',
+    allArticles: 'جدول الترتيب',
     topMatch: 'المباراة المميزة',
   },
   news: {

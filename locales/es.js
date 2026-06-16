@@ -9,8 +9,8 @@ export default {
   },
   home: {
     latestNews: 'Últimas Noticias',
-    trending: 'Tendencias',
-    allArticles: 'Todos los Artículos',
+    trending: 'Resultados',
+    allArticles: 'Clasificación',
     topMatch: 'Partido Destacado',
   },
   news: {

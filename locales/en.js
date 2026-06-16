@@ -9,8 +9,8 @@ export default {
   },
   home: {
     latestNews: 'Latest News',
-    trending: 'Trending',
-    allArticles: 'All Articles',
+    trending: 'Match Results',
+    allArticles: 'Standings',
     topMatch: 'Top Match',
   },
   news: {

@@ -19,14 +19,6 @@
         </div>
       </section>
 
-      <!-- 广告位 1 -->
-      <adm-slot-preload
-        class="ad-block"
-        adm-id="home-1"
-        adm-unit="/23197833490/soccerins/soccerins_home_1"
-        ads-slot="6667048681"
-      />
-
       <!-- 趋势新闻 -->
       <section class="section">
         <h2 class="section-title">{{ $t('home.trending') }}</h2>
@@ -38,14 +30,6 @@
           />
         </div>
       </section>
-
-      <!-- 广告位 2（通栏） -->
-      <adm-slot-full
-        class="ad-block"
-        adm-id="home-full"
-        adm-unit="/23197833490/soccerins/soccerins_home_full"
-        ads-slot="4080715115"
-      />
 
       <!-- 全部文章（无限滚动） -->
       <section class="section">
@@ -67,18 +51,9 @@
         </InfiniteScrollList1>
       </section>
 
-      <!-- 广告位 3 -->
-      <adm-slot
-        class="ad-block"
-        adm-id="home-3"
-        adm-unit="/23197833490/soccerins/soccerins_home_3"
-        ads-slot="6028318341"
-      />
-
     </main>
 
     <Afs-Footer :lang="$i18n.locale" />
-    <AdLoading />
     <BackTop />
   </div>
 </template>

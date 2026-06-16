@@ -5,30 +5,7 @@
     <main class="container">
       <h1 class="page-title">{{ $t('news.title') }}</h1>
 
-      <!-- 广告位顶部 -->
-      <adm-slot-preload
-        class="ad-block"
-        adm-id="news-top"
-        adm-unit="/23197833490/soccerins/soccerins_home_1"
-        ads-slot="6667048681"
-      />
-
-      <!-- 置顶精选 -->
-      <section v-if="featured.length" class="section-featured">
-        <div class="featured-grid">
-          <Soccer-NewsCardFeatured :item="featured[0]" class="featured-main" />
-          <div class="featured-side">
-            <Soccer-NewsCardFeatured
-              v-for="(item, i) in featured.slice(1, 3)"
-              :key="i"
-              :item="item"
-              class="featured-side-item"
-            />
-          </div>
-        </div>
-      </section>
-
-      <!-- 文章列表无限滚动 -->
+      <!-- 不做分类：图片缩略图 + 文章标题的简单列表 -->
       <section class="section">
         <InfiniteScrollList1
           :initial-page="3"
@@ -43,21 +20,12 @@
               :key="i"
               :item="item"
             />
-            <!-- 广告穿插：每10条插一个广告 -->
-            <adm-slot
-              v-if="items.length >= 10"
-              class="ad-inline"
-              adm-id="news-inline"
-              adm-unit="/23197833490/soccerins/soccerins_home_3"
-              ads-slot="6028318341"
-            />
           </template>
         </InfiniteScrollList1>
       </section>
     </main>
 
     <Afs-Footer :lang="$i18n.locale" />
-    <AdLoading />
     <BackTop />
   </div>
 </template>

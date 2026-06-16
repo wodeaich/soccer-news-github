@@ -9,8 +9,8 @@ export default {
   },
   home: {
     latestNews: '最新ニュース',
-    trending: 'トレンド',
-    allArticles: '全記事',
+    trending: '試合結果',
+    allArticles: '順位表',
     topMatch: '注目試合',
   },
   news: {

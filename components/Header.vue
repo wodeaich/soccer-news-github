@@ -45,7 +45,7 @@ export default {
 .logo {
   flex-shrink: 0;
   font-family: "rssb";
-  font-size: 26px;
+  font-size: 20px;
   font-weight: bold;
   color: $color1;
   white-space: nowrap;
@@ -66,7 +66,7 @@ export default {
     }
   }
   .logo {
-    font-size: vw(40);
+    font-size: vw(32);
   }
 }
 </style>

@@ -9,8 +9,8 @@ export default {
   },
   home: {
     latestNews: 'Últimas Notícias',
-    trending: 'Em Alta',
-    allArticles: 'Todos os Artigos',
+    trending: 'Resultados',
+    allArticles: 'Classificação',
     topMatch: 'Jogo em Destaque',
   },
   news: {

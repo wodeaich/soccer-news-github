@@ -9,8 +9,8 @@ export default {
   },
   home: {
     latestNews: '최신 뉴스',
-    trending: '트렌딩',
-    allArticles: '전체 기사',
+    trending: '경기 결과',
+    allArticles: '순위표',
     topMatch: '주요 경기',
   },
   news: {
