@@ -91,6 +91,9 @@
     </script>
     <!-- End Google Tag Manager -->
 
+    <!-- 广告位已按需求临时停用：停止加载 GPT / AdSense，并停用插屏、锚定广告。
+         产品定稿后由后续需求重新规划广告位时恢复以下注释内容即可。 -->
+    <!-- 广告脚本停用开始
     <link rel="preload" href="https://securepubads.g.doubleclick.net/tag/js/gpt.js" as="script" />
     <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
 
@@ -156,6 +159,7 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1853000876464912"
       crossorigin="anonymous"
     ></script>
+    广告脚本停用结束 -->
 
     <script>
       window.addEventListener("load", function () {
@@ -196,10 +200,12 @@
     <!-- End Google Tag Manager (noscript) -->
     {{ APP }}
     <script>
-      googletag.cmd.push(() => {
-        googletag.display(interstitialSlot);
-        googletag.display(anchorSlot);
-      });
+      // 广告位已按需求临时停用：不再展示插屏、锚定广告。
+      // 产品定稿后由后续需求重新规划广告位时恢复以下注释内容即可。
+      // googletag.cmd.push(() => {
+      //   googletag.display(interstitialSlot);
+      //   googletag.display(anchorSlot);
+      // });
 
       // 初始化标志变量
       window.isPageUnloaded = false;

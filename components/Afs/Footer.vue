@@ -162,7 +162,13 @@ export default {
 <style lang="scss" scoped>
 .footer {
   position: relative;
-  margin-top: 32px;
+  // 与 .container（max-width:1200 + padding:0 24）对齐：水平居中并留出同样内边距，
+  // 避免版权链接贴到视口最左侧而与正文错位
+  width: 100%;
+  max-width: 1200px;
+  margin: 32px auto 0;
+  padding: 0 24px;
+  box-sizing: border-box;
 }
 .copyright-content-1 {
   display: flex;
@@ -212,6 +218,7 @@ export default {
 @media screen and (max-width: 750px) {
   .footer {
     margin-top: vw(32);
+    padding: 0 vw(46);
     &.sm {
       transform: scale(0.85);
     }

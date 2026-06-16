@@ -1,58 +1,14 @@
 <template>
-  <div ref="googleAdStyle">
-    <p class="title">Advertisement</p>
-  </div>
+  <!-- 广告位已按需求临时停用：组件保留 props 接口，渲染为空，不加载任何广告脚本。
+       产品定稿后由后续需求重新规划广告位时恢复实现即可。 -->
+  <span v-if="false"></span>
 </template>
 
 <script>
 export default {
+  name: "GoogleAd",
   props: {
-    adSlot: {
-      type: String,
-      required: true
-    }
-  },
-  data() {
-    return {
-      observer: null
-    };
-  },
-  mounted() {
-    this.observer = new IntersectionObserver(this.handleIntersection);
-    this.observer.observe(this.$refs.googleAdStyle);
-  },
-  methods: {
-    handleIntersection(entries) {
-      if (entries[0].isIntersecting) {
-        const adScript = document.createElement("script");
-        adScript.innerHTML = `(adsbygoogle = window.adsbygoogle || []).push({});`;
-        const ins = document.createElement("ins");
-        ins.className = "adsbygoogle";
-        ins.style.display = "block";
-        ins.setAttribute("data-ad-client", "ca-pub-1853000876464912");
-        ins.setAttribute("data-ad-slot", this.adSlot);
-        ins.setAttribute("data-ad-format", "rectangle");
-        ins.setAttribute("data-full-width-responsive", "true");
-        this.$refs.googleAdStyle.appendChild(ins);
-        this.$refs.googleAdStyle.appendChild(adScript);
-        this.observer.unobserve(this.$refs.googleAdStyle);
-      }
-    }
+    adSlot: { type: String, default: "" }
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.title {
-  background: $color1;
-  line-height: 24px;
-  color: rgba($item-name, 0.6);
-  text-align: center;
-}
-@media screen and (max-width: 879px) {
-  .title {
-    font-size: vw(24);
-    line-height: vw(35);
-  }
-}
-</style>
