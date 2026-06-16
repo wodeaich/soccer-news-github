@@ -4,14 +4,15 @@
  * API（抹浏览器真实请求得到）：
  *   ① POST {BASE}/fileUploadAndDownload/uploadFrontEndZip?siteId=<id>&env=<env>
  *        Header: x-token
- *        FormData: file=<zip>（MIME application/zip）
- *        响应 data: { filePath, fileFolder, fileName, fileSize:"825.87 KB", md5, ... }
+ *        FormData: file=<zip>（MIME application/zip，压缩包顶级目录必须是 dist/）
+ *        响应 data: { filePath, fileFolder, fileName, fileSize:"4.78 MB", md5, ... }
  *   ② POST {BASE}/releaseWebpack/release
  *        Header: x-token, Content-Type: application/json
- *        Body: { env, siteId, fileFolder, fileName, filePath, fileSize:<number>, fileMd5 }
+ *        Body: { env, siteId, fileFolder, fileName, filePath, fileSize:"<数值字符串>", fileMd5 }
  *        响应 data: <release_id>
  *
- * 要点：env 用 "prod"/"test"（不是 production）；fileSize 是数字；fileMd5 取上传响应 md5。
+ * 要点：env 用 "prod"/"test"（不是 production）；fileSize 是字符串（后台结构体 string）；
+ *       fileMd5 取上传响应 md5；压缩包顶级目录必须为 dist/。
  *
  * 用法：node scripts/release_frontend.js --zip <path> [--site_id <id>] [--env test]
  * 环境：ADMIN_BACKEND_URL（含 /api）/ ADMIN_JWT_TOKEN / RELEASE_SITE_ID / RELEASE_ENV
@@ -60,8 +61,8 @@ async function main() {
   }
   const d = upJson.data || {};
 
-  // fileSize "825.87 KB" → 825.87（只取数值，与后台示例一致）
-  const fileSize = parseFloat(String(d.fileSize || "0")) || 0;
+  // fileSize "4.78 MB" → "4.78"（去单位取数值，但后台结构体是 string 类型）
+  const fileSize = String(parseFloat(String(d.fileSize || "0")) || 0);
 
   // ② 发版：body 带上传响应的全部字段
   const body = {
