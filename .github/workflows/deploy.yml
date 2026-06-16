@@ -1,13 +1,15 @@
 name: Build & Deploy CompSoccer
 
 # 发版链路（与现有管理后台流程一致，见 docs/admin-backend-eval.md §2.2）：
-#   yarn generate → 打包 dist 为 ZIP → uploadFrontEndZip → releaseFrontEnd
+#   sync_articles → yarn generate → 打包 dist 为 ZIP
+#   → uploadFrontEndZip(?siteId&env) → releaseWebpack/release
 #   → 管理后台并发上传至 AWS S3 / Cloudflare R2 → 域名对外服务
 #
 # 所需 Secrets：
-#   ADMIN_BACKEND_URL  管理后台地址（如 http://52.76.173.58:6688）
+#   ADMIN_BACKEND_URL  管理后台地址（含 /api，如 http://52.76.173.58:6688/api）
 #   ADMIN_JWT_TOKEN    管理后台 JWT（x-token，注意有效期）
 #   RELEASE_SITE_ID    compsoccer.com 在管理后台对应的发版 siteId
+#   RELEASE_ENV        发版环境 test/prod（缺省 prod）
 #   SITE_ID / SITE_AFS 站点数据标识（构建期注入页面 env）
 
 on:
@@ -84,60 +86,23 @@ jobs:
           done
           echo "✅ 产物校验通过"
 
-      - name: Package dist as ZIP
+      # 打包 + 上传 + 发版（复用 release_frontend.js，与联调同一套接口）
+      - name: Package, upload & release
+        env:
+          ADMIN_BACKEND_URL: ${{ secrets.ADMIN_BACKEND_URL }}
+          ADMIN_JWT_TOKEN: ${{ secrets.ADMIN_JWT_TOKEN }}
+          RELEASE_SITE_ID: ${{ secrets.RELEASE_SITE_ID }}
+          RELEASE_ENV: ${{ secrets.RELEASE_ENV }}
         run: |
-          cd dist
-          zip -qr ../deploy.zip . -x "*.DS_Store"
-          cd ..
-          SIZE_MB=$(du -m deploy.zip | cut -f1)
-          echo "ZIP size: ${SIZE_MB}MB, files: $(unzip -l deploy.zip | tail -1 | awk '{print $2}')"
+          ZIP="compsoccer-dist-$(date +%Y%m%d%H%M%S).zip"
+          cd dist && zip -qr "../$ZIP" . -x "*.DS_Store" && cd ..
+          SIZE_MB=$(du -m "$ZIP" | cut -f1)
+          echo "ZIP size: ${SIZE_MB}MB, files: $(unzip -l "$ZIP" | tail -1 | awk '{print $2}')"
           if [ "$SIZE_MB" -ge 100 ]; then
             echo "❌ ZIP 超过后台 100MB 上限"
             exit 1
           fi
-
-      - name: Upload ZIP to admin backend
-        env:
-          RELEASE_ENV: ${{ secrets.RELEASE_ENV }}
-        run: |
-          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
-            "${{ secrets.ADMIN_BACKEND_URL }}/fileUploadAndDownload/uploadFrontEndZip" \
-            -H "x-token: ${{ secrets.ADMIN_JWT_TOKEN }}" \
-            -F "file=@deploy.zip" \
-            -F "siteId=${{ secrets.RELEASE_SITE_ID }}" \
-            -F "env=${RELEASE_ENV:-test}")
-
-          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
-          BODY=$(echo "$RESPONSE" | head -n -1)
-          echo "HTTP status: $HTTP_CODE"
-          echo "Response: $BODY"
-
-          if [ "$HTTP_CODE" != "200" ]; then
-            echo "❌ Upload failed with status $HTTP_CODE（401 多为 JWT 过期）"
-            exit 1
-          fi
-          echo "✅ Upload successful"
-
-      - name: Trigger release on admin backend
-        env:
-          RELEASE_ENV: ${{ secrets.RELEASE_ENV }}
-        run: |
-          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
-            "${{ secrets.ADMIN_BACKEND_URL }}/fileUploadAndDownload/releaseFrontEnd" \
-            -H "x-token: ${{ secrets.ADMIN_JWT_TOKEN }}" \
-            -H "Content-Type: application/json" \
-            -d "{\"siteId\":\"${{ secrets.RELEASE_SITE_ID }}\",\"env\":\"${RELEASE_ENV:-test}\"}")
-
-          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
-          BODY=$(echo "$RESPONSE" | head -n -1)
-          echo "HTTP status: $HTTP_CODE"
-          echo "Response: $BODY"
-
-          if [ "$HTTP_CODE" != "200" ]; then
-            echo "❌ Release trigger failed with status $HTTP_CODE"
-            exit 1
-          fi
-          echo "✅ Release triggered successfully"
+          node scripts/release_frontend.js --zip "$ZIP" --site_id "$RELEASE_SITE_ID" --env "${RELEASE_ENV:-prod}"
 
       - name: Notify result
         if: always()

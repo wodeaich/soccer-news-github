@@ -32,7 +32,7 @@ jobs:
 
       - run: yarn install --frozen-lockfile
 
-      # ── ① 后台连通性 + 鉴权（地址对 /api 重复免疫）─────────────────────
+      # ── ① 后台连通性 + 鉴权（地址对 /api 重复免疫）─────────────────
       - name: "Step 1 - Backend connectivity & auth"
         run: |
           [ -z "$ADMIN_BACKEND_URL" ] && { echo "❌ ADMIN_BACKEND_URL 未配置"; exit 1; }
@@ -67,7 +67,7 @@ jobs:
           [ "$CODE" = "200" ] || { echo "❌ 后台返回非 200（$CODE）"; exit 1; }
           echo "✅ 后台连通，鉴权通过"
 
-      # ── ② 录入并上架一篇测试文章 ───────────────────────────────────────
+      # ── ② 录入并上架一篇测试文章 ──────────────────────────────
       - name: "Step 2 - Publish test article (create + up-site)"
         run: |
           node -e '
@@ -87,7 +87,7 @@ jobs:
           })().catch((e) => { console.error("❌ 录入/上架失败:", e.message); process.exit(1); });
           '
 
-      # ── ③ 从后台拉回列表，验证测试文章在列、检查正文字段 ────────────────
+      # ── ③ 从后台拉回列表，验证测试文章在列、检查正文字段 ────────────
       - name: "Step 3 - Sync back & verify (checks content field too)"
         run: |
           echo "===== 后台 getSiteArticleList 原始字段（用于对齐映射）====="
@@ -113,7 +113,7 @@ jobs:
           else console.log("✅ 带正文，长度", t.content.length);
           '
 
-      # ── ④ 构建静态站 ──────────────────────────────────────────────────
+      # ── ④ 构建静态站 ───────────────────────────────────────
       - name: "Step 4 - Generate static site"
         env:
           NODE_ENV: production
@@ -128,26 +128,13 @@ jobs:
           [ "$COUNT" -ge 10 ] || { echo "❌ 页面数异常"; exit 1; }
           ls dist/en/news/ || true
 
-      # ── ⑤ 打包并上传后台 → 触发发版 ───────────────────────────────────
-      - name: "Step 5 - Upload ZIP & release"
+      # ── ⑤ 打包上传 → 触发发版（复用 release_frontend.js，env=test）────────
+      - name: "Step 5 - Upload ZIP & release (test env)"
+        env:
+          RELEASE_ENV: test
         run: |
-          cd dist && zip -qr ../deploy.zip . -x "*.DS_Store" && cd ..
-          echo "ZIP: $(du -m deploy.zip | cut -f1)MB"
-          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
-            "$ADMIN_BACKEND_URL/fileUploadAndDownload/uploadFrontEndZip" \
-            -H "x-token: $ADMIN_JWT_TOKEN" \
-            -F "file=@deploy.zip" \
-            -F "siteId=$RELEASE_SITE_ID" \
-            -F "env=test")
-          CODE=$(echo "$RESPONSE" | tail -1); BODY=$(echo "$RESPONSE" | head -n -1)
-          echo "upload HTTP $CODE: $BODY"
-          [ "$CODE" = "200" ] || { echo "❌ 上传失败"; exit 1; }
-          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
-            "$ADMIN_BACKEND_URL/fileUploadAndDownload/releaseFrontEnd" \
-            -H "x-token: $ADMIN_JWT_TOKEN" \
-            -H "Content-Type: application/json" \
-            -d "{\"siteId\":\"$RELEASE_SITE_ID\",\"env\":\"test\"}")
-          CODE=$(echo "$RESPONSE" | tail -1); BODY=$(echo "$RESPONSE" | head -n -1)
-          echo "release HTTP $CODE: $BODY"
-          [ "$CODE" = "200" ] || { echo "❌ 发版失败"; exit 1; }
+          ZIP="compsoccer-dist-$(date +%Y%m%d%H%M%S).zip"
+          cd dist && zip -qr "../$ZIP" . -x "*.DS_Store" && cd ..
+          echo "ZIP: $ZIP ($(du -m "$ZIP" | cut -f1)MB)"
+          node scripts/release_frontend.js --zip "$ZIP" --site_id "$RELEASE_SITE_ID" --env "$RELEASE_ENV"
           echo "✅ 全链路联调通过！"
