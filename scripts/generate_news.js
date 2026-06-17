@@ -26,7 +26,8 @@ const LEAGUE_ID     = process.env.WORLD_CUP_LEAGUE_ID || 1;
 const SEASON        = process.env.WORLD_CUP_SEASON || 2026;
 
 const MINIMAX_KEY   = process.env.MINIMAX_API_KEY;
-const MINIMAX_BASE  = process.env.MINIMAX_BASE || "https://api.minimaxi.chat";
+const MINIMAX_BASE  = process.env.MINIMAX_BASE || "https://api.minimax.io";
+const MINIMAX_MODEL = process.env.MINIMAX_MODEL || "MiniMax-M2.7";
 
 // 已生成文章的缓存（避免同一场比赛重复生成）
 const CACHE_FILE = path.join(__dirname, ".news_cache.json");
@@ -123,9 +124,9 @@ async function generateArticle(fixture) {
   console.log(`[Step2] 生成 ${type}: ${home} vs ${away} (ID:${fixtureId})`);
 
   const res = await minimaxClient.post(
-    `/v1/text/chatcompletion_v2`,
+    `/v1/chat/completions`,
     {
-      model: "MiniMax-Text-01",
+      model: MINIMAX_MODEL,
       messages: [
         {
           role: "system",

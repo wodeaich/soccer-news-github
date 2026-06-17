@@ -9,6 +9,7 @@ on:
         type: choice
         options:
           - auto
+          - rss
           - fixture
           - manual
         default: auto
@@ -108,6 +109,17 @@ jobs:
           MINIMAX_API_KEY:     ${{ secrets.MINIMAX_API_KEY }}
           MINIMAX_BASE:        ${{ secrets.MINIMAX_BASE }}
         run: node scripts/pipeline.js --auto
+
+      - name: Run pipeline (rss)
+        if: github.event.inputs.mode == 'rss'
+        env:
+          ADMIN_BACKEND_URL:   ${{ secrets.ADMIN_BACKEND_URL }}
+          ADMIN_JWT_TOKEN:     ${{ secrets.ADMIN_JWT_TOKEN }}
+          RELEASE_SITE_ID:     ${{ secrets.RELEASE_SITE_ID }}
+          BI_API_PREFIX:       ${{ secrets.BI_API_PREFIX }}
+          MINIMAX_API_KEY:     ${{ secrets.MINIMAX_API_KEY }}
+          MINIMAX_BASE:        ${{ secrets.MINIMAX_BASE }}
+        run: node scripts/pipeline.js --rss
 
       - name: Run pipeline (fixture)
         if: github.event.inputs.mode == 'fixture'

@@ -2,7 +2,8 @@
  * CompSoccer 文章生成全流程管道
  *
  * 三种模式：
- *   --auto              自动处理今日（及前后1天）赛事，跳过已生成
+ *   --auto              自动处理今日赛事 + RSS 多源新闻，跳过已生成
+ *   --rss               仅 RSS 多源抓取（Goal/BBC/ESPN）→ AI 改写
  *   --fixture <id>      指定单场赛事 fixture_id
  *   --manual            手动指定文章内容（配合 --title --content --type）
  *
@@ -10,6 +11,7 @@
  *
  * 用法示例：
  *   node scripts/pipeline.js --auto
+ *   node scripts/pipeline.js --rss
  *   node scripts/pipeline.js --fixture 1234567
  *   node scripts/pipeline.js --manual --title "World Cup 2026 Preview" --content "..." --type preview
  */
@@ -19,6 +21,7 @@ const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
 const { publishArticle: biPublish } = require("./lib/publish");
+const { fetchWorldCupNews } = require("./lib/rss");
 
 // 目标站点（后台「种草站」composoccer）
 const SITE_ID = process.env.RELEASE_SITE_ID || "composoccer";
@@ -31,7 +34,8 @@ const LEAGUE_ID     = process.env.WORLD_CUP_LEAGUE_ID || 1;
 const SEASON        = process.env.WORLD_CUP_SEASON || 2026;
 
 const MINIMAX_KEY   = process.env.MINIMAX_API_KEY;
-const MINIMAX_BASE  = process.env.MINIMAX_BASE || "https://api.minimaxi.chat";
+const MINIMAX_BASE  = process.env.MINIMAX_BASE || "https://api.minimax.io";
+const MINIMAX_MODEL = process.env.MINIMAX_MODEL || "MiniMax-M2.7";
 
 const CACHE_FILE    = path.join(__dirname, ".news_cache.json");
 
@@ -137,8 +141,8 @@ async function generateFromFixture(fixture) {
 
   console.log(`  [MiniMax] 生成 ${type}: ${home} vs ${away} (ID:${fixtureId})`);
 
-  const res = await minimax.post("/v1/text/chatcompletion_v2", {
-    model: "MiniMax-Text-01",
+  const res = await minimax.post("/v1/chat/completions", {
+    model: MINIMAX_MODEL,
     messages: [
       {
         role: "system",
@@ -199,6 +203,49 @@ function generateFromManual(args) {
   };
 }
 
+// ─── Step 2b: RSS 新闻 → MiniMax 改写 ───────────────────────────────────────
+async function generateFromRssItem(item) {
+  console.log(`  [MiniMax] 改写 RSS: "${item.title}" (${item.source})`);
+
+  const res = await minimax.post("/v1/chat/completions", {
+    model: MINIMAX_MODEL,
+    messages: [
+      {
+        role: "system",
+        content: `You are a professional football journalist for compsoccer.com. Rewrite the following news into an original 350-word article. Do NOT copy the source text verbatim — create fresh, engaging prose with your own structure and analysis. Format: clear English paragraphs, no markdown headers, no bullet points.`,
+      },
+      {
+        role: "user",
+        content: `Source: ${item.source}\nTitle: ${item.title}\nSummary: ${item.snippet}\n\nRewrite this as an original compsoccer.com article about World Cup 2026. Add context and analysis.`,
+      },
+    ],
+    max_tokens: 700,
+    temperature: 0.7,
+  });
+
+  const content = res.data?.choices?.[0]?.message?.content;
+  if (!content) throw new Error("MiniMax 返回空内容");
+
+  const summary = content.split(/[.。]/)[0].trim() + ".";
+  const slug = item.title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 80) + "-" + Date.now();
+
+  return {
+    fixture_id: null,
+    article_type: "news",
+    title: item.title,
+    content,
+    summary,
+    slug,
+    cover_image: "",
+    tags: ["world-cup-2026"],
+    lang: "en",
+  };
+}
+
 // ─── Step 3: 录入后台并绑定渠道上架（英文）──────────────────────────────────
 function publishArticle(article) {
   return biPublish(
@@ -218,8 +265,8 @@ function publishArticle(article) {
 
 // ─── Step 4: 翻译并上架多语言 ────────────────────────────────────────────────
 async function translateText(text, lang) {
-  const response = await minimax.post("/v1/text/chatcompletion_v2", {
-    model: "MiniMax-Text-01",
+  const response = await minimax.post("/v1/chat/completions", {
+    model: MINIMAX_MODEL,
     messages: [
       {
         role: "system",
@@ -282,6 +329,7 @@ async function run() {
   const args = process.argv.slice(2);
 
   const mode = args.includes("--auto") ? "auto"
+    : args.includes("--rss") ? "rss"
     : args.includes("--fixture") ? "fixture"
     : args.includes("--manual") ? "manual"
     : "auto";
@@ -310,6 +358,20 @@ async function run() {
       }
     }
 
+    console.log("\n【Step 1b】RSS 多源补充...");
+    const processedTitles = cache.rss_titles || [];
+    const rssItems = await fetchWorldCupNews({ skipTitles: processedTitles, maxPerFeed: 3 });
+    console.log(`RSS: ${rssItems.length} 篇世界杯新闻待处理`);
+    for (const item of rssItems) {
+      try {
+        const article = await generateFromRssItem(item);
+        articles.push({ article, fixtureId: null, rssTitle: item.title });
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      } catch (err) {
+        console.error(`  ❌ RSS 改写失败: ${err.message}`);
+      }
+    }
+
   } else if (mode === "fixture") {
     const fixtureIdx = args.indexOf("--fixture");
     const fixtureId = parseInt(args[fixtureIdx + 1]);
@@ -319,6 +381,22 @@ async function run() {
     const fixture = await fetchFixtureById(fixtureId);
     const article = await generateFromFixture(fixture);
     articles.push({ article, fixtureId });
+
+  } else if (mode === "rss") {
+    console.log("\n【Step 1】RSS 多源抓取...");
+    const processedTitles = cache.rss_titles || [];
+    const rssItems = await fetchWorldCupNews({ skipTitles: processedTitles });
+    console.log(`共 ${rssItems.length} 篇 RSS 新闻待处理`);
+
+    for (const item of rssItems) {
+      try {
+        const article = await generateFromRssItem(item);
+        articles.push({ article, fixtureId: null, rssTitle: item.title });
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      } catch (err) {
+        console.error(`  ❌ RSS 改写失败: ${err.message}`);
+      }
+    }
 
   } else if (mode === "manual") {
     console.log("\n【Step 1】手动文章模式");
@@ -334,7 +412,7 @@ async function run() {
   let successCount = 0;
   let translationCount = 0;
 
-  for (const { article, fixtureId } of articles) {
+  for (const { article, fixtureId, rssTitle } of articles) {
     try {
       console.log(`\n▶ 处理: "${article.title}"`);
 
@@ -347,6 +425,12 @@ async function run() {
 
       if (fixtureId) {
         cache.generated.push(fixtureId);
+        saveCache(cache);
+      }
+      if (rssTitle) {
+        if (!cache.rss_titles) cache.rss_titles = [];
+        cache.rss_titles.push(rssTitle);
+        if (cache.rss_titles.length > 500) cache.rss_titles = cache.rss_titles.slice(-300);
         saveCache(cache);
       }
       successCount++;

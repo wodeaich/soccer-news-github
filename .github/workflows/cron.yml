@@ -13,8 +13,11 @@ on:
     - cron: "0 1 * * *"
     - cron: "0 9 * * *"
     - cron: "0 17 * * *"
-    # UTC 06:00 AI 生成+翻译+录入后台上架（pipeline 一气呵成）
-    - cron: "0 6 * * *"
+    # UTC 00:30/06:30/12:30/18:30 AI 生成+翻译+录入后台上架（每6小时）
+    - cron: "30 0 * * *"
+    - cron: "30 6 * * *"
+    - cron: "30 12 * * *"
+    - cron: "30 18 * * *"
     # UTC 23:00 更新积分榜 (北京时间次日 07:00)
     - cron: "0 23 * * *"
   workflow_dispatch:
@@ -28,6 +31,7 @@ on:
           - fetch-results
           - fetch-standings
           - pipeline
+          - rss-only
           - all
 
 permissions:
@@ -87,7 +91,7 @@ jobs:
             case "$SCHEDULE" in
               "0 0 * * *")  JOBS="fetch-matches" ;;
               "0 1 * * *"|"0 9 * * *"|"0 17 * * *") JOBS="fetch-results" ;;
-              "0 6 * * *")  JOBS="pipeline" ;;
+              "30 0 * * *"|"30 6 * * *"|"30 12 * * *"|"30 18 * * *") JOBS="pipeline" ;;
               "0 23 * * *") JOBS="fetch-standings" ;;
             esac
           fi
@@ -106,10 +110,14 @@ jobs:
         if: contains(steps.plan.outputs.jobs, 'fetch-standings')
         run: node scripts/fetch_standings.js
 
-      # 一气呵成：AI 生成英文 → 录入后台上架 → 翻译5语言 → 各语言独立录入上架
+      # 一气呵成：赛事AI生成 + RSS多源 → 录入后台上架 → 翻译5语言 → 各语言独立录入上架
       - name: Generate, translate and publish articles to admin backend
         if: contains(steps.plan.outputs.jobs, 'pipeline')
         run: node scripts/pipeline.js --auto
+
+      - name: RSS-only article generation
+        if: contains(steps.plan.outputs.jobs, 'rss-only')
+        run: node scripts/pipeline.js --rss
 
       # 把 content/ 变更提交回仓库（带 rebase 重试，防止竞态）
       - name: Commit & push content changes
