@@ -29,10 +29,16 @@ function readJSON(file, fallback) {
 }
 
 // ─── 映射工具 ─────────────────────────────────────────────────────────────────
-/** 清理阶段名： "Group Stage - 1" → "Group Stage"；"Round of 16" 原样 */
+/** 阶段名 → 页面 tab key： "Group Stage - 1" → "group"；"Round of 16" → "r16" */
 function cleanStage(stage) {
   if (!stage) return "";
-  return String(stage).replace(/\s*-\s*\d+$/, "").trim();
+  const s = String(stage).replace(/\s*-\s*\d+$/, "").trim().toLowerCase();
+  if (s.includes("group")) return "group";
+  if (s.includes("round of 16") || s === "r16") return "r16";
+  if (s.includes("quarter")) return "quarter";
+  if (s.includes("semi")) return "semi";
+  if (s.includes("final")) return "final";
+  return s;
 }
 
 function statusOf(s) {
@@ -140,16 +146,15 @@ function getToday() {
 
 /** 单场比赛详情。回顾文章作为独立新闻存在，不再内嵌到比赛页。 */
 function getMatch(slug) {
-  const all = [
-    ...readJSON(path.join(MATCHES_DIR, "results.json"), { results: [] }).results || [],
-    ...readJSON(path.join(MATCHES_DIR, "schedule.json"), { fixtures: [] }).fixtures || [],
-  ];
+  const results = readJSON(path.join(MATCHES_DIR, "results.json"), { results: [] }).results || [];
+  const fixtures = readJSON(path.join(MATCHES_DIR, "schedule.json"), { fixtures: [] }).fixtures || [];
+  const all = [...results, ...fixtures];
   const raw = all.find((f) => f.slug === slug);
   if (!raw) return null;
   const match = mapMatch(raw);
   match.review = "";
   match.review_summary = "";
-  match.stats = match.stats || {}; // API-Football 统计数据后续可补
+  match.stats = raw.stats || {};
   return match;
 }
 
@@ -211,7 +216,11 @@ function listArticleSlugs() {
 
 function listMatchSlugs() {
   const results = readJSON(path.join(MATCHES_DIR, "results.json"), { results: [] }).results || [];
-  return results.map((r) => r.slug).filter(Boolean);
+  const fixtures = readJSON(path.join(MATCHES_DIR, "schedule.json"), { fixtures: [] }).fixtures || [];
+  const seen = new Set();
+  return [...results, ...fixtures]
+    .map((r) => r.slug)
+    .filter((s) => s && !seen.has(s) && seen.add(s));
 }
 
 /** 内容真实更新时间，供 sitemap lastmod / GEO 使用 */

@@ -1,0 +1,25 @@
+{
+  "list": [
+    { "id": "fox-us", "name": "Fox Sports", "region": "us", "logo": "", "free": false, "url": "", "note": "English broadcast — all matches" },
+    { "id": "telemundo", "name": "Telemundo", "region": "us", "logo": "", "free": false, "url": "", "note": "Spanish broadcast — all matches" },
+    { "id": "fifa-plus-us", "name": "FIFA+", "region": "us", "logo": "", "free": true, "url": "", "note": "Free streaming — select matches" },
+    { "id": "bbc", "name": "BBC One", "region": "uk", "logo": "", "free": true, "url": "", "note": "Free-to-air — selected matches" },
+    { "id": "itv", "name": "ITV", "region": "uk", "logo": "", "free": true, "url": "", "note": "Free-to-air — selected matches" },
+    { "id": "fifa-plus-uk", "name": "FIFA+", "region": "uk", "logo": "", "free": true, "url": "", "note": "Free streaming — select matches" },
+    { "id": "globo", "name": "TV Globo", "region": "br", "logo": "", "free": true, "url": "", "note": "Canal aberto — jogos selecionados" },
+    { "id": "sportv", "name": "SporTV", "region": "br", "logo": "", "free": false, "url": "", "note": "TV por assinatura — todos os jogos" },
+    { "id": "cazetv", "name": "CazéTV", "region": "br", "logo": "", "free": true, "url": "", "note": "YouTube — jogos selecionados" },
+    { "id": "televisa", "name": "Televisa", "region": "mx", "logo": "", "free": true, "url": "", "note": "TV abierta — partidos seleccionados" },
+    { "id": "sky-mx", "name": "Sky Sports MX", "region": "mx", "logo": "", "free": false, "url": "", "note": "Todos los partidos" },
+    { "id": "fifa-plus-mx", "name": "FIFA+", "region": "mx", "logo": "", "free": true, "url": "", "note": "Streaming gratuito — partidos seleccionados" },
+    { "id": "abema", "name": "ABEMA", "region": "jp", "logo": "", "free": true, "url": "", "note": "全試合無料配信" },
+    { "id": "nhk", "name": "NHK", "region": "jp", "logo": "", "free": true, "url": "", "note": "地上波 — 一部試合" },
+    { "id": "fuji", "name": "Fuji TV", "region": "jp", "logo": "", "free": true, "url": "", "note": "地上波 — 一部試合" },
+    { "id": "kbs", "name": "KBS", "region": "kr", "logo": "", "free": true, "url": "", "note": "지상파 — 일부 경기" },
+    { "id": "mbc", "name": "MBC", "region": "kr", "logo": "", "free": true, "url": "", "note": "지상파 — 일부 경기" },
+    { "id": "coupang", "name": "Coupang Play", "region": "kr", "logo": "", "free": false, "url": "", "note": "전 경기 스트리밍" },
+    { "id": "bein", "name": "beIN Sports", "region": "me", "logo": "", "free": false, "url": "", "note": "جميع المباريات — البث العربي" },
+    { "id": "ssc", "name": "SSC", "region": "me", "logo": "", "free": false, "url": "", "note": "المملكة العربية السعودية" },
+    { "id": "fifa-plus-me", "name": "FIFA+", "region": "me", "logo": "", "free": true, "url": "", "note": "بث مجاني لمباريات مختارة" }
+  ]
+}

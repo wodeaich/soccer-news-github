@@ -153,7 +153,7 @@ export default {
   .news-intro { font-size: vw(30); }
   ::v-deep .ad-box {
     width: 100vw;
-    margin-left: vw(-46);
+    margin-inline-start: vw(-46);
     margin-bottom: vw(48);
   }
 }

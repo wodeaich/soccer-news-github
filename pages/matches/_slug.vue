@@ -277,8 +277,8 @@ export default {
   font-size: 20px;
   color: $font1;
   margin: 32px 0 16px;
-  padding-left: 12px;
-  border-left: 4px solid $color1;
+  padding-inline-start: 12px;
+  border-inline-start: 4px solid $color1;
 }
 .stats-section { margin-bottom: 8px; }
 .stats-list { background: #fff; border-radius: 12px; padding: 20px 24px; }
@@ -306,7 +306,7 @@ export default {
 }
 .stat-bar-wrap { flex: 1; height: 6px; background: #f0f2f5; border-radius: 3px; overflow: hidden; }
 .stat-bar { height: 100%; border-radius: 3px; }
-.home-bar { background: $color1; margin-left: auto; }
+.home-bar { background: $color1; margin-inline-start: auto; }
 .away-bar { background: #41414c; }
 
 /* 评述 */

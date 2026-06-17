@@ -5,97 +5,127 @@
       "timestamp": 1781463600,
       "date": "2026-06-14T19:00:00.000Z",
       "venue": "AT&T Stadium",
-      "city": "",
+      "city": "Arlington",
       "status": "FT",
       "stage": "Group Stage - 1",
-      "home": {
-        "id": 106,
-        "name": "Portugal",
-        "logo": "https://media.api-sports.io/football/teams/POR.png"
-      },
-      "away": {
-        "id": 107,
-        "name": "Netherlands",
-        "logo": "https://media.api-sports.io/football/teams/NED.png"
-      },
-      "score": {
-        "home": 3,
-        "away": 1
-      },
-      "slug": "portugal-vs-netherlands-900003"
+      "home": { "id": 106, "name": "Portugal", "logo": "" },
+      "away": { "id": 107, "name": "Netherlands", "logo": "" },
+      "score": { "home": 3, "away": 1 },
+      "slug": "portugal-vs-netherlands-900003",
+      "stats": {
+        "possession_home": 58, "possession_away": 42,
+        "shots_home": 16, "shots_away": 9,
+        "corners_home": 7, "corners_away": 3,
+        "fouls_home": 11, "fouls_away": 14,
+        "yellow_home": 1, "yellow_away": 3,
+        "red_home": 0, "red_away": 0
+      }
     },
     {
       "id": 900002,
       "timestamp": 1781377200,
       "date": "2026-06-13T19:00:00.000Z",
       "venue": "Estadio Azteca",
-      "city": "",
+      "city": "Mexico City",
       "status": "FT",
       "stage": "Group Stage - 1",
-      "home": {
-        "id": 104,
-        "name": "Spain",
-        "logo": "https://media.api-sports.io/football/teams/ESP.png"
-      },
-      "away": {
-        "id": 105,
-        "name": "Germany",
-        "logo": "https://media.api-sports.io/football/teams/GER.png"
-      },
-      "score": {
-        "home": 2,
-        "away": 0
-      },
-      "slug": "spain-vs-germany-900002"
+      "home": { "id": 104, "name": "Spain", "logo": "" },
+      "away": { "id": 105, "name": "Germany", "logo": "" },
+      "score": { "home": 2, "away": 0 },
+      "slug": "spain-vs-germany-900002",
+      "stats": {
+        "possession_home": 66, "possession_away": 34,
+        "shots_home": 14, "shots_away": 6,
+        "corners_home": 8, "corners_away": 2,
+        "fouls_home": 9, "fouls_away": 12,
+        "yellow_home": 0, "yellow_away": 2,
+        "red_home": 0, "red_away": 0
+      }
     },
     {
       "id": 900001,
       "timestamp": 1781290800,
       "date": "2026-06-12T19:00:00.000Z",
       "venue": "SoFi Stadium",
-      "city": "",
+      "city": "Los Angeles",
       "status": "FT",
       "stage": "Group Stage - 1",
-      "home": {
-        "id": 102,
-        "name": "France",
-        "logo": "https://media.api-sports.io/football/teams/FRA.png"
-      },
-      "away": {
-        "id": 103,
-        "name": "England",
-        "logo": "https://media.api-sports.io/football/teams/ENG.png"
-      },
-      "score": {
-        "home": 1,
-        "away": 2
-      },
-      "slug": "france-vs-england-900001"
+      "home": { "id": 102, "name": "France", "logo": "" },
+      "away": { "id": 103, "name": "England", "logo": "" },
+      "score": { "home": 1, "away": 2 },
+      "slug": "france-vs-england-900001",
+      "stats": {
+        "possession_home": 53, "possession_away": 47,
+        "shots_home": 13, "shots_away": 11,
+        "corners_home": 5, "corners_away": 6,
+        "fouls_home": 13, "fouls_away": 10,
+        "yellow_home": 2, "yellow_away": 1,
+        "red_home": 0, "red_away": 0
+      }
     },
     {
       "id": 900000,
       "timestamp": 1781204400,
       "date": "2026-06-11T19:00:00.000Z",
       "venue": "MetLife Stadium",
-      "city": "",
+      "city": "New Jersey",
       "status": "FT",
       "stage": "Group Stage - 1",
-      "home": {
-        "id": 100,
-        "name": "Brazil",
-        "logo": "https://media.api-sports.io/football/teams/BRA.png"
-      },
-      "away": {
-        "id": 101,
-        "name": "Argentina",
-        "logo": "https://media.api-sports.io/football/teams/ARG.png"
-      },
-      "score": {
-        "home": 0,
-        "away": 1
-      },
-      "slug": "brazil-vs-argentina-900000"
+      "home": { "id": 100, "name": "Brazil", "logo": "" },
+      "away": { "id": 101, "name": "Argentina", "logo": "" },
+      "score": { "home": 1, "away": 2 },
+      "slug": "brazil-vs-argentina-900000",
+      "stats": {
+        "possession_home": 58, "possession_away": 42,
+        "shots_home": 14, "shots_away": 9,
+        "corners_home": 6, "corners_away": 4,
+        "fouls_home": 12, "fouls_away": 15,
+        "yellow_home": 2, "yellow_away": 3,
+        "red_home": 0, "red_away": 0
+      }
+    },
+    {
+      "id": 900010,
+      "timestamp": 1781636400,
+      "date": "2026-06-16T19:00:00.000Z",
+      "venue": "MetLife Stadium",
+      "city": "New Jersey",
+      "status": "FT",
+      "stage": "Group Stage - 2",
+      "home": { "id": 101, "name": "Argentina", "logo": "" },
+      "away": { "id": 102, "name": "France", "logo": "" },
+      "score": { "home": 3, "away": 1 },
+      "slug": "argentina-vs-france-900010",
+      "stats": {
+        "possession_home": 45, "possession_away": 55,
+        "shots_home": 11, "shots_away": 15,
+        "corners_home": 3, "corners_away": 7,
+        "fouls_home": 14, "fouls_away": 11,
+        "yellow_home": 2, "yellow_away": 2,
+        "red_home": 0, "red_away": 0
+      }
+    },
+    {
+      "id": 900011,
+      "timestamp": 1781722800,
+      "date": "2026-06-17T19:00:00.000Z",
+      "venue": "SoFi Stadium",
+      "city": "Los Angeles",
+      "status": "FT",
+      "stage": "Group Stage - 2",
+      "home": { "id": 105, "name": "Germany", "logo": "" },
+      "away": { "id": 106, "name": "Portugal", "logo": "" },
+      "score": { "home": 2, "away": 2 },
+      "slug": "germany-vs-portugal-900011",
+      "stats": {
+        "possession_home": 51, "possession_away": 49,
+        "shots_home": 12, "shots_away": 13,
+        "corners_home": 5, "corners_away": 6,
+        "fouls_home": 10, "fouls_away": 13,
+        "yellow_home": 3, "yellow_away": 2,
+        "red_home": 0, "red_away": 0
+      }
     }
   ],
-  "updated_at": "2026-06-12T07:30:49.189Z"
+  "updated_at": "2026-06-17T12:00:00.000Z"
 }

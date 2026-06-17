@@ -342,7 +342,7 @@ export default {
   font-family: "rssb";
   font-size: 13px;
   color: $color1;
-  margin-left: 8px;
+  margin-inline-start: 8px;
 }
 
 /* 地区 Tab */

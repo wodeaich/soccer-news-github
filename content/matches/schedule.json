@@ -5,23 +5,12 @@
       "timestamp": 1781204400,
       "date": "2026-06-11T19:00:00.000Z",
       "venue": "MetLife Stadium",
-      "city": "",
-      "status": "NS",
+      "city": "New Jersey",
+      "status": "FT",
       "stage": "Group Stage - 1",
-      "home": {
-        "id": 100,
-        "name": "Brazil",
-        "logo": "https://media.api-sports.io/football/teams/BRA.png"
-      },
-      "away": {
-        "id": 101,
-        "name": "Argentina",
-        "logo": "https://media.api-sports.io/football/teams/ARG.png"
-      },
-      "score": {
-        "home": null,
-        "away": null
-      },
+      "home": { "id": 100, "name": "Brazil", "logo": "" },
+      "away": { "id": 101, "name": "Argentina", "logo": "" },
+      "score": { "home": 1, "away": 2 },
       "slug": "brazil-vs-argentina-900000"
     },
     {
@@ -29,23 +18,12 @@
       "timestamp": 1781290800,
       "date": "2026-06-12T19:00:00.000Z",
       "venue": "SoFi Stadium",
-      "city": "",
-      "status": "NS",
+      "city": "Los Angeles",
+      "status": "FT",
       "stage": "Group Stage - 1",
-      "home": {
-        "id": 102,
-        "name": "France",
-        "logo": "https://media.api-sports.io/football/teams/FRA.png"
-      },
-      "away": {
-        "id": 103,
-        "name": "England",
-        "logo": "https://media.api-sports.io/football/teams/ENG.png"
-      },
-      "score": {
-        "home": null,
-        "away": null
-      },
+      "home": { "id": 102, "name": "France", "logo": "" },
+      "away": { "id": 103, "name": "England", "logo": "" },
+      "score": { "home": 1, "away": 2 },
       "slug": "france-vs-england-900001"
     },
     {
@@ -53,23 +31,12 @@
       "timestamp": 1781377200,
       "date": "2026-06-13T19:00:00.000Z",
       "venue": "Estadio Azteca",
-      "city": "",
-      "status": "NS",
+      "city": "Mexico City",
+      "status": "FT",
       "stage": "Group Stage - 1",
-      "home": {
-        "id": 104,
-        "name": "Spain",
-        "logo": "https://media.api-sports.io/football/teams/ESP.png"
-      },
-      "away": {
-        "id": 105,
-        "name": "Germany",
-        "logo": "https://media.api-sports.io/football/teams/GER.png"
-      },
-      "score": {
-        "home": null,
-        "away": null
-      },
+      "home": { "id": 104, "name": "Spain", "logo": "" },
+      "away": { "id": 105, "name": "Germany", "logo": "" },
+      "score": { "home": 2, "away": 0 },
       "slug": "spain-vs-germany-900002"
     },
     {
@@ -77,122 +44,158 @@
       "timestamp": 1781463600,
       "date": "2026-06-14T19:00:00.000Z",
       "venue": "AT&T Stadium",
-      "city": "",
-      "status": "NS",
+      "city": "Arlington",
+      "status": "FT",
       "stage": "Group Stage - 1",
-      "home": {
-        "id": 106,
-        "name": "Portugal",
-        "logo": "https://media.api-sports.io/football/teams/POR.png"
-      },
-      "away": {
-        "id": 107,
-        "name": "Netherlands",
-        "logo": "https://media.api-sports.io/football/teams/NED.png"
-      },
-      "score": {
-        "home": null,
-        "away": null
-      },
+      "home": { "id": 106, "name": "Portugal", "logo": "" },
+      "away": { "id": 107, "name": "Netherlands", "logo": "" },
+      "score": { "home": 3, "away": 1 },
       "slug": "portugal-vs-netherlands-900003"
     },
     {
-      "id": 900004,
-      "timestamp": 1781550000,
-      "date": "2026-06-15T19:00:00.000Z",
+      "id": 900010,
+      "timestamp": 1781636400,
+      "date": "2026-06-16T19:00:00.000Z",
       "venue": "MetLife Stadium",
-      "city": "",
+      "city": "New Jersey",
+      "status": "FT",
+      "stage": "Group Stage - 2",
+      "home": { "id": 101, "name": "Argentina", "logo": "" },
+      "away": { "id": 102, "name": "France", "logo": "" },
+      "score": { "home": 3, "away": 1 },
+      "slug": "argentina-vs-france-900010"
+    },
+    {
+      "id": 900011,
+      "timestamp": 1781722800,
+      "date": "2026-06-17T19:00:00.000Z",
+      "venue": "SoFi Stadium",
+      "city": "Los Angeles",
+      "status": "FT",
+      "stage": "Group Stage - 2",
+      "home": { "id": 105, "name": "Germany", "logo": "" },
+      "away": { "id": 106, "name": "Portugal", "logo": "" },
+      "score": { "home": 2, "away": 2 },
+      "slug": "germany-vs-portugal-900011"
+    },
+    {
+      "id": 900020,
+      "timestamp": 1781895600,
+      "date": "2026-06-19T19:00:00.000Z",
+      "venue": "MetLife Stadium",
+      "city": "New Jersey",
+      "status": "NS",
+      "stage": "Group Stage - 3",
+      "home": { "id": 100, "name": "Brazil", "logo": "" },
+      "away": { "id": 103, "name": "England", "logo": "" },
+      "score": { "home": null, "away": null },
+      "slug": "brazil-vs-england-900020"
+    },
+    {
+      "id": 900021,
+      "timestamp": 1781982000,
+      "date": "2026-06-20T19:00:00.000Z",
+      "venue": "Estadio Azteca",
+      "city": "Mexico City",
+      "status": "NS",
+      "stage": "Group Stage - 3",
+      "home": { "id": 104, "name": "Spain", "logo": "" },
+      "away": { "id": 107, "name": "Netherlands", "logo": "" },
+      "score": { "home": null, "away": null },
+      "slug": "spain-vs-netherlands-900021"
+    },
+    {
+      "id": 900004,
+      "timestamp": 1782241200,
+      "date": "2026-06-23T19:00:00.000Z",
+      "venue": "MetLife Stadium",
+      "city": "New Jersey",
       "status": "NS",
       "stage": "Round of 16",
-      "home": {
-        "id": 108,
-        "name": "USA",
-        "logo": "https://media.api-sports.io/football/teams/USA.png"
-      },
-      "away": {
-        "id": 109,
-        "name": "Mexico",
-        "logo": "https://media.api-sports.io/football/teams/MEX.png"
-      },
-      "score": {
-        "home": null,
-        "away": null
-      },
+      "home": { "id": 108, "name": "USA", "logo": "" },
+      "away": { "id": 109, "name": "Mexico", "logo": "" },
+      "score": { "home": null, "away": null },
       "slug": "usa-vs-mexico-900004"
     },
     {
       "id": 900005,
-      "timestamp": 1781636400,
-      "date": "2026-06-16T19:00:00.000Z",
+      "timestamp": 1782327600,
+      "date": "2026-06-24T19:00:00.000Z",
       "venue": "SoFi Stadium",
-      "city": "",
+      "city": "Los Angeles",
       "status": "NS",
       "stage": "Round of 16",
-      "home": {
-        "id": 110,
-        "name": "Japan",
-        "logo": "https://media.api-sports.io/football/teams/JPN.png"
-      },
-      "away": {
-        "id": 111,
-        "name": "Korea",
-        "logo": "https://media.api-sports.io/football/teams/KOR.png"
-      },
-      "score": {
-        "home": null,
-        "away": null
-      },
+      "home": { "id": 110, "name": "Japan", "logo": "" },
+      "away": { "id": 111, "name": "Korea", "logo": "" },
+      "score": { "home": null, "away": null },
       "slug": "japan-vs-korea-900005"
     },
     {
       "id": 900006,
-      "timestamp": 1781722800,
-      "date": "2026-06-17T19:00:00.000Z",
+      "timestamp": 1782500400,
+      "date": "2026-06-26T19:00:00.000Z",
       "venue": "Estadio Azteca",
-      "city": "",
+      "city": "Mexico City",
       "status": "NS",
       "stage": "Quarter-finals",
-      "home": {
-        "id": 112,
-        "name": "Croatia",
-        "logo": "https://media.api-sports.io/football/teams/CRO.png"
-      },
-      "away": {
-        "id": 113,
-        "name": "Morocco",
-        "logo": "https://media.api-sports.io/football/teams/MAR.png"
-      },
-      "score": {
-        "home": null,
-        "away": null
-      },
+      "home": { "id": 112, "name": "Croatia", "logo": "" },
+      "away": { "id": 113, "name": "Morocco", "logo": "" },
+      "score": { "home": null, "away": null },
       "slug": "croatia-vs-morocco-900006"
     },
     {
       "id": 900007,
-      "timestamp": 1781809200,
-      "date": "2026-06-18T19:00:00.000Z",
+      "timestamp": 1782586800,
+      "date": "2026-06-27T19:00:00.000Z",
       "venue": "AT&T Stadium",
-      "city": "",
+      "city": "Arlington",
       "status": "NS",
       "stage": "Quarter-finals",
-      "home": {
-        "id": 114,
-        "name": "Belgium",
-        "logo": "https://media.api-sports.io/football/teams/BEL.png"
-      },
-      "away": {
-        "id": 115,
-        "name": "Uruguay",
-        "logo": "https://media.api-sports.io/football/teams/URU.png"
-      },
-      "score": {
-        "home": null,
-        "away": null
-      },
+      "home": { "id": 114, "name": "Belgium", "logo": "" },
+      "away": { "id": 115, "name": "Uruguay", "logo": "" },
+      "score": { "home": null, "away": null },
       "slug": "belgium-vs-uruguay-900007"
+    },
+    {
+      "id": 900030,
+      "timestamp": 1782846000,
+      "date": "2026-06-30T19:00:00.000Z",
+      "venue": "MetLife Stadium",
+      "city": "New Jersey",
+      "status": "NS",
+      "stage": "Semi-finals",
+      "home": { "id": null, "name": "QF Winner 1", "logo": "" },
+      "away": { "id": null, "name": "QF Winner 2", "logo": "" },
+      "score": { "home": null, "away": null },
+      "slug": "semi-final-1-900030"
+    },
+    {
+      "id": 900031,
+      "timestamp": 1782932400,
+      "date": "2026-07-01T19:00:00.000Z",
+      "venue": "SoFi Stadium",
+      "city": "Los Angeles",
+      "status": "NS",
+      "stage": "Semi-finals",
+      "home": { "id": null, "name": "QF Winner 3", "logo": "" },
+      "away": { "id": null, "name": "QF Winner 4", "logo": "" },
+      "score": { "home": null, "away": null },
+      "slug": "semi-final-2-900031"
+    },
+    {
+      "id": 900040,
+      "timestamp": 1783278000,
+      "date": "2026-07-05T19:00:00.000Z",
+      "venue": "MetLife Stadium",
+      "city": "New Jersey",
+      "status": "NS",
+      "stage": "Final",
+      "home": { "id": null, "name": "SF Winner 1", "logo": "" },
+      "away": { "id": null, "name": "SF Winner 2", "logo": "" },
+      "score": { "home": null, "away": null },
+      "slug": "final-900040"
     }
   ],
   "by_date": {},
-  "updated_at": "2026-06-12T07:30:49.188Z"
+  "updated_at": "2026-06-17T12:00:00.000Z"
 }

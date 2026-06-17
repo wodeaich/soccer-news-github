@@ -266,7 +266,7 @@ export default {
   display: flex;
   gap: 20px;
   margin-top: 10px;
-  padding-left: 4px;
+  padding-inline-start: 4px;
 }
 .legend-item {
   font-size: 12px;
