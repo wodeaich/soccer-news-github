@@ -194,7 +194,9 @@ export default {
   padding: 0 24px 48px;
 }
 
-.section { margin-top: 40px; }
+.section { margin-top: 64px; }
+// 精选区与首个内容区之间留更大间距
+.section-featured + .section { margin-top: 72px; }
 
 .section-header {
   display: flex;
@@ -410,7 +412,7 @@ td.col-team {
 
 @media screen and (max-width: 750px) {
   .container { padding: 0 vw(46) vw(80); }
-  .section { margin-top: vw(48); }
+  .section { margin-top: vw(72); }
   .section-title { font-size: vw(36); }
   .view-all { font-size: vw(24); }
 
