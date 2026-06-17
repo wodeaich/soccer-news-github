@@ -212,10 +212,17 @@ export default {
 }
 .view-all {
   font-family: "rssb";
-  font-size: 13px;
+  font-size: 15px;
   color: $color1;
   white-space: nowrap;
-  &:hover { text-decoration: underline; }
+  padding: 5px 14px;
+  border: 1.5px solid $color1;
+  border-radius: 20px;
+  transition: background 0.2s, color 0.2s;
+  &:hover {
+    background: $color1;
+    color: #fff;
+  }
 }
 
 // 精选新闻

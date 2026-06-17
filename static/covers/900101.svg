@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#003087;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#1a237e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#b71c1c;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="pitch" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#2d7a2d;stop-opacity:0.5" />
+      <stop offset="100%" style="stop-color:#1a5c1a;stop-opacity:0.5" />
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bg)"/>
+  <rect width="1280" height="720" fill="url(#pitch)"/>
+  <!-- Pitch lines -->
+  <rect x="120" y="80" width="1040" height="560" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="3"/>
+  <line x1="640" y1="80" x2="640" y2="640" stroke="rgba(255,255,255,0.15)" stroke-width="3"/>
+  <circle cx="640" cy="360" r="100" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="3"/>
+  <circle cx="640" cy="360" r="8" fill="rgba(255,255,255,0.25)"/>
+  <rect x="120" y="220" width="180" height="240" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="3"/>
+  <rect x="980" y="220" width="180" height="240" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="3"/>
+  <!-- France flag strip -->
+  <rect x="0" y="0" width="8" height="720" fill="#002395"/>
+  <rect x="8" y="0" width="8" height="720" fill="#fff"/>
+  <rect x="16" y="0" width="8" height="720" fill="#ED2939"/>
+  <!-- England flag strip -->
+  <rect x="1256" y="0" width="24" height="720" fill="#fff"/>
+  <line x1="1256" y1="0" x2="1280" y2="0" stroke="#CF142B" stroke-width="8"/>
+  <rect x="1264" y="0" width="8" height="720" fill="#CF142B"/>
+  <rect x="1256" y="356" width="24" height="8" fill="#CF142B"/>
+  <!-- Preview badge -->
+  <rect x="540" y="180" width="200" height="36" rx="18" fill="#ff6600"/>
+  <text x="640" y="204" font-family="Arial Black,Arial" font-weight="900" font-size="18" fill="#fff" text-anchor="middle">MATCH PREVIEW</text>
+  <!-- Score area -->
+  <rect x="480" y="250" width="320" height="160" rx="16" fill="rgba(0,0,0,0.55)"/>
+  <text x="490" y="325" font-family="Arial Black,Arial" font-weight="900" font-size="22" fill="rgba(255,255,255,0.85)" text-anchor="start">FRA</text>
+  <text x="640" y="345" font-family="Arial Black,Arial" font-weight="900" font-size="56" fill="#ffffff" text-anchor="middle">vs</text>
+  <text x="790" y="325" font-family="Arial Black,Arial" font-weight="900" font-size="22" fill="rgba(255,255,255,0.85)" text-anchor="end">ENG</text>
+  <text x="640" y="385" font-family="Arial,sans-serif" font-size="15" fill="rgba(255,255,255,0.6)" text-anchor="middle">GROUP STAGE · FIFA WORLD CUP 2026</text>
+  <!-- Bottom gradient -->
+  <defs>
+    <linearGradient id="btm" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#000;stop-opacity:0" />
+      <stop offset="100%" style="stop-color:#000;stop-opacity:0.72" />
+    </linearGradient>
+  </defs>
+  <rect x="0" y="480" width="1280" height="240" fill="url(#btm)"/>
+  <text x="64" y="618" font-family="Arial Black,Arial" font-weight="900" font-size="38" fill="#ffffff">France vs England: tactical preview</text>
+  <text x="64" y="658" font-family="Arial,sans-serif" font-size="22" fill="rgba(255,255,255,0.65)">Jun 12, 2026 · CompSoccer</text>
+</svg>

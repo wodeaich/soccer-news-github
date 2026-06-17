@@ -43,23 +43,24 @@ export default {
   bottom: 0;
   left: 0;
   width: 100%;
-  padding: 16px;
-  background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.7) 100%);
+  padding: 48px 24px 20px;
+  background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.45) 55%, transparent 100%);
+  box-sizing: border-box;
 }
 .title {
   font-family: "rssb";
   font-size: 20px;
-  line-height: 28px;
+  line-height: 30px;
   color: #fff;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  margin-bottom: 6px;
 }
 .date {
   font-size: 12px;
   color: rgba(255,255,255,0.7);
-  margin-top: 4px;
   display: block;
 }
 @media screen and (max-width: 750px) {
