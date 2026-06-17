@@ -147,7 +147,6 @@ export default {
 .news-list {
   display: flex;
   flex-direction: column;
-  gap: 20px;
 }
 
 .ad-block { margin: 32px 0; }

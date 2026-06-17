@@ -91,6 +91,7 @@ function mapArticleMenuItem(a) {
     path: a.slug,
     published_at: toEpochSec(a.published_at),
     first_paragraph: a.summary || "",
+    article_type: a.article_type || "news",
   };
 }
 

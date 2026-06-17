@@ -85,7 +85,8 @@ export default {
 .featured-side-item { flex: 1; min-height: 0; }
 
 .section { margin-top: 8px; }
-.news-list { display: flex; flex-direction: column; gap: 20px; }
+// gap 改为 0：分隔线和内边距由 NewsCardRow 自身管理
+.news-list { display: flex; flex-direction: column; }
 .ad-block { margin: 24px 0; }
 .ad-inline { margin: 12px 0; }
 
