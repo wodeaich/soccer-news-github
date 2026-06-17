@@ -57,6 +57,7 @@ export default {
         pt: "Termos de Serviço", // 葡萄牙语
         es: "Términos de Servicio", // 西班牙语
         fr: "Conditions d'utilisation", // 法语
+        ar: "شروط الخدمة", // 阿拉伯语
         th: "ข้อกำหนดการให้บริการ", // 泰语
         id: "Ketentuan Layanan" // 印度尼西亚语
       },
@@ -69,6 +70,7 @@ export default {
         pt: "Política de Privacidade", // 葡萄牙语
         es: "Política de Privacidad", // 西班牙语
         fr: "Politique de Confidentialité", // 法语
+        ar: "سياسة الخصوصية", // 阿拉伯语
         th: "นโยบายความเป็นส่วนตัว", // 泰语
         id: "Kebijakan Privasi" // 印度尼西亚语
       },
@@ -81,6 +83,7 @@ export default {
         pt: "Política de Cookies", // 葡萄牙语
         es: "Política de Cookies", // 西班牙语
         fr: "Politique de Cookies", // 法语
+        ar: "سياسة ملفات تعريف الارتباط", // 阿拉伯语
         th: "นโยบายคุกกี้", // 泰语
         id: "Kebijakan Cookie" // 印度尼西亚语
       },
@@ -93,6 +96,7 @@ export default {
         pt: "Contato", // 葡萄牙语
         es: "Contacto", // 西班牙语
         fr: "Contact", // 法语
+        ar: "اتصل بنا", // 阿拉伯语
         th: "ติดต่อ", // 泰语
         id: "Kontak" // 印度尼西亚语
       },
@@ -105,6 +109,7 @@ export default {
         pt: "Direitos Autorais", // 葡萄牙语
         es: "Derechos de Autor", // 西班牙语
         fr: "Droits d'Auteur", // 法语
+        ar: "حقوق النشر", // 阿拉伯语
         th: "ลิขสิทธิ์", // 泰语
         id: "Hak Cipta" // 印度尼西亚语
       },
@@ -117,6 +122,7 @@ export default {
         pt: "Todos os direitos reservados", // 葡萄牙语
         es: "Todos los derechos reservados", // 西班牙语
         fr: "Tous droits réservés", // 法语
+        ar: "جميع الحقوق محفوظة", // 阿拉伯语
         th: "สงวนลิขสิทธิ์", // 泰语
         id: "Semua hak dilindungi" // 印度尼西亚语
       }
