@@ -39,6 +39,11 @@ function statusOf(s) {
   return /FT|AET|PEN/.test(s || "") ? "finished" : "scheduled";
 }
 
+/** 外部队徽 URL → 本地 SVG 徽章路径（api-sports.io 403，改用本地生成的 SVG） */
+function localTeamLogo(teamId) {
+  return teamId ? `/team-logos/${teamId}.svg` : "";
+}
+
 /** 原始 fixture → 页面比赛结构 */
 function mapMatch(f) {
   if (!f) return null;
@@ -48,11 +53,11 @@ function mapMatch(f) {
     stage: cleanStage(f.stage),
     home_team: f.home && f.home.name,
     away_team: f.away && f.away.name,
-    home_flag: f.home && f.home.logo,
-    away_flag: f.away && f.away.logo,
+    home_flag: localTeamLogo(f.home && f.home.id),
+    away_flag: localTeamLogo(f.away && f.away.id),
     home_score: f.score ? f.score.home : null,
     away_score: f.score ? f.score.away : null,
-    kickoff: f.timestamp, // API-Football timestamp 已是秒级
+    kickoff: f.timestamp,
     venue: f.venue || "",
     status: statusOf(f.status),
   };
@@ -62,8 +67,9 @@ function mapStandingGroup(g) {
   return {
     name: g.name,
     table: (g.table || []).map((t) => ({
-      team: t.team && t.team.name,
-      flag: t.team && t.team.logo,
+      team: t.team
+        ? { name: t.team.name, logo: localTeamLogo(t.team.id) }
+        : null,
       played: t.played,
       won: t.won,
       drawn: t.drawn,
@@ -72,6 +78,7 @@ function mapStandingGroup(g) {
       goals_against: t.goals_against,
       goal_diff: t.goal_diff,
       points: t.points,
+      rank: t.rank,
     })),
   };
 }

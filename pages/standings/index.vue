@@ -60,10 +60,15 @@
                   :key="team.team"
                   :class="{ qualify: i < 2, danger: i >= currentGroup.table.length - 1 }"
                 >
-                  <td class="col-rank">{{ i + 1 }}</td>
+                  <td class="col-rank">{{ team.rank || i + 1 }}</td>
                   <td class="col-team">
-                    <img v-if="team.flag" :src="team.flag" :alt="team.team" class="team-flag" />
-                    <span class="team-name">{{ team.team }}</span>
+                    <img
+                      v-if="team.team && team.team.logo"
+                      :src="team.team.logo"
+                      :alt="team.team.name"
+                      class="team-flag"
+                    />
+                    <span class="team-name">{{ team.team && team.team.name }}</span>
                   </td>
                   <td>{{ team.played }}</td>
                   <td>{{ team.won }}</td>
