@@ -277,7 +277,8 @@ export default {
   width: 28px;
   height: 20px;
   object-fit: cover;
-  border-radius: 2px;
+  border-radius: 3px;
+  border: 1px solid rgba($font1, 0.08);
   flex-shrink: 0;
 }
 .team-name {
@@ -380,11 +381,13 @@ td.col-team {
   white-space: nowrap;
 }
 .team-logo {
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
+  width: 22px;
+  height: 16px;
+  object-fit: cover;
+  border-radius: 2px;
+  border: 1px solid rgba($font1, 0.08);
   vertical-align: middle;
-  margin-right: 4px;
+  margin-right: 6px;
 }
 .col-pts {
   font-family: "rssb";
