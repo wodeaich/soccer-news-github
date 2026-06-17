@@ -1,28 +1,8 @@
 <template>
   <header class="header">
-    <!-- 第一行：LOGO + 语言切换 -->
-    <div class="header-top">
-      <Afs-CustomLink to="/" class="logo">CompSoccer</Afs-CustomLink>
+    <Afs-CustomLink to="/" class="logo">CompSoccer</Afs-CustomLink>
 
-      <!-- 语言切换器：点击展开，再次点击语言即切换 -->
-      <div ref="langSwitcher" class="lang-switcher" :class="{ open: langOpen }">
-        <span class="lang-current" @click.stop="toggleLang">
-          {{ currentLocaleName }}
-          <i class="caret"></i>
-        </span>
-        <ul v-show="langOpen" class="lang-dropdown">
-          <li
-            v-for="locale in availableLocales"
-            :key="locale.code"
-            :class="{ active: locale.code === $i18n.locale }"
-          >
-            <span @click="switchLang(locale.code)">{{ locale.name }}</span>
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- 第二行：导航菜单（完整展示，不截断） -->
+    <!-- 导航菜单：PC 端与 LOGO 同行（LOGO 右侧），移动端换至第二行 -->
     <nav class="nav-menu">
       <nuxt-link :to="localePath('/news/')" class="nav-item">{{ $t('nav.news') }}</nuxt-link>
       <nuxt-link :to="localePath('/schedule/')" class="nav-item">{{ $t('nav.schedule') }}</nuxt-link>
@@ -30,6 +10,23 @@
       <nuxt-link :to="localePath('/standings/')" class="nav-item">{{ $t('nav.standings') }}</nuxt-link>
       <nuxt-link :to="localePath('/live-tv/')" class="nav-item">{{ $t('nav.liveTV') }}</nuxt-link>
     </nav>
+
+    <!-- 语言切换器：点击展开，再次点击语言即切换 -->
+    <div ref="langSwitcher" class="lang-switcher" :class="{ open: langOpen }">
+      <span class="lang-current" @click.stop="toggleLang">
+        {{ currentLocaleName }}
+        <i class="caret"></i>
+      </span>
+      <ul v-show="langOpen" class="lang-dropdown">
+        <li
+          v-for="locale in availableLocales"
+          :key="locale.code"
+          :class="{ active: locale.code === $i18n.locale }"
+        >
+          <span @click="switchLang(locale.code)">{{ locale.name }}</span>
+        </li>
+      </ul>
+    </div>
   </header>
 </template>
 
@@ -82,15 +79,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// 两行布局：第一行 LOGO + 语言，第二行完整导航
+// PC 端：LOGO + 导航 + 语言 同一行；移动端：导航换行至第二行
 .header {
   position: relative;
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto 24px;
-  padding: 0 24px;
+  padding: 14px 24px;
   box-sizing: border-box;
   // 底部阴影延伸到全宽（视觉分隔线）
   &::after {
@@ -106,14 +104,6 @@ export default {
   }
 }
 
-// 第一行
-.header-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 52px;
-}
-
 .logo {
   font-family: "rssb";
   font-size: 22px;
@@ -123,13 +113,12 @@ export default {
   letter-spacing: 0.5px;
 }
 
-// 第二行：导航
+// 导航：PC 端紧跟 LOGO 右侧
 .nav-menu {
   display: flex;
   align-items: center;
   gap: 32px;
-  height: 40px;
-  border-top: 1px solid rgba($color1, 0.15);
+  margin-left: 48px;
 }
 
 .nav-item {
@@ -147,6 +136,7 @@ export default {
 .lang-switcher {
   position: relative;
   flex-shrink: 0;
+  margin-left: auto;
   cursor: pointer;
   z-index: 10;
 }
@@ -208,20 +198,30 @@ export default {
   }
 }
 
-// 移动端
+// 移动端：恢复两行布局（第一行 LOGO + 语言，第二行导航）
 @media screen and (max-width: 750px) {
   .header {
     max-width: 100vw;
     margin-bottom: vw(24);
-    padding: 0 vw(24);
-  }
-  .header-top {
-    height: vw(80);
+    padding: vw(16) vw(24);
   }
   .logo {
     font-size: vw(36);
+    line-height: vw(48);
   }
+  // 语言切换排在第一行右侧
+  .lang-switcher {
+    order: 2;
+  }
+  // 导航换行至第二行，占满整行
   .nav-menu {
+    order: 3;
+    flex-basis: 100%;
+    width: 100%;
+    margin-left: 0;
+    margin-top: vw(16);
+    padding-top: vw(16);
+    border-top: 1px solid rgba($color1, 0.15);
     height: vw(60);
     gap: vw(36);
     overflow-x: auto;
