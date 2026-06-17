@@ -196,7 +196,7 @@ export default {
 
 .section { margin-top: 64px; }
 // 精选区与首个内容区之间留更大间距
-.section-featured + .section { margin-top: 72px; }
+.section-featured + .section { margin-top: 96px; }
 
 .section-header {
   display: flex;

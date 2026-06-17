@@ -1,38 +1,55 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
   <defs>
     <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#003087;stop-opacity:1" />
+      <stop offset="0%" style="stop-color:#002395;stop-opacity:1" />
       <stop offset="50%" style="stop-color:#1a237e;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#b71c1c;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#a31515;stop-opacity:1" />
     </linearGradient>
     <linearGradient id="pitch" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" style="stop-color:#2d7a2d;stop-opacity:0.5" />
-      <stop offset="100%" style="stop-color:#1a5c1a;stop-opacity:0.5" />
+      <stop offset="0%" style="stop-color:#2d7a2d;stop-opacity:0.4" />
+      <stop offset="100%" style="stop-color:#1a5c1a;stop-opacity:0.4" />
     </linearGradient>
   </defs>
   <rect width="1280" height="720" fill="url(#bg)"/>
   <rect width="1280" height="720" fill="url(#pitch)"/>
-  <!-- Pitch lines -->
-  <rect x="120" y="80" width="1040" height="560" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="3"/>
-  <line x1="640" y1="80" x2="640" y2="640" stroke="rgba(255,255,255,0.15)" stroke-width="3"/>
-  <circle cx="640" cy="360" r="110" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="3"/>
-  <circle cx="640" cy="360" r="8" fill="rgba(255,255,255,0.25)"/>
-  <rect x="120" y="220" width="180" height="280" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="3"/>
-  <rect x="980" y="220" width="180" height="280" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="3"/>
-  <!-- France flag strip -->
+  <rect x="120" y="80" width="1040" height="560" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="3"/>
+  <line x1="640" y1="80" x2="640" y2="640" stroke="rgba(255,255,255,0.12)" stroke-width="3"/>
+  <circle cx="640" cy="360" r="120" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="3"/>
+  <!-- Flag strips -->
   <rect x="0" y="0" width="8" height="720" fill="#002395"/>
   <rect x="8" y="0" width="8" height="720" fill="#fff"/>
   <rect x="16" y="0" width="8" height="720" fill="#ED2939"/>
-  <!-- England flag strip -->
   <rect x="1256" y="0" width="24" height="720" fill="#fff"/>
   <rect x="1264" y="0" width="8" height="720" fill="#CF142B"/>
   <rect x="1256" y="356" width="24" height="8" fill="#CF142B"/>
+  <!-- Left player (FRA, facing right) -->
+  <g transform="translate(300,180)" fill="#ffffff" fill-opacity="0.9">
+    <circle cx="60" cy="50" r="40"/>
+    <path d="M28 96 Q60 80 92 96 L100 248 Q60 262 20 248 Z"/>
+    <rect x="78" y="96" width="30" height="120" rx="15" transform="rotate(-42 93 156)"/>
+    <rect x="12" y="96" width="30" height="118" rx="15" transform="rotate(20 27 155)"/>
+    <rect x="26" y="246" width="34" height="150" rx="17" transform="rotate(16 43 321)"/>
+    <rect x="62" y="246" width="34" height="150" rx="17" transform="rotate(-22 79 321)"/>
+  </g>
+  <!-- Right player (ENG, facing left, mirrored) -->
+  <g transform="translate(980,180) scale(-1,1)" fill="#ffffff" fill-opacity="0.9">
+    <circle cx="60" cy="50" r="40"/>
+    <path d="M28 96 Q60 80 92 96 L100 248 Q60 262 20 248 Z"/>
+    <rect x="78" y="96" width="30" height="120" rx="15" transform="rotate(-42 93 156)"/>
+    <rect x="12" y="96" width="30" height="118" rx="15" transform="rotate(20 27 155)"/>
+    <rect x="26" y="246" width="34" height="150" rx="17" transform="rotate(16 43 321)"/>
+    <rect x="62" y="246" width="34" height="150" rx="17" transform="rotate(-22 79 321)"/>
+  </g>
+  <!-- Ball centre -->
+  <circle cx="640" cy="560" r="34" fill="#ffffff"/>
+  <path d="M640 534 l22 16 -8 26 -28 0 -8 -26 z" fill="#111"/>
   <!-- Preview badge -->
-  <rect x="540" y="220" width="200" height="40" rx="20" fill="#ff6600"/>
-  <text x="640" y="247" font-family="Arial Black,Arial" font-weight="900" font-size="18" fill="#fff" text-anchor="middle">MATCH PREVIEW</text>
-  <!-- vs area (centred) -->
-  <rect x="470" y="290" width="340" height="160" rx="18" fill="rgba(0,0,0,0.55)"/>
-  <text x="500" y="382" font-family="Arial Black,Arial" font-weight="900" font-size="26" fill="rgba(255,255,255,0.85)" text-anchor="start">FRA</text>
-  <text x="640" y="392" font-family="Arial Black,Arial" font-weight="900" font-size="52" fill="#ffffff" text-anchor="middle">vs</text>
-  <text x="780" y="382" font-family="Arial Black,Arial" font-weight="900" font-size="26" fill="rgba(255,255,255,0.85)" text-anchor="end">ENG</text>
+  <rect x="540" y="250" width="200" height="42" rx="21" fill="#ff6600"/>
+  <text x="640" y="279" font-family="Arial Black,Arial" font-weight="900" font-size="18" fill="#fff" text-anchor="middle">MATCH PREVIEW</text>
+  <!-- VS badge -->
+  <rect x="556" y="306" width="168" height="120" rx="16" fill="rgba(0,0,0,0.58)"/>
+  <text x="590" y="378" font-family="Arial Black,Arial" font-weight="900" font-size="24" fill="rgba(255,255,255,0.9)" text-anchor="start">FRA</text>
+  <text x="640" y="382" font-family="Arial Black,Arial" font-weight="900" font-size="34" fill="#ffffff" text-anchor="middle">vs</text>
+  <text x="690" y="378" font-family="Arial Black,Arial" font-weight="900" font-size="24" fill="rgba(255,255,255,0.9)" text-anchor="end">ENG</text>
+  <text x="640" y="412" font-family="Arial,sans-serif" font-size="13" fill="rgba(255,255,255,0.6)" text-anchor="middle">GROUP STAGE</text>
 </svg>
