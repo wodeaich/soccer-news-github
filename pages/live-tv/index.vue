@@ -286,8 +286,8 @@ export default {
   font-size: 28px;
   color: $font1;
   margin: 32px 0 24px;
-  padding-left: 12px;
-  border-left: 4px solid $color1;
+  padding-inline-start: 12px;
+  border-inline-start: 4px solid $color1;
 }
 
 .section-title {
@@ -295,8 +295,8 @@ export default {
   font-size: 20px;
   color: $font1;
   margin: 0 0 16px;
-  padding-left: 10px;
-  border-left: 3px solid $color1;
+  padding-inline-start: 10px;
+  border-inline-start: 3px solid $color1;
 }
 
 /* 今日赛事 */

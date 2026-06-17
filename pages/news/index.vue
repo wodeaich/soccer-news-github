@@ -69,8 +69,8 @@ export default {
   font-size: 28px;
   color: $font1;
   margin: 32px 0 24px;
-  padding-left: 12px;
-  border-left: 4px solid $color1;
+  padding-inline-start: 12px;
+  border-inline-start: 4px solid $color1;
 }
 
 .section-featured { margin-bottom: 40px; }
@@ -92,7 +92,7 @@ export default {
 
 @media screen and (max-width: 750px) {
   .container { padding: 0 vw(46) vw(80); }
-  .page-title { font-size: vw(42); margin: vw(32) 0 vw(24); padding-left: vw(16); }
+  .page-title { font-size: vw(42); margin: vw(32) 0 vw(24); padding-inline-start: vw(16); }
   .featured-grid { grid-template-columns: 1fr; height: auto; gap: vw(24); }
   .featured-main { height: vw(360); }
   .featured-side { flex-direction: row; height: vw(200); }

@@ -169,8 +169,8 @@ export default {
   font-size: 28px;
   color: $font1;
   margin: 32px 0 24px;
-  padding-left: 12px;
-  border-left: 4px solid $color1;
+  padding-inline-start: 12px;
+  border-inline-start: 4px solid $color1;
 }
 
 .tabs {

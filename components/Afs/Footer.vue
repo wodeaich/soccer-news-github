@@ -203,8 +203,8 @@ export default {
       white-space: nowrap;
       &::after {
         content: "|";
-        margin-left: 9px;
-        margin-right: 9px;
+        margin-inline-start: 9px;
+        margin-inline-end: 9px;
         opacity: 0.4;
       }
       &:last-child {
@@ -236,8 +236,8 @@ export default {
       line-height: vw(48);
       a {
         &::after {
-          margin-left: vw(6);
-          margin-right: vw(6);
+          margin-inline-start: vw(6);
+          margin-inline-end: vw(6);
         }
       }
     }

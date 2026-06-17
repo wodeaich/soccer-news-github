@@ -118,7 +118,7 @@ export default {
   display: flex;
   align-items: center;
   gap: 32px;
-  margin-left: 48px;
+  margin-inline-start: 48px;
 }
 
 .nav-item {
@@ -136,7 +136,7 @@ export default {
 .lang-switcher {
   position: relative;
   flex-shrink: 0;
-  margin-left: auto;
+  margin-inline-start: auto;
   cursor: pointer;
   z-index: 10;
 }
@@ -218,7 +218,7 @@ export default {
     order: 3;
     flex-basis: 100%;
     width: 100%;
-    margin-left: 0;
+    margin-inline-start: 0;
     margin-top: vw(16);
     padding-top: vw(16);
     border-top: 1px solid rgba($color1, 0.15);

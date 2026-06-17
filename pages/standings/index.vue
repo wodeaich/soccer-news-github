@@ -171,8 +171,8 @@ export default {
   font-size: 28px;
   color: $font1;
   margin: 32px 0 24px;
-  padding-left: 12px;
-  border-left: 4px solid $color1;
+  padding-inline-start: 12px;
+  border-inline-start: 4px solid $color1;
 }
 
 .empty {
@@ -209,8 +209,8 @@ export default {
   font-size: 16px;
   color: $font1;
   margin-bottom: 12px;
-  padding-left: 10px;
-  border-left: 3px solid $color1;
+  padding-inline-start: 10px;
+  border-inline-start: 3px solid $color1;
 }
 
 .table-wrap {
@@ -247,8 +247,8 @@ export default {
     transition: background 0.15s;
     &:hover { background: rgba($color1, 0.05); }
     &:last-child td { border-bottom: none; }
-    &.qualify td { border-left: 3px solid $color1; }
-    &.danger td { border-left: 3px solid #ff5a5a; }
+    &.qualify td { border-inline-start: 3px solid $color1; }
+    &.danger td { border-inline-start: 3px solid #ff5a5a; }
   }
 }
 
