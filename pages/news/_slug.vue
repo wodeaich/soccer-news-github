@@ -18,6 +18,7 @@
           :alt="newInfo.name"
           class="article-img"
           loading="eager"
+          @error="e => e.target.src='/img-fallback.svg'"
         />
 
         <div class="news-intro">{{ newInfo.first_paragraph }}</div>

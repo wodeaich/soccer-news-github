@@ -1,6 +1,6 @@
 <template>
   <nuxt-link :to="localePath(`/news/${item.path}/`)" class="card-grid">
-    <img :src="item.cover" :alt="item.name" class="img" loading="lazy" />
+    <img :src="item.cover" :alt="item.name" class="img" loading="lazy" @error="e => e.target.src='/img-fallback.svg'" />
     <div class="info">
       <p class="title">{{ item.name }}</p>
       <span class="date">{{ formatDate(item.published_at) }}</span>
