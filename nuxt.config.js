@@ -29,12 +29,13 @@ export default {
 
       const routes = [];
       for (const l of langs) {
+        const homeGroups = content.getStandings();
         routes.push({
           route: `/${l}/`,
           payload: {
             featured: content.getMenu(l, "rec", 3),
-            trending: content.getMenu(l, "trending", 6),
-            allNews: content.getMenu(l, "all", 10),
+            results: content.getResults(),
+            groups: homeGroups,
           },
         });
         routes.push({
