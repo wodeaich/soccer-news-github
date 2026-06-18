@@ -11,7 +11,6 @@
 <script>
 export default {
   props: {
-    // 纯静态模式下不传：列表只展示 initialItems，不再发起远程加载
     apiEndpoint: {
       type: String,
       default: ""
@@ -34,16 +33,36 @@ export default {
     }
   },
   data() {
+    const isStatic = !this.apiEndpoint;
+    const firstBatch = isStatic
+      ? this.initialItems.slice(0, this.pageSize)
+      : [...this.initialItems];
     return {
       loading: false,
-      endOfList: !this.apiEndpoint,
+      endOfList: isStatic
+        ? this.initialItems.length <= this.pageSize
+        : false,
       currentPage: this.initialPage,
-      items: [...this.initialItems]
+      items: firstBatch,
+      cursor: isStatic ? this.pageSize : 0
     };
   },
   methods: {
     async loadMore() {
-      if (this.loading || this.endOfList || !this.apiEndpoint) return;
+      if (this.loading || this.endOfList) return;
+
+      if (!this.apiEndpoint) {
+        this.loading = true;
+        const next = this.initialItems.slice(this.cursor, this.cursor + this.pageSize);
+        this.items = this.items.concat(next);
+        this.cursor += next.length;
+        if (next.length < this.pageSize || this.cursor >= this.initialItems.length) {
+          this.endOfList = true;
+        }
+        this.loading = false;
+        return;
+      }
+
       this.loading = true;
       try {
         const params = {
@@ -52,9 +71,6 @@ export default {
           page: this.currentPage,
           size: this.pageSize
         };
-        // if (this.modId) {
-        //   params.mod_id = this.modId;
-        // }
         const response = await this.$axios.$get(this.apiEndpoint, { params });
         const newData = response.list;
         this.items = this.items.concat(newData);
@@ -73,7 +89,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// .infinite-loading {
-//   grid-column: 1 / -1;
-// }
 </style>

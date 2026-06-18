@@ -187,6 +187,7 @@ function getMenu(lang, modId = "all", size = 10) {
   let slice;
   if (modId === "rec") slice = all.slice(0, size);
   else if (modId === "trending") slice = all.slice(size, size * 2).length ? all.slice(0, size) : all.slice(0, size);
+  else if (size === 0) slice = all;
   else slice = all.slice(0, size);
   return slice.map(mapArticleMenuItem);
 }

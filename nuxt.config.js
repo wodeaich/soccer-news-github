@@ -40,7 +40,7 @@ export default {
         });
         routes.push({
           route: `/${l}/news/`,
-          payload: { featured: content.getMenu(l, "rec", 3), allNews: content.getMenu(l, "all", 10) },
+          payload: { featured: content.getMenu(l, "rec", 3), allNews: content.getMenu(l, "all", 0) },
         });
         routes.push({ route: `/${l}/schedule/`, payload: { matches: content.getSchedule() } });
         routes.push({ route: `/${l}/results/`, payload: { results: content.getResults() } });
